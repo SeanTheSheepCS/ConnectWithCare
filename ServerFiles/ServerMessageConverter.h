@@ -11,7 +11,7 @@ class ServerMessageConverter
   protected:
     //
   private:
-    Message convertToPostingDataMessage(Posting postingToConvertToMessage);
+    //
 }
 
 #endif

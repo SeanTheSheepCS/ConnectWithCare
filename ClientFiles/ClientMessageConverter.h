@@ -10,9 +10,7 @@ class ClientMessageConverter
   protected:
     //
   private:
-    Message convertToLoginMessage(std::string username, std::string password);
-    Message convertToCreatePostMessage(Post postToConvertToMessage);
-
+    //
 }
 
 #endif
