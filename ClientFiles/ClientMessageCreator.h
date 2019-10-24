@@ -10,9 +10,6 @@ class ClientMessageCreator
 {
   public:
     ClientMessageCreator();
-  protected:
-    //
-  private:
     Message createLoginMessage(std::string username, std::string password);
     Message createLogoutMessage();
     Message createCreatePostMessage(Post postToConvertToMessage);
@@ -23,6 +20,10 @@ class ClientMessageCreator
     Message createUserMessageHistoryAllMessage(Date startDate, Date endDate);
     Message createBoardHistoryMessage(Date startDate, Date endDate, long int boardID);
     Message createBoardSearchMessage(Date startDate, Date endDate, long int boardID, std::string searchKeyWord);
+  protected:
+    //
+  private:
+    //
 }
 
 #endif

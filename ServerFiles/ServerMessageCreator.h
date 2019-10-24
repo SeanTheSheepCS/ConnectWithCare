@@ -9,9 +9,6 @@ class ServerMessageCreator
 {
   public:
     ServerMessageCreator();
-  protected:
-    //
-  private:
     Message createLoginAuthMessage(bool whetherTheLoginWasAccepted);
     Message createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
     Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
@@ -27,6 +24,10 @@ class ServerMessageCreator
     Message createErrorWriteFailedMessage();
     Message createWriteSuccessFulMessage();
     Message createEndOfDataMessage();
+  protected:
+    //
+  private:
+    //
 }
 
 #endif

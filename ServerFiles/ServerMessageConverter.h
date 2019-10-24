@@ -8,9 +8,6 @@ class ServerMessageConverter
 {
   public:
     ServerMessageConverter();
-  protected:
-    //
-  private:
     bool isALoginMessage(Message messageToDetermineTypeOf);
     std::string getUsernameOfALoginMessage(Message loginMessageToGetUsernameFieldOf);
     std::string getPasswordOfALoginMessage(Message loginMessageToGetPasswordFieldOf);
@@ -41,6 +38,10 @@ class ServerMessageConverter
     bool isABoardSearchMessage(Message messageToDetermineTypeOf);
     std::string getKeywordOfBoardSearchMessage(Message boardSearchMessageToGetKeywordFieldOf);
     long int getTheBoardIDFieldOfABoardSearchMessage(Message boardSearchMessageToGetBoardIDFieldOf);
+  protected:
+    //
+  private:
+    //
 }
 
 #endif
