@@ -1,0 +1,1 @@
+Files that can be used by both clients and servers such as Posting objects can be put here.

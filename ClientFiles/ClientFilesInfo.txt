@@ -1,0 +1,1 @@
+Files specific to the client such as info for rendering the GUI can go here
