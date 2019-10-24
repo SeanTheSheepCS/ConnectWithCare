@@ -3,7 +3,7 @@
 
 #include "../CommonFiles/MessageCodes.h"
 
-public class ClientMessageConverter
+class ClientMessageConverter
 {
   public:
     ClientMessageConverter();
@@ -11,6 +11,8 @@ public class ClientMessageConverter
     //
   private:
     Message convertToLoginMessage(std::string username, std::string password);
+    Message convertToCreatePostMessage(Post postToConvertToMessage);
+
 }
 
 #endif
