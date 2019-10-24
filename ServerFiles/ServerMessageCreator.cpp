@@ -3,7 +3,7 @@
 
 #include "../CommonFiles/MessageCodes.h"
 
-public class ServerMessageCreator
+class ServerMessageCreator
 {
   public:
     ServerMessageCreator();
