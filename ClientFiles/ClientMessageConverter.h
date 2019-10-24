@@ -3,14 +3,14 @@
 
 #include "../CommonFiles/MessageCodes.h"
 
-public class ClientMessageConverter
+class ClientMessageConverter
 {
   public:
     ClientMessageConverter();
   protected:
     //
   private:
-    Message convertToLoginMessage(std::string username, std::string password);
+    //
 }
 
 #endif
