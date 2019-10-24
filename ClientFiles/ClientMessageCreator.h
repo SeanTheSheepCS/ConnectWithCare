@@ -5,6 +5,8 @@
 #include "../CommonFiles/MessageCodes.h"
 #include "../CommonFiles/Posting.h"
 #include "../CommonFiles/Message.h"
+#include "../CommonFiles/UserMessage.h"
+#include "../CommonFiles/AllMessageTypes.h"
 
 class ClientMessageCreator
 {
