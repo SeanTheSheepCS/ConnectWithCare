@@ -1,7 +1,7 @@
 #ifndef MESSAGE_CODES_H
 #define MESSAGE_CODES_H
 
-enum ServerMessageCode = {SERVERMESSAGECODE_LOGINAUTH = 0x00,
+enum ServerMessageCode   {SERVERMESSAGECODE_LOGINAUTH = 0x00,
                           SERVERMESSAGECODE_LOGOUTCONFIRM = 0x01,
                           SERVERMESSAGECODE_MESSAGEDATA = 0x10,
                           SERVERMESSAGECODE_MESSAGEIMGDATA = 0x11,
@@ -17,7 +17,7 @@ enum ServerMessageCode = {SERVERMESSAGECODE_LOGINAUTH = 0x00,
                           SERVERMESSAGECODE_ENDOFDATA = 0xFF
                         };
 
-enum ClientMessageCode = {CLIENTMESSAGECODE_LOGIN = 0x00,
+enum ClientMessageCode   {CLIENTMESSAGECODE_LOGIN = 0x00,
                           CLIENTMESSAGECODE_LOGOUT = 0x01,
                           CLIENTMESSAGECODE_CREATEPOST = 0x02,
                           CLIENTMESSAGECODE_CREATEPOSTIMG = 0x03,

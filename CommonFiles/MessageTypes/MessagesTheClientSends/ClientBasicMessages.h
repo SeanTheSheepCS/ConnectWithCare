@@ -6,7 +6,7 @@
 class ClientBasicMessage: public Message
 {
   public:
-    //
+    ClientBasicMessage();
   protected:
     //
   private:
