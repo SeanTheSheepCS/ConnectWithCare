@@ -1,17 +1,53 @@
 #include "Message.h"
 #include <string.h>
 
-Message::Message(long int lengthArg, char* messageAsCharArrayArg)
+Message::Message(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg)
 {
-  length = lengthArg;
-  strcpy(messageAsCharArray, messageAsCharArrayArg);
-}
-public long int getLength()
-{
-  return length
+	length = lengthArg;
+	messageAsCharArray = new unsigned char[lengthArg];
+	for(int i = 0; i < length; i++)
+	{
+		messageAsCharArray[i] = messageAsCharArrayArg[i];
+	}
 }
 
-public const char* getMessageAsCharArray()
+Message::Message(const Message& other)
 {
-  return messageAsCharArray;
+	this->length = other.length;
+	this->messageAsCharArray = new unsigned char[other.length];
+	for(int i = 0; i < length; i++)
+	{
+		messageAsCharArray[i] = other.messageAsCharArray[i];
+	}
+}
+
+Message& operator=(const Message& rhs)
+{
+	if(this == &rhs)
+	{
+		this->length = other.length;
+		delete[] messageAsCharArray;
+		messageAsCharArray = new unsigned char[rhs.length];
+		for(int i = 0; i < length; i++)
+		{
+			messageAsCharArray[i] = other.messageAsCharArray[i];
+		}
+	}
+	return *this;
+}
+
+Message::~Message()
+{
+	length = 0;
+	delete[] messageAsCharArray;
+}
+
+unsigned long int Message::getLength()
+{
+	return length;
+}
+
+const char* Message::getMessageAsCharArray()
+{
+	return messageAsCharArray;
 }

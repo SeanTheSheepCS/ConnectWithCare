@@ -6,11 +6,15 @@
 class ClientBasicMessage: public Message
 {
   public:
-    ClientBasicMessage();
+    ClientBasicMessage(Message messageToTurnIntoClientBasicMessage);
   protected:
-    //
+    unsigned char getMessageCode();
+    unsigned long int getDataLengthInBytes();
+    unsigned long int getIndexOfFirstData();
   private:
-    //
+    unsigned char messageCode;
+    unsigned long int dataLengthInBytes;
+    unsigned long int indexOfFirstData
 }
 
 #include "ClientBasicMessages/CreatePostingImageMessage.h"

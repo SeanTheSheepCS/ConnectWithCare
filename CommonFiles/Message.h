@@ -4,17 +4,17 @@
 class Message
 {
   public:
-    Message(long int lengthArg, char* messageAsCharArrayArg);
+    Message(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
     Message(const Message& other);
     Message& operator=(const Message& rhs);
     ~Message();
-    long int getLength();
-    const char* getMessageAsCharArray();
+    unsigned long int getLength();
+    const unsigned char* getMessageAsCharArray();
   protected:
     //
   private:
-    long int length;
-    char* messageAsCharArray;
+    unsigned long int length;
+    unsigned char* messageAsCharArray;
 };
 
 #endif
