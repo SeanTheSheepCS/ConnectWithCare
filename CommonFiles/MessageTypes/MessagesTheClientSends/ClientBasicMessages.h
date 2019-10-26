@@ -7,6 +7,9 @@ class ClientBasicMessage: public Message
 {
   public:
     ClientBasicMessage(Message messageToTurnIntoClientBasicMessage);
+    ClientBasicMessage(const ClientBasicMessage& other);
+    ClientBasicMessage& operator=(const ClientBasicMessage& rhs);
+    virtual ~ClientBasicMessage();
   protected:
     unsigned char getMessageCode();
     unsigned long int getDataLengthInBytes();

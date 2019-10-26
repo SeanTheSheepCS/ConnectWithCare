@@ -7,7 +7,7 @@ class Message
     Message(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
     Message(const Message& other);
     Message& operator=(const Message& rhs);
-    ~Message();
+    virtual ~Message();
     unsigned long int getLength();
     const unsigned char* getMessageAsCharArray();
   protected:

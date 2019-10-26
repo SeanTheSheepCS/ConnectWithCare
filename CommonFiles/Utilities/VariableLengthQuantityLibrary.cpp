@@ -1,9 +1,13 @@
 #include "VariableLengthQuantityLibrary.h"
 
-unsigned long int convertVariableLengthQuantityToUnsignedLongIntAndMoveTheIndexPastTheVariableLengthQuantityValue(unsigned char** thisIsAPointerToAPointerThatShouldPointToTheStartOfTheVariableLengthQuantityValueAndShouldBeMovedOneBytePastTheEndOfTheVariableLengthQuantityValue)
+VariableLengthQuantityConverter::VariableLengthQuantityConverter()
 {
-	unsigned char[] messageStartingAtVariableLengthQuantityValue = *thisIsAPointerToAPointerThatShouldPointToTheStartOfTheVariableLengthQuantityValueAndShouldBeMovedOneBytePastTheEndOfTheVariableLengthQuantityValue;
-	unsigned char firstElement = messageStartingAtVariableLengthQuantityValue[0];
+	veriableLengthQuantityByteLengthOfLastConversion = 0;
+}
+
+unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(unsigned char* messageDataStartingAtVariableLengthQuantityValue);
+{
+	unsigned char firstElement = messageDataStartingAtVariableLengthQuantityValue[0];
 
 	if(firstElement & 0x80 == 0x00) //If the first element is the only byte in use...
 	{
@@ -16,16 +20,17 @@ unsigned long int convertVariableLengthQuantityToUnsignedLongIntAndMoveTheIndexP
 		arrayOfValues[0] = firstElement & 0x7F;
 		for(int currentIndex = 1; currentIndex < maximumNumberOfBytesToProcess; currentIndex++)
 		{
-			arrayOfValues[currentIndex] = messageStartingAtVariableLengthQuantityValue[currentIndex] & 0x7F;
-			if(messageStartingAtVariableLengthQuantityValue[currentIndex] & 0x80 == 0) //If this is the last byte...
+			arrayOfValues[currentIndex] = messageDataStartingAtVariableLengthQuantityValue[currentIndex] & 0x7F;
+			if(messageDataStartingAtVariableLengthQuantityValue[currentIndex] & 0x80 == 0) //If this is the last byte...
 			{
 				long int sum = 0;
 				int iterationNumber = 0;
 				for(int i = currentIndex; i >= 0; i--)
 				{
-					sum = sum + (arrayOfValues[i] << ( 7 * iterationNumber));
+					sum = sum + (((unsigned long int)arrayOfValues[i]) << ( 7 * iterationNumber));
 					iterationNumber++;
 				}
+				veriableLengthQuantityByteLengthOfLastConversion = currentIndex+1;
 				return sum;
 			}
 		}
@@ -35,3 +40,7 @@ unsigned long int convertVariableLengthQuantityToUnsignedLongIntAndMoveTheIndexP
 	}
 }
 
+unsigned short int VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversion()
+{
+	return veriableLengthQuantityByteLengthOfLastConversion;
+}

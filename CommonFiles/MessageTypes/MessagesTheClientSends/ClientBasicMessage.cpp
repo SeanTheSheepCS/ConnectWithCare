@@ -6,10 +6,35 @@ ClientBasicMessage::ClientBasicMessage(Message messageToTurnIntoClientBasicMessa
 	//Reading message code
 	messageCode = messageCharArray[0];
 	//Reading the data length (variable length quantity)
-	char** beforeCallToTheVariableLengthQuantityFunctionWillPointToStartOfVariableLengthQuantityAfterCallWillPointToValueAfter = &(messageCharArray[1]);
-	dataLengthInBytes = convertVariableLengthQuantityToUnsignedLongIntAndMoveTheIndexPastTheVariableLengthQuantityValue(beforeCallToTheVariableLengthQuantityFunctionWillPointToStartOfVariableLengthQuantityAfterCallWillPointToValueAfter);
-	//messageCharArray our beforeCallAfterCall variable should now be advanced to the index of the first data. This subtraction should return the index where the data begins.
-	indexOfFirstData = (*beforeCallToTheVariableLengthQuantityFunctionWillPointToStartOfVariableLengthQuantityAfterCallWillPointToValueAfter)-(&messageCharArray[0]);
+	dataLengthInBytes = convertVariableLengthQuantityToUnsignedLongInt(&(messageCharArray[1]));
+	indexOfFirstData = getVariableLengthQuantityByteLengthOfLastConversion();
+}
+
+ClientBasicMessage::~ClientBasicMessage()
+{
+	messageCode = 0;
+	dataLengthInBytes = 0;
+	indexOfFirstData = 0;
+}
+
+ClientBasicMessage(const ClientBasicMessage& other)
+{
+	Message(other);
+	this->messageCode = messageCode();
+	this->dataLengthInBytes = other.dataLengthInBytes;
+	this->indexOfFirstData = other.indexOfFirstData;
+}
+
+ClientBasicMessage& operator=(const ClientBasicMessage& rhs)
+{
+	if(this != &rhs)
+	{
+		Message::operator=(rhs);
+		this->messageCode = rhs.messageCode;
+		this->dataLengthInBytes = rhs.dataLengthInBytes;
+		this->indexOfFirstData = rhs.indexOfFirstData;
+	}
+	return *this;
 }
 
 unsigned char getMessageCode()
