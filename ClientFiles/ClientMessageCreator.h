@@ -12,7 +12,7 @@ class ClientMessageCreator
 {
   public:
     ClientMessageCreator();
-    Message createLoginMessage(std::string username, std::string password);
+    LoginMessage createLoginMessage(std::string username, std::string password);
     Message createLogoutMessage();
     Message createCreatePostMessage(Post postToConvertToMessage);
     Message createCreatePostImageMessage(PostImage postToConvertToMessage);

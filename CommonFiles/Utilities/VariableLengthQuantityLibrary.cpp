@@ -44,3 +44,14 @@ unsigned short int VariableLengthQuantityConverter::getVariableLengthQuantityByt
 {
 	return veriableLengthQuantityByteLengthOfLastConversion;
 }
+
+unsigned char* convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity)
+{
+
+}
+
+unsigned short int getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ()
+{
+
+}
+

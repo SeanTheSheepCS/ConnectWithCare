@@ -6,7 +6,9 @@ class VariableLengthQuantityConverter
 	public:
 		VariableLengthQuantityConverter();
 		unsigned long int convertVariableLengthQuantityToUnsignedLongInt(unsigned char* messageDataStartingAtVariableLengthQuantityValue);
-		unsigned short int getVariableLengthQuantityByteLengthOfLastConversion();
+		unsigned short int getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
+		unsigned char* convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity);
+		unsigned short int getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
 	protected:
 
 	private:

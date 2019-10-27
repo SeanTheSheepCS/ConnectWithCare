@@ -2,7 +2,7 @@ LoginMessage::LoginMessage(ClientBasicMessage clientBasicMessageToTurnIntoALogin
 {
 	char* dataArray = &(Message::getMessageAsCharArray[ClientBasicMessage::getIndexOfFirstData()]);
 	long int usernameLength = convertVariableLengthQuantityToUnsignedLongInt(&(dataArray[0]));
-	short int usernameLengthFieldLength = getVariableLengthQuantityByteLengthOfLastConversion();
+	short int usernameLengthFieldLength = getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 	long int passwordLength = dataLength - usernameLength - usernameLengthFieldLength;
 	char[] usernameAsCharArray = new char[usernameLength];
 	char[] passwordAsCharArray = new char[passwordLength];
