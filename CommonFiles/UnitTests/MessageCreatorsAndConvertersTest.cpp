@@ -14,5 +14,16 @@ int main()
 
 void runLoginMessageTest()
 {
-	LoginMessage testMessage =
+	ClientMessageCreator creator;
+	LoginMessage theLoginMessage = creator.createLoginMessage(string("john_doe"), string("passw0rd"));
+	std::cout << theLoginMessage.getUsername() << std::endl;
+	std::cout << theLoginMessage.getPassword() << std::endl;
+	Message theMessage = theLoginMessage;
+	ServerMessageConverter converter;
+	if(converter.isALoginMessage(theMessage))
+	{
+		LoginMessage theLoginMessageConverted = converter.toLoginMessage(theMessage);
+		std::cout << theLoginMessageConverted.getUsername() << std::endl;
+		std::cout << theLoginMessageConverted.getPassword() << std::endl;
+	}
 }
