@@ -2,6 +2,8 @@
 #define SERVER_MESSAGE_CREATOR_H
 
 #include "../CommonFiles/MessageCodes.h"
+#include "../CommonFiles/Message.h"
+#include <string>
 
 class ServerMessageCreator
 {
@@ -11,7 +13,7 @@ class ServerMessageCreator
     //
   private:
     Message convertToLoginMessage(std::string username, std::string password);
-    Message convertTo
-}
+    //Message convertTo
+};
 
 #endif
