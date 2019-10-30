@@ -11,7 +11,7 @@ Posting::Posting()
 	dateTimePosted = "";
 }
 
-string Posting::getPostText()
+string Posting::getDateTimePosted()
 {
 	return dateTimePosted;
 }

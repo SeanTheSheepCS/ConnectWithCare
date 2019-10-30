@@ -6,7 +6,7 @@
 class ClientBasicMessage: public Message
 {
   public:
-    ClientBasicMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
+    ClientBasicMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg);
     ClientBasicMessage(const ClientBasicMessage& other);
     virtual ClientBasicMessage& operator=(const ClientBasicMessage& rhs);
     virtual ~ClientBasicMessage();

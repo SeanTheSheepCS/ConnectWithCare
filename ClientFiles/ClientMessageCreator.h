@@ -7,6 +7,7 @@
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/UserMessage.h"
 #include "../CommonFiles/AllMessageTypes.h"
+#include "../CommonFiles/Utilities/VariableLengthQuantityLibrary.h"
 
 class ClientMessageCreator
 {
@@ -27,7 +28,7 @@ class ClientMessageCreator
   protected:
     //
   private:
-    //
+    VariableLengthQuantityConverter vlqConverter;
 };
 
 #endif

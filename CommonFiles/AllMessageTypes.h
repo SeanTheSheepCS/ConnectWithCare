@@ -3,7 +3,7 @@
 
 #include "Message.h"
 
-#include "MessageTypes/MessagesTheClientSends.h"
-#include "MessageTypes/MessagesTheServerSends.h"
+#include "MessageTypes/messagesTheClientSends.h"
+#include "MessageTypes/messagesTheServerSends.h"
 
 #endif

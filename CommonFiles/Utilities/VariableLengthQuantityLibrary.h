@@ -5,14 +5,16 @@ class VariableLengthQuantityConverter
 {
 	public:
 		VariableLengthQuantityConverter();
-		static unsigned long int convertVariableLengthQuantityToUnsignedLongInt(const unsigned char* messageDataStartingAtVariableLengthQuantityValue);
-		static unsigned short int getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
-		static unsigned char* convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity);
-		static unsigned short int getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+		unsigned long int convertVariableLengthQuantityToUnsignedLongInt(const unsigned char* messageDataStartingAtVariableLengthQuantityValue);
+		unsigned short int getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
+		unsigned char* convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity);
+		unsigned short int getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
 	protected:
 
 	private:
-		static unsigned short int veriableLengthQuantityByteLengthOfLastConversion;
+		unsigned short int variableLengthQuantityByteLengthOfLastConversion;
+		unsigned short int arrayLenthOfVLQValueFromLastConversion;
 };
+
 
 #endif

@@ -17,16 +17,16 @@ enum ServerMessageCode   {SERVERMESSAGECODE_LOGINAUTH = 0x00,
                           SERVERMESSAGECODE_ENDOFDATA = 0xFF
                         };
 
-enum ClientMessageCode   {CLIENTMESSAGECODE_LOGIN = 0x00,
-                          CLIENTMESSAGECODE_LOGOUT = 0x01,
-                          CLIENTMESSAGECODE_CREATEPOST = 0x02,
-                          CLIENTMESSAGECODE_CREATEPOSTIMG = 0x03,
-                          CLIENTMESSAGECODE_SENDMESSAGE = 0x04,
-                          CLIENTMESSAGECODE_SENDMESSAGEIMG = 0x05,
-                          CLIENTMESSAGECODE_MESSAGEHISTORY = 0x10,
-                          CLIENTMESSAGECODE_MESSAGEHISTALL = 0x11,
-                          CLIENTMESSAGECODE_BOARDHISTORY = 0x12,
-                          CLIENTMESSAGECODE_BOARDSEARCH = 0x13,
+enum ClientMessageCode   {CLIENTMESSAGECODE_LOGIN = 0xB0,
+                          CLIENTMESSAGECODE_LOGOUT = 0xB1,
+                          CLIENTMESSAGECODE_CREATEPOST = 0xB2,
+                          CLIENTMESSAGECODE_CREATEPOSTIMG = 0xB3,
+                          CLIENTMESSAGECODE_SENDMESSAGE = 0xB4,
+                          CLIENTMESSAGECODE_SENDMESSAGEIMG = 0xB5,
+                          CLIENTMESSAGECODE_MESSAGEHISTORY = 0xC0,
+                          CLIENTMESSAGECODE_MESSAGEHISTALL = 0xC1,
+                          CLIENTMESSAGECODE_BOARDHISTORY = 0xC2,
+                          CLIENTMESSAGECODE_BOARDSEARCH = 0xC3,
                         };
 
 #endif

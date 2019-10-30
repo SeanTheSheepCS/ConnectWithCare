@@ -1,35 +1,37 @@
 #include "LoginMessage.h"
 #include "../../../Utilities/VariableLengthQuantityLibrary.h"
 #include <string>
+#include <iostream>
 
-LoginMessage::LoginMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg) : ClientBasicMessage(lengthArg, messageAsCharArrayArg)
+LoginMessage::LoginMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg) : ClientBasicMessage(lengthArg, messageAsCharArrayArg)
 {
+	vlqConverter = VariableLengthQuantityConverter();
 	const unsigned char* pointerToStartOfMessage = &(Message::getMessageAsCharArray()[0]);
 	unsigned long int indexOfStartOfData = ClientBasicMessage::getIndexOfFirstData();
 	const unsigned char* dataArray = &(pointerToStartOfMessage[indexOfStartOfData]);
-
-	unsigned long int usernameLength = VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(&(dataArray[0]));
-	unsigned short int usernameLengthFieldLength = VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
+	unsigned long int usernameLength = Message::vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(&(dataArray[0]));
+	unsigned long int usernameLengthFieldLength = Message::vlqConverter.getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 	unsigned long int passwordLength = ClientBasicMessage::getDataLengthInBytes() - usernameLength - usernameLengthFieldLength;
-	char* usernameAsCharArray = new char[usernameLength];
-	char* passwordAsCharArray = new char[passwordLength];
-	int indexInTheMessage = ClientBasicMessage::getIndexOfFirstData() + usernameLengthFieldLength;
-	for(unsigned int i = 0; i < usernameLength-1; i++)
+	char* usernameAsCharArray = new char[usernameLength+1];
+	char* passwordAsCharArray = new char[passwordLength+1];
+	int indexInDataArray = usernameLengthFieldLength /*AN INITIAL OFFSET SO THAT WE DO NOT READ THE UNL FIELD AGAIN */;
+	for(unsigned int i = 0; i < usernameLength; i++)
 	{
-		usernameAsCharArray[i] = dataArray[indexInTheMessage];
-		indexInTheMessage++;
+		usernameAsCharArray[i] = dataArray[indexInDataArray];
+		indexInDataArray++;
 	}
-	usernameAsCharArray[usernameLength-1] = '\0';
+	usernameAsCharArray[usernameLength] = '\0';
 	username = std::string(usernameAsCharArray);
-	for(unsigned int i = 0; i < passwordLength-1; i++)
+	for(unsigned int i = 0; i < passwordLength; i++)
 	{
-		passwordAsCharArray[i] = dataArray[indexInTheMessage];
-		indexInTheMessage++;
+		passwordAsCharArray[i] = dataArray[indexInDataArray];
+		indexInDataArray++;
 	}
-	passwordAsCharArray[passwordLength-1] = '\0';
+	passwordAsCharArray[passwordLength] = '\0';
 	password = std::string(passwordAsCharArray);
-	delete usernameAsCharArray;
-	delete passwordAsCharArray;
+
+	delete[] usernameAsCharArray;
+	delete[] passwordAsCharArray;
 }
 
 LoginMessage::LoginMessage(const LoginMessage& other): ClientBasicMessage(other)

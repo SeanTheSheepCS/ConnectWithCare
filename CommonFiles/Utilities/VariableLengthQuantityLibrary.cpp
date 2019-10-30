@@ -3,7 +3,8 @@
 
 VariableLengthQuantityConverter::VariableLengthQuantityConverter()
 {
-	veriableLengthQuantityByteLengthOfLastConversion = 0;
+	variableLengthQuantityByteLengthOfLastConversion = 0;
+	arrayLenthOfVLQValueFromLastConversion = 0;
 }
 
 unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(const unsigned char* messageDataStartingAtVariableLengthQuantityValue)
@@ -12,6 +13,7 @@ unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantity
 
 	if((firstElement & 0x80) == 0x00) //If the first element is the only byte in use...
 	{
+		variableLengthQuantityByteLengthOfLastConversion = 1;
 		return (unsigned long int)firstElement;
 	}
 	else
@@ -31,7 +33,7 @@ unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantity
 					sum = sum + (((unsigned long int)arrayOfValues[i]) << ( 7 * iterationNumber));
 					iterationNumber++;
 				}
-				veriableLengthQuantityByteLengthOfLastConversion = currentIndex+1;
+				variableLengthQuantityByteLengthOfLastConversion = currentIndex+1;
 				return sum;
 			}
 		}
@@ -43,16 +45,54 @@ unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantity
 
 unsigned short int VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt()
 {
-	return veriableLengthQuantityByteLengthOfLastConversion;
+	return variableLengthQuantityByteLengthOfLastConversion;
 }
 
-unsigned char* convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity)
+unsigned char* VariableLengthQuantityConverter::convertUnsignedLongIntToVariableLengthQuantity(unsigned long int valueToTurnIntoVariableLengthQuantity)
 {
+	//Determining the length array we will need
+	unsigned short int lengthOfArrayWeWillNeed = 1;
+	if(valueToTurnIntoVariableLengthQuantity >= (1<<29))
+	{
+		lengthOfArrayWeWillNeed = 5;
+	}
+	else if(valueToTurnIntoVariableLengthQuantity >= (1<<22))
+	{
+		lengthOfArrayWeWillNeed = 4;
+	}
+	else if(valueToTurnIntoVariableLengthQuantity >= (1<<15))
+	{
+		lengthOfArrayWeWillNeed = 3;
+	}
+	else if(valueToTurnIntoVariableLengthQuantity >= (1<<8))
+	{
+		lengthOfArrayWeWillNeed = 2;
+	}
 
+	unsigned char* vlqArray = new unsigned char[lengthOfArrayWeWillNeed];
+	for(int i = 0; i < lengthOfArrayWeWillNeed; i++)
+	{
+		if(i == lengthOfArrayWeWillNeed - 1) //If we are on the last element of the array...
+		{
+			//We don't make the first bit a one.
+			int shiftAmount = (lengthOfArrayWeWillNeed - i - 1) * 7;
+			vlqArray[i] = (unsigned char) valueToTurnIntoVariableLengthQuantity >> shiftAmount;
+			vlqArray[i] &= ~0x80;
+		}
+		else
+		{
+			//Be sure to make the first bit of the char a 1.
+			int shiftAmount = (lengthOfArrayWeWillNeed - i - 1) * 7;
+			vlqArray[i] = (unsigned char) valueToTurnIntoVariableLengthQuantity >> shiftAmount;
+			vlqArray[i] |= 0x80;
+		}
+	}
+	arrayLenthOfVLQValueFromLastConversion = lengthOfArrayWeWillNeed;
+	return &(vlqArray[0]);
 }
 
-unsigned short int getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ()
+unsigned short int VariableLengthQuantityConverter::getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ()
 {
-
+	return arrayLenthOfVLQValueFromLastConversion;
 }
 

@@ -1,14 +1,15 @@
 #include "ClientBasicMessages.h"
 #include "../../Utilities/VariableLengthQuantityLibrary.h"
+#include <iostream>
 
-ClientBasicMessage::ClientBasicMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg) : Message(lengthArg, messageAsCharArrayArg)
+ClientBasicMessage::ClientBasicMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg) : Message(lengthArg, messageAsCharArrayArg)
 {
 	const unsigned char* messageCharArray = Message::getMessageAsCharArray();
 	//Reading message code
 	messageCode = messageCharArray[0];
 	//Reading the data length (variable length quantity)
-	dataLengthInBytes = VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(&(messageCharArray[1]));
-	indexOfFirstData = VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
+	dataLengthInBytes = Message::vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(&(messageCharArray[1]));
+	indexOfFirstData = 1 /* FOR THE MESSAGE CODE*/ + Message::vlqConverter.getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 }
 
 ClientBasicMessage::~ClientBasicMessage()

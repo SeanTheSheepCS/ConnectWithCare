@@ -3,11 +3,12 @@
 
 #include <string>
 #include "../ClientBasicMessages.h"
+#include "../../../Utilities/VariableLengthQuantityLibrary.h"
 
 class LoginMessage : public ClientBasicMessage
 {
 	public:
-		LoginMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
+		LoginMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg);
 	    LoginMessage(const LoginMessage& other);
 	    LoginMessage& operator=(const LoginMessage& rhs);
 	    virtual ~LoginMessage();
@@ -16,6 +17,7 @@ class LoginMessage : public ClientBasicMessage
 	protected:
 		//
 	private:
+		VariableLengthQuantityConverter vlqConverter;
 		std::string username;
 		std::string password;
 };

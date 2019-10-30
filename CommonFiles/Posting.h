@@ -12,6 +12,7 @@ class Posting
 		string postText; //the contents of the post
 		string dateTimePosted;//date;
 	public:
+		Posting();
 		void setPostText(string text);
 		string getPostText();
 		void setDateTimePosted(time_t dateTime);

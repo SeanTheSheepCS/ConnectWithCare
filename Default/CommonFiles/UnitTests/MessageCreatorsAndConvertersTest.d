@@ -2,10 +2,11 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
  ../CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.cpp \
  ../CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.h \
  ../CommonFiles/UnitTests/../Message.h \
+ ../CommonFiles/UnitTests/../Utilities/VariableLengthQuantityLibrary.h \
  ../CommonFiles/UnitTests/../MessageCodes.h \
  ../CommonFiles/UnitTests/../AllMessageTypes.h \
  ../CommonFiles/UnitTests/../Message.h \
- ../CommonFiles/UnitTests/../MessageTypes/MessagesTheClientSends.h \
+ ../CommonFiles/UnitTests/../MessageTypes/messagesTheClientSends.h \
  ../CommonFiles/UnitTests/../MessageTypes/../Message.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/../../Message.h \
@@ -13,6 +14,7 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/CreatePostingMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/LoginMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/../ClientBasicMessages.h \
+ /cygdrive/d/EclipseCPlusPlusWorkspaceSeanKenny/ConnectWithCare/CommonFiles/Utilities/VariableLengthQuantityLibrary.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/LogoutMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/SendUserMessageImageMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/SendUserMessageMessage.h \
@@ -21,7 +23,7 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientRequestMessages/BoardSearchMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientRequestMessages/UserMessageHistoryAllMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientRequestMessages/UserMessageHistoryMessage.h \
- ../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends.h \
+ ../CommonFiles/UnitTests/../MessageTypes/messagesTheServerSends.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends/ServerBasicMessages.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends/ServerBasicMessages/LoginAuthMessage.h \
  ../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends/ServerBasicMessages/LogoutConfirmMessage.h \
@@ -44,6 +46,7 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
  ../CommonFiles/UnitTests/../../ClientFiles/../CommonFiles/UserMessage.h \
  ../CommonFiles/UnitTests/../../ClientFiles/../CommonFiles/AllMessageTypes.h \
  ../CommonFiles/UnitTests/../../ClientFiles/ClientMessageCreator.h \
+ ../CommonFiles/UnitTests/../../ClientFiles/../CommonFiles/Utilities/VariableLengthQuantityLibrary.h \
  ../CommonFiles/UnitTests/../../ServerFiles/ServerMessageConverter.h \
  ../CommonFiles/UnitTests/../../ServerFiles/../CommonFiles/MessageCodes.h \
  ../CommonFiles/UnitTests/../../ServerFiles/../CommonFiles/Posting.h \
@@ -56,13 +59,15 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
 
 ../CommonFiles/UnitTests/../Message.h:
 
+../CommonFiles/UnitTests/../Utilities/VariableLengthQuantityLibrary.h:
+
 ../CommonFiles/UnitTests/../MessageCodes.h:
 
 ../CommonFiles/UnitTests/../AllMessageTypes.h:
 
 ../CommonFiles/UnitTests/../Message.h:
 
-../CommonFiles/UnitTests/../MessageTypes/MessagesTheClientSends.h:
+../CommonFiles/UnitTests/../MessageTypes/messagesTheClientSends.h:
 
 ../CommonFiles/UnitTests/../MessageTypes/../Message.h:
 
@@ -77,6 +82,8 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
 ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/LoginMessage.h:
 
 ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/../ClientBasicMessages.h:
+
+/cygdrive/d/EclipseCPlusPlusWorkspaceSeanKenny/ConnectWithCare/CommonFiles/Utilities/VariableLengthQuantityLibrary.h:
 
 ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientBasicMessages/LogoutMessage.h:
 
@@ -94,7 +101,7 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
 
 ../CommonFiles/UnitTests/../MessageTypes/MessagestheClientSends/ClientRequestMessages/UserMessageHistoryMessage.h:
 
-../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends.h:
+../CommonFiles/UnitTests/../MessageTypes/messagesTheServerSends.h:
 
 ../CommonFiles/UnitTests/../MessageTypes/MessagesTheServerSends/ServerBasicMessages.h:
 
@@ -139,6 +146,8 @@ CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.o: \
 ../CommonFiles/UnitTests/../../ClientFiles/../CommonFiles/AllMessageTypes.h:
 
 ../CommonFiles/UnitTests/../../ClientFiles/ClientMessageCreator.h:
+
+../CommonFiles/UnitTests/../../ClientFiles/../CommonFiles/Utilities/VariableLengthQuantityLibrary.h:
 
 ../CommonFiles/UnitTests/../../ServerFiles/ServerMessageConverter.h:
 
