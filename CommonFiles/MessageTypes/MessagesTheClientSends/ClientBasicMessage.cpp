@@ -1,13 +1,14 @@
 #include "ClientBasicMessages.h"
+#include "../../Utilities/VariableLengthQuantityLibrary.h"
 
-ClientBasicMessage::ClientBasicMessage(Message messageToTurnIntoClientBasicMessage) : Message(messageToTurnIntoClientBasicMessage)
+ClientBasicMessage::ClientBasicMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg) : Message(lengthArg, messageAsCharArrayArg)
 {
-	char[] messageCharArray = getMessageAsCharArray;
+	const unsigned char* messageCharArray = Message::getMessageAsCharArray();
 	//Reading message code
 	messageCode = messageCharArray[0];
 	//Reading the data length (variable length quantity)
-	dataLengthInBytes = convertVariableLengthQuantityToUnsignedLongInt(&(messageCharArray[1]));
-	indexOfFirstData = getVariableLengthQuantityByteLengthOfLastConversion();
+	dataLengthInBytes = VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(&(messageCharArray[1]));
+	indexOfFirstData = VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 }
 
 ClientBasicMessage::~ClientBasicMessage()
@@ -17,15 +18,15 @@ ClientBasicMessage::~ClientBasicMessage()
 	indexOfFirstData = 0;
 }
 
-ClientBasicMessage(const ClientBasicMessage& other)
+
+ClientBasicMessage::ClientBasicMessage(const ClientBasicMessage& other) : Message(other)
 {
-	Message(other);
-	this->messageCode = messageCode();
+	this->messageCode = other.messageCode;
 	this->dataLengthInBytes = other.dataLengthInBytes;
 	this->indexOfFirstData = other.indexOfFirstData;
 }
 
-ClientBasicMessage& operator=(const ClientBasicMessage& rhs)
+ClientBasicMessage& ClientBasicMessage::operator=(const ClientBasicMessage& rhs)
 {
 	if(this != &rhs)
 	{
@@ -37,17 +38,17 @@ ClientBasicMessage& operator=(const ClientBasicMessage& rhs)
 	return *this;
 }
 
-unsigned char getMessageCode()
+unsigned char ClientBasicMessage::getMessageCode()
 {
 	return messageCode;
 }
 
-unsigned long int getDataLengthInBytes()
+unsigned long int ClientBasicMessage::getDataLengthInBytes()
 {
 	return dataLengthInBytes;
 }
 
-unsigned long int getIndexOfFirstData()
+unsigned long int ClientBasicMessage::getIndexOfFirstData()
 {
 	return indexOfFirstData;
 }

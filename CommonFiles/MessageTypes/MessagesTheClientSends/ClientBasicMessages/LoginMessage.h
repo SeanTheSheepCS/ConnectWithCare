@@ -7,7 +7,7 @@
 class LoginMessage : public ClientBasicMessage
 {
 	public:
-		LoginMessage(ClientBasicMessage clientBasicMessageToTurnIntoALoginMessage);
+		LoginMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
 	    LoginMessage(const LoginMessage& other);
 	    LoginMessage& operator=(const LoginMessage& rhs);
 	    virtual ~LoginMessage();

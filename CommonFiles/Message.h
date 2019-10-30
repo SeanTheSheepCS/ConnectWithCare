@@ -6,7 +6,7 @@ class Message
   public:
     Message(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
     Message(const Message& other);
-    Message& operator=(const Message& rhs);
+    virtual Message& operator=(const Message& rhs);
     virtual ~Message();
     unsigned long int getLength();
     const unsigned char* getMessageAsCharArray();
@@ -14,7 +14,7 @@ class Message
     //
   private:
     unsigned long int length;
-    unsigned char* messageAsCharArray;
+    const unsigned char* messageAsCharArray;
 };
 
 #endif

@@ -21,16 +21,16 @@ Message::Message(const Message& other)
 	}
 }
 
-Message& operator=(const Message& rhs)
+Message& Message::operator=(const Message& rhs)
 {
 	if(this == &rhs)
 	{
-		this->length = other.length;
+		this->length = rhs.length;
 		delete[] messageAsCharArray;
 		messageAsCharArray = new unsigned char[rhs.length];
 		for(int i = 0; i < length; i++)
 		{
-			messageAsCharArray[i] = other.messageAsCharArray[i];
+			messageAsCharArray[i] = rhs.messageAsCharArray[i];
 		}
 	}
 	return *this;
@@ -47,7 +47,7 @@ unsigned long int Message::getLength()
 	return length;
 }
 
-const char* Message::getMessageAsCharArray()
+const unsigned char* Message::getMessageAsCharArray()
 {
 	return messageAsCharArray;
 }

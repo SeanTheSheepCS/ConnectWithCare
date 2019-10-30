@@ -34,4 +34,5 @@ CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages \
 CommonFiles/UnitTests \
 CommonFiles/Utilities \
 ServerFiles \
+View \
 

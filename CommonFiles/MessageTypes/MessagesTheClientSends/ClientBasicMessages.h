@@ -6,9 +6,9 @@
 class ClientBasicMessage: public Message
 {
   public:
-    ClientBasicMessage(Message messageToTurnIntoClientBasicMessage);
+    ClientBasicMessage(unsigned long int lengthArg, unsigned char* messageAsCharArrayArg);
     ClientBasicMessage(const ClientBasicMessage& other);
-    ClientBasicMessage& operator=(const ClientBasicMessage& rhs);
+    virtual ClientBasicMessage& operator=(const ClientBasicMessage& rhs);
     virtual ~ClientBasicMessage();
   protected:
     unsigned char getMessageCode();
