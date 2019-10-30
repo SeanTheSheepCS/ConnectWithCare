@@ -1,2 +1,0 @@
-CommonFiles/MessageTypes/MessagesTheClientSends/ClientBasicMessages/SendUserMessageImageMessage.o: \
- ../CommonFiles/MessageTypes/MessagesTheClientSends/ClientBasicMessages/SendUserMessageImageMessage.cpp

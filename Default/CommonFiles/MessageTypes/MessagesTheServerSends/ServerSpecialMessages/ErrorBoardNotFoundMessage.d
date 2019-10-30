@@ -1,2 +1,0 @@
-CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorBoardNotFoundMessage.o: \
- ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorBoardNotFoundMessage.cpp
