@@ -13,6 +13,7 @@ class ServerMessageCreator
     ServerMessageCreator();
     Message createLoginAuthMessage(bool whetherTheLoginWasAccepted);
     Message createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
+#if 0
     Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
     Message createUserMessageImageDataMessage(UserMessageImage messageImageToConvertToMessage);
     Message createPostingDataMessage(Posting postingToConvertToMessage);
@@ -26,10 +27,11 @@ class ServerMessageCreator
     Message createErrorWriteFailedMessage();
     Message createWriteSuccessFulMessage();
     Message createEndOfDataMessage();
+#endif
   protected:
     //
   private:
     //
-}
+};
 
 #endif

@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheClientSends/ClientRequestMessages/UserMessageHistoryAllMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheClientSends/ClientRequestMessages/UserMessageHistoryAllMessage.cpp

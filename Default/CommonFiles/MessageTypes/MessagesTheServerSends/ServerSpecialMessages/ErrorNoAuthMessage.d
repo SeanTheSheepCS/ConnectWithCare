@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorNoAuthMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorNoAuthMessage.cpp

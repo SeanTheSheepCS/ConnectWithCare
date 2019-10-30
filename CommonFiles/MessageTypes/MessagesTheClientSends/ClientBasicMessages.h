@@ -17,8 +17,8 @@ class ClientBasicMessage: public Message
   private:
     unsigned char messageCode;
     unsigned long int dataLengthInBytes;
-    unsigned long int indexOfFirstData
-}
+    unsigned long int indexOfFirstData;
+};
 
 #include "ClientBasicMessages/CreatePostingImageMessage.h"
 #include "ClientBasicMessages/CreatePostingMessage.h"

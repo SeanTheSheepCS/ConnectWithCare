@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/WriteSuccessfulMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/WriteSuccessfulMessage.cpp

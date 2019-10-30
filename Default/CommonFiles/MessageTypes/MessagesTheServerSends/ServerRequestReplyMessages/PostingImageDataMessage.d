@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerRequestReplyMessages/PostingImageDataMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerRequestReplyMessages/PostingImageDataMessage.cpp

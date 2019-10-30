@@ -6,7 +6,7 @@ VariableLengthQuantityConverter::VariableLengthQuantityConverter()
 	veriableLengthQuantityByteLengthOfLastConversion = 0;
 }
 
-unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(unsigned char* messageDataStartingAtVariableLengthQuantityValue)
+unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantityToUnsignedLongInt(const unsigned char* messageDataStartingAtVariableLengthQuantityValue)
 {
 	unsigned char firstElement = messageDataStartingAtVariableLengthQuantityValue[0];
 
@@ -41,7 +41,7 @@ unsigned long int VariableLengthQuantityConverter::convertVariableLengthQuantity
 	}
 }
 
-unsigned short int VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversion()
+unsigned short int VariableLengthQuantityConverter::getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt()
 {
 	return veriableLengthQuantityByteLengthOfLastConversion;
 }

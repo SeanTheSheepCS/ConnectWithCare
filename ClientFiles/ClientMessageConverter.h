@@ -11,7 +11,7 @@ class ClientMessageConverter
 {
   public:
     ClientMessageConverter();
-
+#if 0
     bool isLoginAuthMessage(Message messageToDetermineTypeOf);
     LoginAuthMessage toLoginAuthMessage(Message messageToTurnIntoALoginAuthMessage); //ONLY TO BE CALLED IF ISLOGINAUTHMESSAGE RETURNED TRUE!
 
@@ -47,10 +47,10 @@ class ClientMessageConverter
 
     bool isEndOfDataMessage(Message messageToDetermineTypeOf);
     EndOfDataMessage toEndOfDataMessage(Message messageToTurnIntoAnEndOfDataMessage);
-
+#endif
   protected:
     //
   private:
-}
+};
 
 #endif

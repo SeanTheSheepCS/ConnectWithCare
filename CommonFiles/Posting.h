@@ -1,5 +1,8 @@
+#ifndef POSTING_H
+#define POSTING_H
+
 #include <string>
-# include <ctime>
+#include <ctime>
 
 using namespace std;
 
@@ -11,6 +14,8 @@ class Posting
 	public:
 		void setPostText(string text);
 		string getPostText();
-		void set dateTimePosted(string dateTime);
-`		string getDateTimePosted();
+		void setDateTimePosted(time_t dateTime);
+		string getDateTimePosted();
 };
+
+#endif

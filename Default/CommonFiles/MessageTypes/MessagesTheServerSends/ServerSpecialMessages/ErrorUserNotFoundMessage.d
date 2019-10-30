@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorUserNotFoundMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerSpecialMessages/ErrorUserNotFoundMessage.cpp

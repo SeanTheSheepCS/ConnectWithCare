@@ -1,7 +1,14 @@
+#include "LoginMessage.h"
+#include "../../../Utilities/VariableLengthQuantityLibrary.h"
+#include <string>
+
 LoginMessage::LoginMessage(ClientBasicMessage clientBasicMessageToTurnIntoALoginMessage) : ClientBasicMessage(clientBasicMessageToTurnIntoALoginMessage)
 {
-	char* dataArray = &(Message::getMessageAsCharArray[ClientBasicMessage::getIndexOfFirstData()]);
-	long int usernameLength = convertVariableLengthQuantityToUnsignedLongInt(&(dataArray[0]));
+	const unsigned char* pointerToStartOfMessage = &(Message::getMessageAsCharArray()[0]);
+	unsigned long int indexOfStartOfData = ClientBasicMessage::getIndexOfFirstData();
+	const unsigned char* dataArray = &(pointerToStartOfMessage[indexOfStartOfData]);
+
+	unsigned long int usernameLength = VariableLengthQuantityLibrary::convertVariableLengthQuantityToUnsignedLongInt(&(dataArray[0]));
 	short int usernameLengthFieldLength = getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 	long int passwordLength = dataLength - usernameLength - usernameLengthFieldLength;
 	char[] usernameAsCharArray = new char[usernameLength];

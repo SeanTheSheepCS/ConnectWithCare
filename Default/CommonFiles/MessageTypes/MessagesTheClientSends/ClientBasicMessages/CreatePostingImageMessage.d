@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheClientSends/ClientBasicMessages/CreatePostingImageMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheClientSends/ClientBasicMessages/CreatePostingImageMessage.cpp

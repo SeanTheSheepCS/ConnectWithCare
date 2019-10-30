@@ -14,7 +14,7 @@ class ServerMessageConverter
 
     bool isALoginMessage(Message messageToDetermineTypeOf);
     LoginMessage toLoginMessage(Message messageToTurnIntoALoginMessage); //ONLY CALL ME IF ISALOGINMESSAGE WAS TRUE!
-
+#if 0
     bool isALogoutMessage(Message messageToDetermineTypeOf);
     LogoutMessage toLogoutMessage(Message messageToTurnIntoALogoutMessage); //ONLY CALL ME IF ISALOGOUTMESSAGE WAS TRUE!
 
@@ -41,11 +41,11 @@ class ServerMessageConverter
 
     bool isABoardSearchMessage(Message messageToDetermineTypeOf);
     BoardSearchMessage toBoardSearchMessage(Message messageToTurnIntoABoardSearchMessage);
-
+#endif
   protected:
     //
   private:
     //
-}
+};
 
 #endif

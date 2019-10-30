@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerBasicMessages/LogoutConfirmMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerBasicMessages/LogoutConfirmMessage.cpp

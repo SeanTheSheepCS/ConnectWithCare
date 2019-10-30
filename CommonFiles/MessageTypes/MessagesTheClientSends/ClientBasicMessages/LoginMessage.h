@@ -1,6 +1,9 @@
 #ifndef LOGIN_MESSAGE_H
 #define LOGIN_MESSAGE_H
 
+#include <string>
+#include "../ClientBasicMessages.h"
+
 class LoginMessage : public ClientBasicMessage
 {
 	public:

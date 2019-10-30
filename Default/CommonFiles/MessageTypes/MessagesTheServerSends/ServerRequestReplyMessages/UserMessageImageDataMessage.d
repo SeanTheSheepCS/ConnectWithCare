@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheServerSends/ServerRequestReplyMessages/UserMessageImageDataMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheServerSends/ServerRequestReplyMessages/UserMessageImageDataMessage.cpp

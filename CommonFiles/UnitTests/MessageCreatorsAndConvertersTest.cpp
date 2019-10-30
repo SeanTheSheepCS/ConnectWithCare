@@ -6,6 +6,7 @@
 #include "../../ClientFiles/ClientMessageCreator.h"
 #include "../../ServerFiles/ServerMessageConverter.h"
 #include "../../ServerFiles/ServerMessageCreator.h"
+#include <iostream>
 
 int main()
 {

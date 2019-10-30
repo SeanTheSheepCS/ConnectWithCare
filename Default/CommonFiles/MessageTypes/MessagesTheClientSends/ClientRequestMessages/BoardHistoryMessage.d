@@ -1,0 +1,2 @@
+CommonFiles/MessageTypes/MessagesTheClientSends/ClientRequestMessages/BoardHistoryMessage.o: \
+ ../CommonFiles/MessageTypes/MessagesTheClientSends/ClientRequestMessages/BoardHistoryMessage.cpp
