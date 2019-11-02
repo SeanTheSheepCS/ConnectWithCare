@@ -11,7 +11,7 @@ ServerMessageConverter::ServerMessageConverter()
 
 }
 
-bool ServerMessageConverter::isALoginMessage(Message messageToDetermineTypeOf)
+bool ServerMessageConverter::isLoginMessage(Message messageToDetermineTypeOf)
 {
 	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
 	if(messageCode == CLIENTMESSAGECODE_LOGIN)

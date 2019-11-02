@@ -4,5 +4,6 @@
 int mainMessageUnitTest();
 void runUnitTestsForMessages();
 void runLoginMessageTest();
+void runLoginAuthMessageTest();
 
 #endif

@@ -6,15 +6,16 @@
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/UserMessage.h"
 #include "../CommonFiles/AllMessageTypes.h"
+#include "../CommonFiles/Utilities/VariableLengthQuantityLibrary.h"
 
 class ClientMessageConverter
 {
   public:
     ClientMessageConverter();
-#if 0
+
     bool isLoginAuthMessage(Message messageToDetermineTypeOf);
     LoginAuthMessage toLoginAuthMessage(Message messageToTurnIntoALoginAuthMessage); //ONLY TO BE CALLED IF ISLOGINAUTHMESSAGE RETURNED TRUE!
-
+#if 0
     bool isLogoutConfirmMessage(Message messageToDetermineTypeOf);
     LogoutConfirmMessage toLogoutConfirmMessage(Message messageToTurnIntoALogoutConfirmMessage); //ONLY TO BE CALLED IF ISLOGOUTCONFIRMMESSAGE RETURNED TRUE!
 
@@ -51,6 +52,7 @@ class ClientMessageConverter
   protected:
     //
   private:
+    VariableLengthQuantityConverter vlqConverter;
 };
 
 #endif

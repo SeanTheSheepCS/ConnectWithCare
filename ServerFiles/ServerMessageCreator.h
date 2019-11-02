@@ -11,9 +11,9 @@ class ServerMessageCreator
 {
   public:
     ServerMessageCreator();
-    Message createLoginAuthMessage(bool whetherTheLoginWasAccepted);
-    Message createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
+    LoginAuthMessage createLoginAuthMessage(bool whetherTheLoginWasAccepted);
 #if 0
+    Message createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
     Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
     Message createUserMessageImageDataMessage(UserMessageImage messageImageToConvertToMessage);
     Message createPostingDataMessage(Posting postingToConvertToMessage);
@@ -31,7 +31,7 @@ class ServerMessageCreator
   protected:
     //
   private:
-    //
+    VariableLengthQuantityConverter vlqConverter;
 };
 
 #endif
