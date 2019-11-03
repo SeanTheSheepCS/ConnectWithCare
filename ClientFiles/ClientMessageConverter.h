@@ -30,7 +30,7 @@ class ClientMessageConverter
 
     bool isPostingImageDataMessage(Message messageToDetermineTypeOf);
     PostingImageDataMessage toPostingImageDataMessage(Message messageToTurnIntoPostingImageDataMessage);
-
+#endif
     bool isErrorNoAuthMessage(Message messageToDetermineTypeOf);
     ErrorNoAuthMessage toErrorNoAuthMessage(Message messageToTurnIntoAnErrorNoAuthMessage);
 
@@ -48,7 +48,6 @@ class ClientMessageConverter
 
     bool isEndOfDataMessage(Message messageToDetermineTypeOf);
     EndOfDataMessage toEndOfDataMessage(Message messageToTurnIntoAnEndOfDataMessage);
-#endif
   protected:
     //
   private:

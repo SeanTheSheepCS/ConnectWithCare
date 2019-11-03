@@ -5,5 +5,10 @@ int mainMessageUnitTest();
 void runUnitTestsForMessages();
 void runLoginMessageTest();
 void runLoginAuthMessageTest();
+void runSpecialMessageTest();
+void runServerSpecialMessagesTest();
+
+void testPassed();
+void testFailed();
 
 #endif

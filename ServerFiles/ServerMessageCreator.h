@@ -21,13 +21,13 @@ class ServerMessageCreator
     //TWO MESSAGES TO IMPLEMENT LATER...
     //ASKCLIENTTOREQEUSTMESSAGEINFO FUNCTION GOES HERE
     //ASKCLIENTTOREQUESTBOARDINFO FUNCTION GOES HERE
-    Message createErrorNoAuthMessage();
-    Message createUserNotFoundMessage();
-    Message createBoardNotFoundMessage();
-    Message createErrorWriteFailedMessage();
-    Message createWriteSuccessFulMessage();
-    Message createEndOfDataMessage();
 #endif
+    ErrorNoAuthMessage createErrorNoAuthMessage();
+    ErrorUserNotFoundMessage createErrorUserNotFoundMessage();
+    ErrorBoardNotFoundMessage createErrorBoardNotFoundMessage();
+    ErrorWriteFailedMessage createErrorWriteFailedMessage();
+    WriteSuccessfulMessage createWriteSuccessfulMessage();
+    EndOfDataMessage createEndOfDataMessage();
   protected:
     //
   private:

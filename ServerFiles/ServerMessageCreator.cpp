@@ -37,3 +37,39 @@ LoginAuthMessage ServerMessageCreator::createLoginAuthMessage(bool whetherTheLog
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+ErrorNoAuthMessage ServerMessageCreator::createErrorNoAuthMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_ERRORNOAUTH;
+	return ErrorNoAuthMessage(1, &messageCode);
+}
+
+ErrorUserNotFoundMessage ServerMessageCreator::createErrorUserNotFoundMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_ERRORUSERNOTFOUND;
+	return ErrorUserNotFoundMessage(1, &messageCode);
+}
+
+ErrorBoardNotFoundMessage ServerMessageCreator::createErrorBoardNotFoundMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_ERRORBOARDNOTFOUND;
+	return ErrorBoardNotFoundMessage(1, &messageCode);
+}
+
+ErrorWriteFailedMessage ServerMessageCreator::createErrorWriteFailedMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_ERRORWRITEFAILED;
+	return ErrorWriteFailedMessage(1, &messageCode);
+}
+
+WriteSuccessfulMessage ServerMessageCreator::createWriteSuccessfulMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_WRITESUCCESSFUL;
+	return WriteSuccessfulMessage(1, &messageCode);
+}
+
+EndOfDataMessage ServerMessageCreator::createEndOfDataMessage()
+{
+	unsigned char messageCode = SERVERMESSAGECODE_ENDOFDATA;
+	return EndOfDataMessage(1, &messageCode);
+}
