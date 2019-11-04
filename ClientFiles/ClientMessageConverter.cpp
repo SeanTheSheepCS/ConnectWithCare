@@ -36,6 +36,36 @@ LoginAuthMessage ClientMessageConverter::toLoginAuthMessage(Message messageToTur
 	}
 }
 
+bool ClientMessageConverter::isLogoutConfirmMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char* messageAsCharArray = messageToDetermineTypeOf.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_LOGOUTCONFIRM)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+LogoutConfirmMessage ClientMessageConverter::toLogoutConfirmMessage(Message messageToTurnIntoALogoutConfirmMessage)
+{
+	//another quick check to be 100% sure this message is a logoutConfirmMessage...
+	const unsigned char* messageAsCharArray = messageToTurnIntoALogoutConfirmMessage.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_LOGOUTCONFIRM)
+	{
+		return LogoutConfirmMessage(messageToTurnIntoALogoutConfirmMessage.getLength(), messageToTurnIntoALogoutConfirmMessage.getMessageAsCharArray());
+	}
+	else
+	{
+		std::cout << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+}
+
 bool ClientMessageConverter::isErrorNoAuthMessage(Message messageToDetermineTypeOf)
 {
 	const unsigned char* messageAsCharArray = messageToDetermineTypeOf.getMessageAsCharArray();

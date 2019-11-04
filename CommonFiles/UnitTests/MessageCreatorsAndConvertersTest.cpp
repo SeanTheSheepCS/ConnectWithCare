@@ -11,7 +11,7 @@
 int numberOfTestsPassed = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 int numberOfTestsAdministered = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 
-int mainMessageUnitTest()
+int mainMessagesUnitTest()
 {
 	runUnitTestsForMessages();
 	return 0;
@@ -22,6 +22,7 @@ void runUnitTestsForMessages()
 	std::cout << "--- LOGIN MESSAGE UNIT TEST ---" << std::endl;
 	runLoginMessageTest();
 	runLoginAuthMessageTest();
+	runLogoutConfirmMessageTest();
 	runServerSpecialMessagesTest();
 	std::cout << "TESTS PASSED: " << std::dec << numberOfTestsPassed << "/" << std::dec << numberOfTestsAdministered << std::endl;
 }
@@ -130,6 +131,41 @@ void runLoginAuthMessageTest()
 		else
 		{
 			std::cout << "		" << "FALSE" << std::endl;
+			testFailed();
+		}
+	}
+}
+
+void runLogoutConfirmMessageTest()
+{
+	ServerMessageCreator creator = ServerMessageCreator();
+	LogoutConfirmMessage theLogoutConfirmMessage = creator.createLogoutConfirmMessage(false);
+	Message theMessage = Message(theLogoutConfirmMessage.getLength(), theLogoutConfirmMessage.getMessageAsCharArray());
+	ClientMessageConverter converter;
+	if(converter.isLogoutConfirmMessage(theMessage))
+	{
+		LogoutConfirmMessage theLogoutConfirmMessageConverted = converter.toLogoutConfirmMessage(theMessage);
+		if(theLogoutConfirmMessageConverted.getSuccessBit() == true)
+		{
+			testFailed();
+		}
+		else
+		{
+			testPassed();
+		}
+	}
+
+	LogoutConfirmMessage anotherLogoutConfirmMessage = creator.createLogoutConfirmMessage(true);
+	Message anotherMessage = Message(anotherLogoutConfirmMessage.getLength(), anotherLogoutConfirmMessage.getMessageAsCharArray());
+	if(converter.isLogoutConfirmMessage(anotherMessage))
+	{
+		LogoutConfirmMessage theLogoutConfirmMessageConverted = converter.toLogoutConfirmMessage(anotherMessage);
+		if(theLogoutConfirmMessageConverted.getSuccessBit() == true)
+		{
+			testPassed();
+		}
+		else
+		{
 			testFailed();
 		}
 	}

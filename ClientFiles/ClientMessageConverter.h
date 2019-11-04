@@ -15,10 +15,10 @@ class ClientMessageConverter
 
     bool isLoginAuthMessage(Message messageToDetermineTypeOf);
     LoginAuthMessage toLoginAuthMessage(Message messageToTurnIntoALoginAuthMessage); //ONLY TO BE CALLED IF ISLOGINAUTHMESSAGE RETURNED TRUE!
-#if 0
+
     bool isLogoutConfirmMessage(Message messageToDetermineTypeOf);
     LogoutConfirmMessage toLogoutConfirmMessage(Message messageToTurnIntoALogoutConfirmMessage); //ONLY TO BE CALLED IF ISLOGOUTCONFIRMMESSAGE RETURNED TRUE!
-
+#if 0
     bool isUserMessageDataMessage(Message messageToDetermineTypeOf);
     UserMessageDataMessage toUserMessageDataMessage(Message messageToTurnIntoAUserMessageDataMessage); //ONLY TO BE CALLED IF ISUSERMESSAGEDATAMESSAGE RETURNED TRUE!
 

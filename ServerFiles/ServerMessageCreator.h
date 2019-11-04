@@ -12,8 +12,8 @@ class ServerMessageCreator
   public:
     ServerMessageCreator();
     LoginAuthMessage createLoginAuthMessage(bool whetherTheLoginWasAccepted);
+    LogoutConfirmMessage createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
 #if 0
-    Message createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
     Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
     Message createUserMessageImageDataMessage(UserMessageImage messageImageToConvertToMessage);
     Message createPostingDataMessage(Posting postingToConvertToMessage);
