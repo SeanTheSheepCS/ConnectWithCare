@@ -14,8 +14,8 @@ class ClientMessageCreator
   public:
     ClientMessageCreator();
     LoginMessage createLoginMessage(std::string username, std::string password);
+    LogoutMessage createLogoutMessage();
 #if 0
-    Message createLogoutMessage();
     Message createCreatePostMessage(Post postToConvertToMessage);
     Message createCreatePostImageMessage(PostImage postToConvertToMessage);
     Message createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
