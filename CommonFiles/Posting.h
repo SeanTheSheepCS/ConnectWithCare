@@ -10,7 +10,7 @@ class Posting
 {
 	private:
 		string postText; //the contents of the post
-		string dateTimePosted;//date;
+		date dateTimePosted;//date;
 	public:
 		Posting();
 		void setPostText(string text);

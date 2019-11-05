@@ -137,3 +137,10 @@ bool Date::isAfter(Date other)
 		return false;
 	}
 }
+
+string Date::Print()
+{
+	string toPrint;
+	toPrint = (this->day)->ToString() + "/" + (this->month)->ToString() + "/" + (this->year)->ToString();
+	return toPrint;
+}
