@@ -36,6 +36,9 @@ void runLoginMessageTest()
 	std::cout << "		" << theLoginMessage.getUsername() << std::endl;
 	std::cout << "		" << theLoginMessage.getPassword() << std::endl;
 	Message theMessage = theLoginMessage;
+
+	//////////
+
 	ServerMessageConverter converter;
 	if(converter.isLoginMessage(theMessage))
 	{
