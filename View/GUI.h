@@ -9,6 +9,7 @@
 
 #include <string.h>
 #include <string>
+#include "../ClientFiles/ClientController.h"
 
 using namespace std;
 
@@ -37,7 +38,8 @@ class GUI
         char buildAccountMenu(string username, string nameTag, string accountType);
         // Builds Account menu given the user's username, name tag and account type. Returns
         //    a char for the option selected by the user.
-
+    private:
+        //ClientController client;
 
 };
 

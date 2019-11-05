@@ -17,7 +17,8 @@
 #include <stdlib.h>     // for atoi() and exit()
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
-
+#include "../View/GUI.h"
+#include "../View/GUI.cpp"
 #define BUFFERSIZE 32
 
 
@@ -33,12 +34,14 @@ class ClientController
     private:
         int sock; // Socket descriptor
         struct sockaddr_in serverAddr; // Address of the server
-        char inBuffer[BUFFERSIZE]; // Buffer for the message from the server
-        int bytesRecv; // Number of bytes received
+        GUI app;
 
-        char outBuffer[BUFFERSIZE]; // Buffer for message to the server
-        int msgLength; // Length of the outgoing message
-        int bytesSent; // Number of bytes sent
+        //char inBuffer[BUFFERSIZE]; // Buffer for the message from the server
+        //int bytesRecv; // Number of bytes received
+
+        //char outBuffer[BUFFERSIZE]; // Buffer for message to the server
+        //int msgLength; // Length of the outgoing message
+        //int bytesSent; // Number of bytes sent
 
         void createSocket();
         // Helper function for creating the socket.

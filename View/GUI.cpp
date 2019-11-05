@@ -5,6 +5,7 @@
  * NOTE: 
  * - Might add functionality later to make b and q global operations for the whole program.
  * - Possibly change passing multi char array 
+ * - might have to attach specific client to each gui interface.
  * 
  * EXTRA STUFF FOR LATER:
  * - add number of friends to the top of friends list.
@@ -17,7 +18,10 @@
 using namespace std;
 string divider = "-------------------------";
 
-GUI::GUI(){}
+GUI::GUI()
+{
+    //client = c;
+}
 
 void GUI::buildWelcomeMessage()
 {
