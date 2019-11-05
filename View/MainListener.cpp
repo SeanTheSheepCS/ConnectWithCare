@@ -2,6 +2,10 @@
  * ConnectWithCare
  * "MainListener.cpp"
  * 
+ * NOTE:
+ * - have to change more to the run() function, or make more subroutines to deligate different menu options
+ * - have to decide wheter or not have to add while loop inside listener or insdie the client
+ * 
  * Last updated by: Daryl
  */
 
