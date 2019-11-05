@@ -29,15 +29,12 @@ void runUnitTestsForMessages()
 
 void runLoginMessageTest()
 {
-
 	ClientMessageCreator creator = ClientMessageCreator();
 	LoginMessage theLoginMessage = creator.createLoginMessage(string("john_doe"), string("passw0rd"));
 	std::cout << "	" << "INPUT" << std::endl;
 	std::cout << "		" << theLoginMessage.getUsername() << std::endl;
 	std::cout << "		" << theLoginMessage.getPassword() << std::endl;
 	Message theMessage = theLoginMessage;
-
-	//////////
 
 	ServerMessageConverter converter;
 	if(converter.isLoginMessage(theMessage))
@@ -91,6 +88,40 @@ void runLoginMessageTest()
 		{
 			testFailed();
 		}
+	}
+}
+
+void runLogoutMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	LogoutMessage theLogoutMessage = creator.createLogoutMessage();
+	Message theMessage = Message(theLogoutMessage.getLength(), theLogoutMessage.getMessageAsCharArray());
+
+	ServerMessageConverter converter;
+	if(converter.isLogoutMessage(theMessage))
+	{
+		LogoutMessage logoutMessageAgain = converter.toLogoutMessage(theMessage);
+		if((logoutMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_LOGOUT)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
 	}
 }
 

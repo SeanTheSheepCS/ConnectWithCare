@@ -52,3 +52,16 @@ LoginMessage ClientMessageCreator::createLoginMessage(std::string username, std:
 	delete[] messageArray;
 	return returnValue;
 }
+
+LogoutMessage ClientMessageCreator::createLogoutMessage()
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_LOGOUT;
+	unsigned char dataLengthInVLQ = 0x00; //Logout messages carry no data...
+	unsigned char* messageAsCharArray = new unsigned char[2];
+	messageAsCharArray[0] = messageCode;
+	messageAsCharArray[1] = dataLengthInVLQ;
+
+	LogoutMessage returnValue = LogoutMessage(2,messageAsCharArray);
+	delete[] messageAsCharArray;
+	return returnValue;
+}
