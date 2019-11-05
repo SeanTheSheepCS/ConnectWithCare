@@ -16,9 +16,11 @@ class GUI
 {
     public:
         GUI ();
+        void buildWelcomeMessage();
+        // Builds a welcome message.
         void buildLogin();
         // Builds login menu, makes sure that entry is correct by calling "validate" from UserDB.
-        char buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications);
+        void buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications);
         // Builds the menu and returns the option selected by the user (as a char).
         char buildBulletinBoard();
         // Builds bulletin board and returns the option seleceted by the user (as a char).

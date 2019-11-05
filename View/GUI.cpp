@@ -19,6 +19,11 @@ string divider = "-------------------------";
 
 GUI::GUI(){}
 
+void GUI::buildWelcomeMessage()
+{
+    cout << "*** Welcome to Connect With Care! ****" << endl;
+}
+
 void GUI::buildLogin()
 {
     cout << "---Enter username and password---" << endl;
@@ -42,10 +47,10 @@ void GUI::buildLogin()
     }
 }
 
-char GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications)
+void GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications)
 {
-    cout << "\n\n\tMAIN MENU" << endl;
-
+    cout << divider << "MAIN-MENU" << divider << endl;
+    
     // Print Bulletin Board
     cout.setf(ios::left);
     cout.width(25);
@@ -81,17 +86,9 @@ char GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications
 
     // Print My Account
     cout << "[6] My Account\n";
-    cout << divider << endl;
+    cout << divider << "---------" << divider << endl;
 
     cout << "Enter option (or type 'q' to exit):";
-    char option;
-    cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
 }
 
 char GUI::buildBulletinBoard()
@@ -223,7 +220,7 @@ char GUI::buildAccountMenu(string username, string nameTag, string accountType)
     }
     return option;
 }
-
+/*
 int main() // Testing how it looks.
 {
     cout << "testing GUI" << endl;
@@ -233,3 +230,4 @@ int main() // Testing how it looks.
     cout << opt << endl;
     return 0;
 }
+*/
