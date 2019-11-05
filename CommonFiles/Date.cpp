@@ -1,4 +1,5 @@
 #include "Date.h"
+#include <string>
 
 Date::Date(unsigned short int year, unsigned short int month, unsigned short int day, unsigned long int seconds)
 {
@@ -138,9 +139,9 @@ bool Date::isAfter(Date other)
 	}
 }
 
-string Date::Print()
+std::string Date::toString()
 {
-	string toPrint;
-	toPrint = (this->day)->ToString() + "/" + (this->month)->ToString() + "/" + (this->year)->ToString();
+	std::string toPrint;
+	toPrint = std::to_string(this->day) + "/" + std::to_string(this->month) + "/" + std::to_string(this->year);
 	return toPrint;
 }

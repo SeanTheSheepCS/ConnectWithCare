@@ -1,6 +1,7 @@
 #ifndef POSTING_H
 #define POSTING_H
 
+#include "Date.h"
 #include <string>
 #include <ctime>
 
@@ -10,9 +11,10 @@ class Posting
 {
 	private:
 		string postText; //the contents of the post
-		date dateTimePosted;//date;
+		Date* dateTimePosted;//date;
 	public:
-		Posting();
+		Posting(std::string postText, Date datePosted);
+		~Posting();
 		void setPostText(string text);
 		string getPostText();
 		void setDateTimePosted(time_t dateTime);

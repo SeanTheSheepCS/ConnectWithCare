@@ -5,10 +5,10 @@
 
 using namespace std;
 
-Posting::Posting()
+Posting::Posting(std::string postText, Date datePosted)
 {
-	postText = "";
-	dateTimePosted = "";
+	this->postText = postText;
+	this->dateTimePosted = new Date(datePosted.getYear(), datePosted.getMonth(), datePosted.getDay(), datePosted.getSeconds());
 }
 
 void Posting::setPostText(string text)
@@ -19,6 +19,11 @@ void Posting::setPostText(string text)
 string Posting::getPostText()
 {
 	return postText;
+}
+
+Posting::~Posting()
+{
+	delete dateTimePosted;
 }
 
 //void Posting::setDateTimePosted(time_t now) //pass in current time. Gets converted to a string.
