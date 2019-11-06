@@ -9,27 +9,27 @@ Date::Date(unsigned short int year, unsigned short int month, unsigned short int
 	this->seconds = seconds;
 }
 
-unsigned short int Date::getYear()
+unsigned short int Date::getYear() const
 {
 	return year;
 }
 
-unsigned short int Date::getMonth()
+unsigned short int Date::getMonth() const
 {
 	return month;
 }
 
-unsigned short int Date::getDay()
+unsigned short int Date::getDay() const
 {
 	return day;
 }
 
-unsigned long int Date::getSeconds()
+unsigned long int Date::getSeconds() const
 {
 	return seconds;
 }
 
-bool Date::equals(Date other)
+bool Date::equals(const Date other) const
 {
 	if((this->year == other.year) && (this->month == other.month) && (this->day == other.day) && (this->seconds == other.seconds))
 	{
@@ -41,7 +41,7 @@ bool Date::equals(Date other)
 	}
 }
 
-bool Date::isBefore(Date other)
+bool Date::isBefore(const Date other) const
 {
 	if(this->year == other.year)
 	{
@@ -90,7 +90,7 @@ bool Date::isBefore(Date other)
 	}
 }
 
-bool Date::isAfter(Date other)
+bool Date::isAfter(const Date other) const
 {
 	if(this->year == other.year)
 	{
@@ -139,14 +139,14 @@ bool Date::isAfter(Date other)
 	}
 }
 
-std::string Date::toString()
+std::string Date::toString() const
 {
 	std::string toPrint;
 	toPrint = std::to_string(this->day) + "/" + std::to_string(this->month) + "/" + std::to_string(this->year);
 	return toPrint;
 }
 
-const unsigned char* Date::toFiveByteFormat()
+const unsigned char* Date::toFiveByteFormat() const
 {
 	unsigned char* charArray = new unsigned char[5];
 	for(int i = 0; i < 5; i++)

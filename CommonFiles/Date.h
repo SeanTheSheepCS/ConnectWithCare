@@ -7,15 +7,15 @@ class Date
 {
 	public:
 		Date(unsigned short int year, unsigned short int month, unsigned short int day, unsigned long int seconds);
-		unsigned short int getYear();
-		unsigned short int getMonth();
-		unsigned short int getDay();
-		unsigned long int getSeconds();
-		bool equals(Date other);
-		bool isBefore(Date other);
-		bool isAfter(Date other);
-		std::string toString();
-		const unsigned char* toFiveByteFormat();
+		unsigned short int getYear() const;
+		unsigned short int getMonth() const;
+		unsigned short int getDay() const;
+		unsigned long int getSeconds() const;
+		bool equals(const Date other) const;
+		bool isBefore(const Date other) const;
+		bool isAfter(const Date other) const;
+		std::string toString() const;
+		const unsigned char* toFiveByteFormat() const;
 	protected:
 		//
 	private:

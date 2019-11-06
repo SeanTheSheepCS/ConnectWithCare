@@ -11,8 +11,9 @@ class BoardHistoryMessage : public ClientRequestMessage
 		BoardHistoryMessage(const BoardHistoryMessage& other);
 		virtual BoardHistoryMessage& operator=(const BoardHistoryMessage& rhs);
 		virtual ~BoardHistoryMessage();
-	protected:
 		unsigned long int getBoardID();
+	protected:
+		//
 	private:
 		unsigned long int boardID;
 };

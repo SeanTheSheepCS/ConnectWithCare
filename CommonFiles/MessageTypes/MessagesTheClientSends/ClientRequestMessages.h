@@ -12,12 +12,13 @@ class ClientRequestMessage : public Message
 		ClientRequestMessage(const ClientRequestMessage& other);
 		virtual ClientRequestMessage& operator=(const ClientRequestMessage& rhs);
 		virtual ~ClientRequestMessage();
-	protected:
 		unsigned char getMessageCode();
 		unsigned long int getDataLengthInBytes();
 		unsigned long int getIndexOfFirstData();
 		const Date getStartDate();
 		const Date getEndDate();
+	protected:
+		//
 	private:
 		unsigned char messageCode;
 		unsigned long int dataLengthInBytes;

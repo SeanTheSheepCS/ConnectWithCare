@@ -11,7 +11,7 @@
 int numberOfTestsPassed = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 int numberOfTestsAdministered = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 
-int mainMessagesUnitTest()
+int mainMessageUnitTest()
 {
 	runUnitTestsForMessages();
 	return 0;
@@ -157,24 +157,27 @@ void runBoardHistoryMessageTest()
 		else
 		{
 			testFailed();
+			std::cout << std::dec << bhMessageAgain.getBoardID() << std::endl;
 		}
 
-		if(bhMessageAgain.getStartDate().equals(testStartDate))
+		if(testStartDate.equals(bhMessageAgain.getStartDate()))
 		{
 			testPassed();
 		}
 		else
 		{
 			testFailed();
+			std::cout << bhMessageAgain.getStartDate().toString() << std::endl;
 		}
 
-		if(bhMessageAgain.getEndDate().equals(testEndDate))
+		if(testEndDate.equals(bhMessageAgain.getStartDate()))
 		{
 			testPassed();
 		}
 		else
 		{
 			testFailed();
+			std::cout << bhMessageAgain.getEndDate().toString() << std::endl;
 		}
 	}
 	else

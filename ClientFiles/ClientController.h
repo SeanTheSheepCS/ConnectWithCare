@@ -18,7 +18,6 @@
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
 #include "../View/GUI.h"
-#include "../View/GUI.cpp"
 #define BUFFERSIZE 32
 
 
