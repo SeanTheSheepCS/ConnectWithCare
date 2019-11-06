@@ -9,7 +9,6 @@
 
 #include <string.h>
 #include <string>
-#include "../ClientFiles/ClientController.h"
 
 using namespace std;
 
