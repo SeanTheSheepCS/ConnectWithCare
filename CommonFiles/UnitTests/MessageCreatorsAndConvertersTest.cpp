@@ -135,6 +135,13 @@ void runBoardHistoryMessageTest()
 	unsigned long int testBoardID = 2022;
 	BoardHistoryMessage theBHMessage = creator.createBoardHistoryMessage(testStartDate,testEndDate,testBoardID);
 	Message theMessage = Message(theBHMessage.getLength(), theBHMessage.getMessageAsCharArray());
+	std::cout << "BHISTORY MESSAGE BEGIN" << std::endl;
+	for(unsigned int i = 0; i < theMessage.getLength(); i++)
+	{
+		std::cout << std::hex << (int)(theMessage.getMessageAsCharArray())[i] << std::endl;
+	}
+	// DATES AND BOARD ID OK
+	std::cout << "BHISTORY MESSAGE END" << std::endl;
 
 	ServerMessageConverter converter;
 	if(converter.isBoardHistoryMessage(theMessage))

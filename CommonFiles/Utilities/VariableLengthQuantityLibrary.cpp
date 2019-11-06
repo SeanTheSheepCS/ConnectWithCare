@@ -76,14 +76,14 @@ unsigned char* VariableLengthQuantityConverter::convertUnsignedLongIntToVariable
 		{
 			//We don't make the first bit a one.
 			int shiftAmount = (lengthOfArrayWeWillNeed - i - 1) * 7;
-			vlqArray[i] = (unsigned char) valueToTurnIntoVariableLengthQuantity >> shiftAmount;
+			vlqArray[i] = (unsigned char) (valueToTurnIntoVariableLengthQuantity >> shiftAmount);
 			vlqArray[i] &= ~0x80;
 		}
 		else
 		{
 			//Be sure to make the first bit of the char a 1.
 			int shiftAmount = (lengthOfArrayWeWillNeed - i - 1) * 7;
-			vlqArray[i] = (unsigned char) valueToTurnIntoVariableLengthQuantity >> shiftAmount;
+			vlqArray[i] = (unsigned char) (valueToTurnIntoVariableLengthQuantity >> shiftAmount);
 			vlqArray[i] |= 0x80;
 		}
 	}
