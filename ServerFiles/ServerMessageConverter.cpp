@@ -66,3 +66,31 @@ LogoutMessage ServerMessageConverter::toLogoutMessage(Message messageToTurnIntoA
 		return LogoutMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isBoardHistoryMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_BOARDHISTORY)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+BoardHistoryMessage ServerMessageConverter::toBoardHistoryMessage(Message messageToTurnIntoABoardHistoryMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoABoardHistoryMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoABoardHistoryMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_BOARDHISTORY)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return BoardHistoryMessage(messageLength,messageAsCharArray);
+	}
+}

@@ -15,6 +15,7 @@ class Date
 		bool isBefore(Date other);
 		bool isAfter(Date other);
 		std::string toString();
+		const unsigned char* toFiveByteFormat();
 	protected:
 		//
 	private:

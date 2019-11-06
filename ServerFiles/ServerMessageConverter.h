@@ -35,10 +35,12 @@ class ServerMessageConverter
 
     bool isMessageHistoryAllMessage(Message messageToDetermineTypeOf);
     UserMessageHistoryAllMessage toUserMessageHistoryAllMessage(Message messageToTurnIntoAUserMessageHistoryAllMessage);
+#endif
 
     bool isBoardHistoryMessage(Message messageToDetermineTypeOf);
     BoardHistoryMessage toBoardHistoryMessage(Message messageToTurnIntoABoardHistoryMessage);
 
+#if 0
     bool isBoardSearchMessage(Message messageToDetermineTypeOf);
     BoardSearchMessage toBoardSearchMessage(Message messageToTurnIntoABoardSearchMessage);
 #endif

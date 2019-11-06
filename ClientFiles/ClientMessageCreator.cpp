@@ -65,3 +65,45 @@ LogoutMessage ClientMessageCreator::createLogoutMessage()
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+BoardHistoryMessage ClientMessageCreator::createBoardHistoryMessage(Date startDate, Date endDate, unsigned long int boardID)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_BOARDHISTORY;
+	const unsigned char* startDateInFiveByteRepresentation = startDate.toFiveByteFormat();
+	const unsigned char* endDateInFiveByteRepresentation = endDate.toFiveByteFormat();
+	const unsigned char* boardIDSplitIntoBytes = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(boardID);
+	const unsigned short int lengthOfBoardIDSplitIntoBytes = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfBoardIDSplitIntoBytes);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+	const unsigned short int totalDataLengthInBytes = 1 /* MESSAGE CODE */ + 5 /* START DATE */ + 5 /* END DATE */ + lengthOfDataLengthInVLQField + lengthOfBoardIDSplitIntoBytes;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalDataLengthInBytes];
+	int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+	for(int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = startDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = endDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < lengthOfBoardIDSplitIntoBytes; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = boardIDSplitIntoBytes[i];
+		currentIndexInTheMessage++;
+	}
+
+	BoardHistoryMessage returnValue = BoardHistoryMessage(totalDataLengthInBytes, messageAsCharArray);
+	delete[] messageAsCharArray;
+	return returnValue;
+}

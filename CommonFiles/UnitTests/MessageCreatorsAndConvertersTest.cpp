@@ -21,6 +21,8 @@ void runUnitTestsForMessages()
 {
 	std::cout << "--- LOGIN MESSAGE UNIT TEST ---" << std::endl;
 	runLoginMessageTest();
+	runLogoutMessageTest();
+	runBoardHistoryMessageTest();
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
 	runServerSpecialMessagesTest();
@@ -116,6 +118,80 @@ void runLogoutMessageTest()
 	}
 
 	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runBoardHistoryMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	Date testStartDate = Date(1999,8,20,3);
+	Date testEndDate = Date(1999,9,18,0);
+	unsigned long int testBoardID = 2022;
+	BoardHistoryMessage theBHMessage = creator.createBoardHistoryMessage(testStartDate,testEndDate,testBoardID);
+	Message theMessage = Message(theBHMessage.getLength(), theBHMessage.getMessageAsCharArray());
+
+	ServerMessageConverter converter;
+	if(converter.isBoardHistoryMessage(theMessage))
+	{
+		BoardHistoryMessage bhMessageAgain = converter.toBoardHistoryMessage(theMessage);
+
+		if((bhMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_BOARDHISTORY)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(bhMessageAgain.getBoardID() == testBoardID)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(bhMessageAgain.getStartDate().equals(testStartDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(bhMessageAgain.getEndDate().equals(testEndDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	if(converter.isLogoutMessage(theMessage))
 	{
 		testFailed();
 	}

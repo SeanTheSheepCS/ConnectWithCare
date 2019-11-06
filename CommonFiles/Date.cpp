@@ -145,3 +145,26 @@ std::string Date::toString()
 	toPrint = std::to_string(this->day) + "/" + std::to_string(this->month) + "/" + std::to_string(this->year);
 	return toPrint;
 }
+
+const unsigned char* Date::toFiveByteFormat()
+{
+	unsigned char* charArray = new unsigned char[5];
+	for(int i = 0; i < 5; i++)
+	{
+		charArray[i] = 0;
+	}
+	//First 14 bits are for year
+	charArray[0] |= (year >> 6);
+	charArray[1] |= (year) << 2;
+	//Next 4 bits are for month
+	charArray[1] |= (month >> 2);
+	charArray[2] |= (month) << 6;
+	//Next 5 bits are for day
+	charArray[2] |= (day) << 1;
+	//Next 17 bits are for seconds
+	charArray[2] |= (seconds << 16);
+	charArray[3] |= (seconds << 8);
+	charArray[4] |= (seconds);
+
+	return charArray;
+}

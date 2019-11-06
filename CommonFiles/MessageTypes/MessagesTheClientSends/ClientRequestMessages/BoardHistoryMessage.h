@@ -14,7 +14,6 @@ class BoardHistoryMessage : public ClientRequestMessage
 	protected:
 		unsigned long int getBoardID();
 	private:
-		VariableLengthQuantityConverter vlqConverter;
 		unsigned long int boardID;
 };
 

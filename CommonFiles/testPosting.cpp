@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int main()
+int mainTP()
 {
   Date date = Date(2019, 11, 05, 8978);
   Posting post = Posting(string("HI"), date);

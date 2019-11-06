@@ -22,7 +22,9 @@ class ClientMessageCreator
     Message createSendUserMessageImageMessage(UserImageMessage userImageMessageToConvertToMessage);
     Message createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet);
     Message createUserMessageHistoryAllMessage(Date startDate, Date endDate);
-    Message createBoardHistoryMessage(Date startDate, Date endDate, long int boardID);
+#endif
+    BoardHistoryMessage createBoardHistoryMessage(Date startDate, Date endDate, unsigned long int boardID);
+#if 0
     Message createBoardSearchMessage(Date startDate, Date endDate, long int boardID, std::string searchKeyWord);
 #endif
   protected:
