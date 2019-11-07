@@ -51,6 +51,16 @@ void GUI::buildLogin()
     }
 }
 
+void GUI::buildUsernameField()
+{
+    cout << "Username:";
+}
+
+void GUI::buildPasswordField()
+{
+    cout << "Password:";
+}
+
 void GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications)
 {
     cout << divider << "MAIN-MENU" << divider << endl;

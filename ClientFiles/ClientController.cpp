@@ -17,6 +17,8 @@ using namespace std;
 ClientController::ClientController(int portNumber, char* serverIP)
 {
     app = GUI();
+    theCreator = ClientMessageCreator();
+    theConvertor = ClientMessageConverter();
 
     createSocket();
     cout << "...Attempting to connect to the server..." << endl;
@@ -47,7 +49,30 @@ void ClientController::communicate()
     char outBuffer[BUFFERSIZE]; // Buffer for message to the server
     int msgLength; // Length of the outgoing message
     int bytesSent; // Number of bytes sent
-    
+
+    /*** PROCESS OF LOGGING IN ***/
+    while(1)
+    {
+        string userN, passN;
+        app.buildUsernameField();
+        cin >> userN;
+        app.buildUsernameField();
+        cin >> passN;
+        LoginMessage userAttempt = theCreator.createLoginMessage(userN, passN);
+
+        fgets(outbuffer, MAXLINE, LoginMessage);
+        msgLength = strlen(outbuffer);
+
+         //Send the message to the server
+        bytesSent = send(sockfd, (char *) &outbuffer, msgLength, 0);
+        if (bytesSent < 0 || bytesSent != msgLength)
+        {
+            cout << "error in sending" << endl;
+            exit(1); 
+        }
+    }
+
+    /*** LOGIN WAS SUCCESSFUL ***/
     app.buildWelcomeMessage();
     app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
     char option;
@@ -75,12 +100,13 @@ void ClientController::communicate()
                 cout << "my account selected" << endl;
                 break;
             case 'q':
-                cout << "terminating program" << endl;
+                cout << "Terminating Program..." << endl;
+                close(sock);
                 exit(0);
                 break;
-        default:
-            cout << "Invalid Input, try again." << endl;
-    }
+            default:
+                cout << "Invalid Input, try again." << endl;
+        }
     }
 }
 
