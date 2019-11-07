@@ -51,33 +51,37 @@ void ClientController::communicate()
     app.buildWelcomeMessage();
     app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
     char option;
-    switch(option)
+    
+    while(1)
     {
-        case '1':
-            cout << "bb selected" << endl;
-            break; 
-        case '2':
-            cout << "chats selected" << endl;
-            break;    
-        case '3':
-            cout << "my posts selected" << endl;
-            break;
-        case '4':
-            cout << "public channel selected" << endl;
-            break;
-        case '5':
-            cout << "friends selected" << endl;
-            break;
-        case '6':
-            cout << "my account selected" << endl;
-            break;
-        case 'q':
-            cout << "terminating program" << endl;
-            exit(0);
-            break;
+        switch(option)
+        {
+            case '1':
+                cout << "bb selected" << endl;
+                break; 
+            case '2':
+                cout << "chats selected" << endl;
+                break;    
+            case '3':
+                cout << "my posts selected" << endl;
+                break;
+            case '4':
+                cout << "public channel selected" << endl;
+                break;
+            case '5':
+                cout << "friends selected" << endl;
+                break;
+            case '6':
+                cout << "my account selected" << endl;
+                break;
+            case 'q':
+                cout << "terminating program" << endl;
+                exit(0);
+                break;
         default:
             cout << "Invalid Input, try again." << endl;
-        }
+    }
+    }
 }
 
 void ClientController::createSocket()
