@@ -9,6 +9,7 @@ void runLoginAuthMessageTest();
 void runBoardHistoryMessageTest();
 void runBoardSearchMessageTest();
 void runUserMessageHistoryMessageTest();
+void runUserMessageHistoryAllMessageTest();
 void runLogoutConfirmMessageTest();
 void runSpecialMessageTest();
 void runServerSpecialMessagesTest();

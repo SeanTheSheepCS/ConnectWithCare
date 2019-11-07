@@ -150,3 +150,31 @@ UserMessageHistoryMessage ServerMessageConverter::toUserMessageHistoryMessage(Me
 		return UserMessageHistoryMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isUserMessageHistoryAllMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_MESSAGEHISTALL)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+UserMessageHistoryAllMessage ServerMessageConverter::toUserMessageHistoryAllMessage(Message messageToTurnIntoAUserMessageHistoryAllMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoAUserMessageHistoryAllMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoAUserMessageHistoryAllMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_MESSAGEHISTALL)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return UserMessageHistoryAllMessage(messageLength,messageAsCharArray);
+	}
+}

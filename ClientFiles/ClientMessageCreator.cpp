@@ -204,3 +204,38 @@ UserMessageHistoryMessage ClientMessageCreator::createUserMessageHistoryMessage(
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+UserMessageHistoryAllMessage ClientMessageCreator::createUserMessageHistoryAllMessage(Date startDate, Date endDate)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_MESSAGEHISTALL;
+	const unsigned char* startDateInFiveByteRepresentation = startDate.toFiveByteFormat();
+	const unsigned char* endDateInFiveByteRepresentation = endDate.toFiveByteFormat();
+
+	const unsigned char dataLengthInVLQ = 0x00;
+	const unsigned short int lengthOfDataLengthInVLQField = 1;
+
+	const unsigned short int totalDataLengthInBytes = 1 /* MESSAGE CODE */ + 5 /* START DATE */ + 5 /* END DATE */ + lengthOfDataLengthInVLQField;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalDataLengthInBytes];
+	int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+	for(unsigned int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = startDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = endDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+
+	messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ;
+	currentIndexInTheMessage++;
+
+	UserMessageHistoryAllMessage returnValue = UserMessageHistoryAllMessage(totalDataLengthInBytes, messageAsCharArray);
+	delete[] messageAsCharArray;
+	return returnValue;
+}

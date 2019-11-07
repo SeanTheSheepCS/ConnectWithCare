@@ -25,6 +25,7 @@ void runUnitTestsForMessages()
 	runBoardHistoryMessageTest();
 	runBoardSearchMessageTest();
 	runUserMessageHistoryMessageTest();
+	runUserMessageHistoryAllMessageTest();
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
 	runServerSpecialMessagesTest();
@@ -351,7 +352,88 @@ void runUserMessageHistoryMessageTest()
 		testPassed();
 	}
 
+	if(converter.isBoardHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runUserMessageHistoryAllMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	Date testStartDate = Date(2007,8,8,100);
+	Date testEndDate = Date(2019,11,7,0);
+	UserMessageHistoryAllMessage theUMHAMessage = creator.createUserMessageHistoryAllMessage(testStartDate,testEndDate);
+	Message theMessage = Message(theUMHAMessage.getLength(), theUMHAMessage.getMessageAsCharArray());
+	ServerMessageConverter converter;
+	if(converter.isUserMessageHistoryAllMessage(theMessage))
+	{
+		UserMessageHistoryAllMessage umhaMessageAgain = converter.toUserMessageHistoryAllMessage(theMessage);
+
+		if((umhaMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_MESSAGEHISTALL)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testStartDate.equals(umhaMessageAgain.getStartDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testEndDate.equals(umhaMessageAgain.getEndDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
 	if(converter.isLogoutMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	if(converter.isUserMessageHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	if(converter.isBoardHistoryMessage(theMessage))
 	{
 		testFailed();
 	}
