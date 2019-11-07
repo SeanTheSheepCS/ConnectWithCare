@@ -8,6 +8,7 @@ void runLogoutMessageTest();
 void runLoginAuthMessageTest();
 void runBoardHistoryMessageTest();
 void runBoardSearchMessageTest();
+void runUserMessageHistoryMessageTest();
 void runLogoutConfirmMessageTest();
 void runSpecialMessageTest();
 void runServerSpecialMessagesTest();

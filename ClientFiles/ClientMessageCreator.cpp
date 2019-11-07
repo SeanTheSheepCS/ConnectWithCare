@@ -159,3 +159,48 @@ BoardSearchMessage ClientMessageCreator::createBoardSearchMessage(Date startDate
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+UserMessageHistoryMessage ClientMessageCreator::createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_MESSAGEHISTORY;
+	const unsigned char* startDateInFiveByteRepresentation = startDate.toFiveByteFormat();
+	const unsigned char* endDateInFiveByteRepresentation = endDate.toFiveByteFormat();
+
+	unsigned long int lengthOfUsernameAsCharArray = usernameWhoseHistoryWithYouYouWantToGet.size();
+	const char* usernameAsCharArray = usernameWhoseHistoryWithYouYouWantToGet.c_str();
+
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsernameAsCharArray);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const unsigned short int totalDataLengthInBytes = 1 /* MESSAGE CODE */ + 5 /* START DATE */ + 5 /* END DATE */ + lengthOfDataLengthInVLQField + lengthOfUsernameAsCharArray;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalDataLengthInBytes];
+	int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+	for(unsigned int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = startDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = endDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameAsCharArray; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+
+	UserMessageHistoryMessage returnValue = UserMessageHistoryMessage(totalDataLengthInBytes, messageAsCharArray);
+	delete[] messageAsCharArray;
+	return returnValue;
+}

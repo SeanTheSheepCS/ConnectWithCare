@@ -29,10 +29,12 @@ class ServerMessageConverter
 
     bool isSendUserMessageImageMessage(Message messageToDetermineTypeOf);
     SendUserMessageImageMessage toSendUserMessageImageMessage(Message messageToTurnIntoASendUserMessageImageMessage);
+#endif
 
     bool isUserMessageHistoryMessage(Message messageToDetermineTypeOf);
     UserMessageHistoryMessage toUserMessageHistoryMessage(Message messageToTurnIntoAUserMessageHistoryMessage);
 
+#if 0
     bool isMessageHistoryAllMessage(Message messageToDetermineTypeOf);
     UserMessageHistoryAllMessage toUserMessageHistoryAllMessage(Message messageToTurnIntoAUserMessageHistoryAllMessage);
 #endif

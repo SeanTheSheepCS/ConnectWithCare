@@ -122,3 +122,31 @@ BoardSearchMessage ServerMessageConverter::toBoardSearchMessage(Message messageT
 		return BoardSearchMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isUserMessageHistoryMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_MESSAGEHISTORY)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+UserMessageHistoryMessage ServerMessageConverter::toUserMessageHistoryMessage(Message messageToTurnIntoAUserMessageHistoryMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoAUserMessageHistoryMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoAUserMessageHistoryMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_MESSAGEHISTORY)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return UserMessageHistoryMessage(messageLength,messageAsCharArray);
+	}
+}

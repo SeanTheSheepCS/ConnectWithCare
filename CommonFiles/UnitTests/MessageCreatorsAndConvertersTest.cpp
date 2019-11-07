@@ -24,6 +24,7 @@ void runUnitTestsForMessages()
 	runLogoutMessageTest();
 	runBoardHistoryMessageTest();
 	runBoardSearchMessageTest();
+	runUserMessageHistoryMessageTest();
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
 	runServerSpecialMessagesTest();
@@ -254,6 +255,80 @@ void runBoardSearchMessageTest()
 		}
 
 		if(bsMessageAgain.getSearchKeyword() == testSearchTerm)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	if(converter.isLogoutMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runUserMessageHistoryMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	Date testStartDate = Date(1999,4,10,23);
+	Date testEndDate = Date(2003,5,19,37);
+	std::string testUsername = "hugh__JENSEN";
+	UserMessageHistoryMessage theUMHMessage = creator.createUserMessageHistoryMessage(testStartDate,testEndDate,testUsername);
+	Message theMessage = Message(theUMHMessage.getLength(), theUMHMessage.getMessageAsCharArray());
+
+	ServerMessageConverter converter;
+	if(converter.isUserMessageHistoryMessage(theMessage))
+	{
+		UserMessageHistoryMessage umhMessageAgain = converter.toUserMessageHistoryMessage(theMessage);
+
+		if((umhMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_MESSAGEHISTORY)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(umhMessageAgain.getUsernameToGetHistoryWith() == testUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testStartDate.equals(umhMessageAgain.getStartDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testEndDate.equals(umhMessageAgain.getEndDate()))
 		{
 			testPassed();
 		}

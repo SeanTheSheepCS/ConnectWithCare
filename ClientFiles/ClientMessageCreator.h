@@ -20,7 +20,9 @@ class ClientMessageCreator
     Message createCreatePostImageMessage(PostImage postToConvertToMessage);
     Message createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
     Message createSendUserMessageImageMessage(UserImageMessage userImageMessageToConvertToMessage);
-    Message createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet);
+#endif
+    UserMessageHistoryMessage createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet);
+#if 0
     Message createUserMessageHistoryAllMessage(Date startDate, Date endDate);
 #endif
     BoardHistoryMessage createBoardHistoryMessage(Date startDate, Date endDate, unsigned long int boardID);
