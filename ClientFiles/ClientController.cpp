@@ -47,6 +47,7 @@ void ClientController::communicate()
     char outBuffer[BUFFERSIZE]; // Buffer for message to the server
     int msgLength; // Length of the outgoing message
     int bytesSent; // Number of bytes sent
+    
     app.buildWelcomeMessage();
     app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
     char option;
