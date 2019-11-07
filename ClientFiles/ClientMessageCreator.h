@@ -24,9 +24,7 @@ class ClientMessageCreator
     Message createUserMessageHistoryAllMessage(Date startDate, Date endDate);
 #endif
     BoardHistoryMessage createBoardHistoryMessage(Date startDate, Date endDate, unsigned long int boardID);
-#if 0
-    Message createBoardSearchMessage(Date startDate, Date endDate, long int boardID, std::string searchKeyWord);
-#endif
+    BoardSearchMessage createBoardSearchMessage(Date startDate, Date endDate, long int boardID, std::string searchKeyWord);
   protected:
     //
   private:

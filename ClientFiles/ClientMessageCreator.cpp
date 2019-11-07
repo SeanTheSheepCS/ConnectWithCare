@@ -107,3 +107,55 @@ BoardHistoryMessage ClientMessageCreator::createBoardHistoryMessage(Date startDa
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+BoardSearchMessage ClientMessageCreator::createBoardSearchMessage(Date startDate, Date endDate, long int boardID, std::string searchKeyword)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_BOARDSEARCH;
+	const unsigned char* startDateInFiveByteRepresentation = startDate.toFiveByteFormat();
+	const unsigned char* endDateInFiveByteRepresentation = endDate.toFiveByteFormat();
+	const unsigned char* boardIDSplitIntoBytes = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(boardID);
+	const unsigned short int lengthOfBoardIDSplitIntoBytes = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfBoardIDSplitIntoBytes);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+	char* searchKeywordAsCharArray = new char[searchKeyword.size()];
+	for(unsigned short int i = 0; i < searchKeyword.size(); i++)
+	{
+		searchKeywordAsCharArray[i] = searchKeyword[i];
+	}
+	const unsigned short int totalDataLengthInBytes = 1 /* MESSAGE CODE */ + 5 /* START DATE */ + 5 /* END DATE */ + lengthOfDataLengthInVLQField + lengthOfBoardIDSplitIntoBytes + searchKeyword.size();
+
+	unsigned char* messageAsCharArray = new unsigned char[totalDataLengthInBytes];
+	int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+	for(int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = startDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < 5; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = endDateInFiveByteRepresentation[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(int i = 0; i < lengthOfBoardIDSplitIntoBytes; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = boardIDSplitIntoBytes[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned short int i = 0; i < searchKeyword.size(); i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = searchKeywordAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+
+	BoardSearchMessage returnValue = BoardSearchMessage(totalDataLengthInBytes, messageAsCharArray);
+	delete[] messageAsCharArray;
+	return returnValue;
+}

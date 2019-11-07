@@ -19,10 +19,11 @@ int mainMessageUnitTest()
 
 void runUnitTestsForMessages()
 {
-	std::cout << "--- LOGIN MESSAGE UNIT TEST ---" << std::endl;
+	std::cout << "--- MESSAGE UNIT TEST ---" << std::endl;
 	runLoginMessageTest();
 	runLogoutMessageTest();
 	runBoardHistoryMessageTest();
+	runBoardSearchMessageTest();
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
 	runServerSpecialMessagesTest();
@@ -169,6 +170,90 @@ void runBoardHistoryMessageTest()
 		}
 
 		if(testEndDate.equals(bhMessageAgain.getEndDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	if(converter.isLogoutMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runBoardSearchMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	Date testStartDate = Date(2007,4,31,9);
+	Date testEndDate = Date(2009,10,1,0);
+	unsigned long int testBoardID = 51;
+	std::string testSearchTerm = "House";
+	BoardSearchMessage theBSMessage = creator.createBoardSearchMessage(testStartDate,testEndDate,testBoardID, testSearchTerm);
+	Message theMessage = Message(theBSMessage.getLength(), theBSMessage.getMessageAsCharArray());
+
+	ServerMessageConverter converter;
+	if(converter.isBoardSearchMessage(theMessage))
+	{
+		BoardSearchMessage bsMessageAgain = converter.toBoardSearchMessage(theMessage);
+
+		if((bsMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_BOARDSEARCH)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(bsMessageAgain.getBoardID() == testBoardID)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testStartDate.equals(bsMessageAgain.getStartDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(testEndDate.equals(bsMessageAgain.getEndDate()))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(bsMessageAgain.getSearchKeyword() == testSearchTerm)
 		{
 			testPassed();
 		}

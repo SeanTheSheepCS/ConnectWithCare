@@ -94,3 +94,31 @@ BoardHistoryMessage ServerMessageConverter::toBoardHistoryMessage(Message messag
 		return BoardHistoryMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isBoardSearchMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_BOARDSEARCH)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+BoardSearchMessage ServerMessageConverter::toBoardSearchMessage(Message messageToTurnIntoABoardSearchMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoABoardSearchMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoABoardSearchMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_BOARDSEARCH)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return BoardSearchMessage(messageLength,messageAsCharArray);
+	}
+}

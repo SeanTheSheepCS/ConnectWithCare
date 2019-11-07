@@ -7,6 +7,7 @@ void runLoginMessageTest();
 void runLogoutMessageTest();
 void runLoginAuthMessageTest();
 void runBoardHistoryMessageTest();
+void runBoardSearchMessageTest();
 void runLogoutConfirmMessageTest();
 void runSpecialMessageTest();
 void runServerSpecialMessagesTest();
