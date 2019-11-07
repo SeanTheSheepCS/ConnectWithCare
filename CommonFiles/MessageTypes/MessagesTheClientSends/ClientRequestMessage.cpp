@@ -15,7 +15,7 @@ ClientRequestMessage::ClientRequestMessage(const unsigned long int lengthArg, co
 	// next 4 bits are a binary representation of the month.
 	unsigned short int startMonth = ((startDateSecondEightBits & 0x3) << 2) + ((startDateThirdEightBits & 0xC0) >> 6);
 	// next 5 bits are a binary representation of the day
-	unsigned short int startDay = ((startDateThirdEightBits & 0x4E) >> 1);
+	unsigned short int startDay = ((startDateThirdEightBits & 0x3E) >> 1);
 	// next 17 bits are a binary representation of the seconds.
 	unsigned long int startSeconds = ((startDateThirdEightBits & 0x01) << 16) + ((startDateFourthEightBits) << 8) + (startDateFifthEightBits);
 	startDate = new Date(startYear, startMonth, startDay, startSeconds);
@@ -30,7 +30,7 @@ ClientRequestMessage::ClientRequestMessage(const unsigned long int lengthArg, co
 	// next 4 bits are a binary representation of the month.
 	unsigned short int endMonth = ((endDateSecondEightBits & 0x3) << 2) + ((endDateThirdEightBits & 0xC0) >> 6);
 	// next 5 bits are a binary representation of the day
-	unsigned short int endDay = ((endDateThirdEightBits & 0x4E) >> 1);
+	unsigned short int endDay = ((endDateThirdEightBits & 0x3E) >> 1);
 	// next 17 bits are a binary representation of the seconds.
 	unsigned long int endSeconds = ((endDateThirdEightBits & 0x01) << 16) + ((endDateFourthEightBits) << 8) + (endDateFifthEightBits);
 	endDate = new Date(endYear, endMonth, endDay, endSeconds);

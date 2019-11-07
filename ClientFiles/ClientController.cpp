@@ -109,7 +109,7 @@ void ClientController::createSocket()
     cout << "\tCreated Socket!" << endl;
 }
 
-int main(int argc, char *argv[])
+int mainCC(int argc, char *argv[])
 {
     if(argc != 3)
     {

@@ -11,7 +11,7 @@
 int numberOfTestsPassed = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 int numberOfTestsAdministered = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 
-int mainMessageUnitTest()
+int main/*MessageUnitTest*/()
 {
 	runUnitTestsForMessages();
 	return 0;
@@ -33,18 +33,18 @@ void runLoginMessageTest()
 {
 	ClientMessageCreator creator = ClientMessageCreator();
 	LoginMessage theLoginMessage = creator.createLoginMessage(string("john_doe"), string("passw0rd"));
-	std::cout << "	" << "INPUT" << std::endl;
-	std::cout << "		" << theLoginMessage.getUsername() << std::endl;
-	std::cout << "		" << theLoginMessage.getPassword() << std::endl;
+	//std::cout << "	" << "INPUT" << std::endl;
+	//std::cout << "		" << theLoginMessage.getUsername() << std::endl;
+	//std::cout << "		" << theLoginMessage.getPassword() << std::endl;
 	Message theMessage = theLoginMessage;
 
 	ServerMessageConverter converter;
 	if(converter.isLoginMessage(theMessage))
 	{
 		LoginMessage theLoginMessageConverted = converter.toLoginMessage(theMessage);
-		std::cout << "	" << "OUTPUT" << std::endl;
-		std::cout << "		" << theLoginMessageConverted.getUsername() << std::endl;
-		std::cout << "		" << theLoginMessageConverted.getPassword() << std::endl;
+		//std::cout << "	" << "OUTPUT" << std::endl;
+		//std::cout << "		" << theLoginMessageConverted.getUsername() << std::endl;
+		//std::cout << "		" << theLoginMessageConverted.getPassword() << std::endl;
 		if(theLoginMessageConverted.getUsername() == "john_doe")
 		{
 			testPassed();
@@ -64,16 +64,16 @@ void runLoginMessageTest()
 	}
 
 	LoginMessage anotherLoginMessage = creator.createLoginMessage(string("tom"), string("securepassword"));
-	std::cout << "	" << "INPUT" << std::endl;
-	std::cout << "		" << anotherLoginMessage.getUsername() << std::endl;
-	std::cout << "		" << anotherLoginMessage.getPassword() << std::endl;
+	//std::cout << "	" << "INPUT" << std::endl;
+	//std::cout << "		" << anotherLoginMessage.getUsername() << std::endl;
+	//std::cout << "		" << anotherLoginMessage.getPassword() << std::endl;
 	Message anotherMessage = anotherLoginMessage;
 	if(converter.isLoginMessage(anotherLoginMessage))
 	{
 		LoginMessage theLoginMessageConverted = converter.toLoginMessage(anotherMessage);
-		std::cout << "	" << "OUTPUT" << std::endl;
-		std::cout << "		" << theLoginMessageConverted.getUsername() << std::endl;
-		std::cout << "		" << theLoginMessageConverted.getPassword() << std::endl;
+		//std::cout << "	" << "OUTPUT" << std::endl;
+		//std::cout << "		" << theLoginMessageConverted.getUsername() << std::endl;
+		//std::cout << "		" << theLoginMessageConverted.getPassword() << std::endl;
 		if(theLoginMessageConverted.getUsername() == "tom")
 		{
 			testPassed();
@@ -135,13 +135,6 @@ void runBoardHistoryMessageTest()
 	unsigned long int testBoardID = 2022;
 	BoardHistoryMessage theBHMessage = creator.createBoardHistoryMessage(testStartDate,testEndDate,testBoardID);
 	Message theMessage = Message(theBHMessage.getLength(), theBHMessage.getMessageAsCharArray());
-	std::cout << "BHISTORY MESSAGE BEGIN" << std::endl;
-	for(unsigned int i = 0; i < theMessage.getLength(); i++)
-	{
-		std::cout << std::hex << (int)(theMessage.getMessageAsCharArray())[i] << std::endl;
-	}
-	// DATES AND BOARD ID OK
-	std::cout << "BHISTORY MESSAGE END" << std::endl;
 
 	ServerMessageConverter converter;
 	if(converter.isBoardHistoryMessage(theMessage))
@@ -164,7 +157,6 @@ void runBoardHistoryMessageTest()
 		else
 		{
 			testFailed();
-			std::cout << std::dec << bhMessageAgain.getBoardID() << std::endl;
 		}
 
 		if(testStartDate.equals(bhMessageAgain.getStartDate()))
@@ -174,17 +166,15 @@ void runBoardHistoryMessageTest()
 		else
 		{
 			testFailed();
-			std::cout << bhMessageAgain.getStartDate().toString() << std::endl;
 		}
 
-		if(testEndDate.equals(bhMessageAgain.getStartDate()))
+		if(testEndDate.equals(bhMessageAgain.getEndDate()))
 		{
 			testPassed();
 		}
 		else
 		{
 			testFailed();
-			std::cout << bhMessageAgain.getEndDate().toString() << std::endl;
 		}
 	}
 	else
@@ -215,42 +205,42 @@ void runLoginAuthMessageTest()
 {
 	ServerMessageCreator creator = ServerMessageCreator();
 	LoginAuthMessage theLoginAuthMessage = creator.createLoginAuthMessage(false);
-	std::cout << "	" << "INPUT" << std::endl;
-	std::cout << "		" << "FALSE" << std::endl;
+	//std::cout << "	" << "INPUT" << std::endl;
+	//std::cout << "		" << "FALSE" << std::endl;
 	Message theMessage = Message(theLoginAuthMessage.getLength(), theLoginAuthMessage.getMessageAsCharArray());
 	ClientMessageConverter converter;
 	if(converter.isLoginAuthMessage(theMessage))
 	{
 		LoginAuthMessage theLoginAuthMessageConverted = converter.toLoginAuthMessage(theMessage);
-		std::cout << "	" << "OUTPUT" << std::endl;
+		//std::cout << "	" << "OUTPUT" << std::endl;
 		if(theLoginAuthMessageConverted.getValidBit() == true)
 		{
-			std::cout << "		" << "TRUE" << std::endl;
+			//std::cout << "		" << "TRUE" << std::endl;
 			testFailed();
 		}
 		else
 		{
-			std::cout << "		" << "FALSE" << std::endl;
+			//std::cout << "		" << "FALSE" << std::endl;
 			testPassed();
 		}
 	}
 
 	LoginAuthMessage anotherLoginAuthMessage = creator.createLoginAuthMessage(true);
-	std::cout << "	" << "INPUT" << std::endl;
-	std::cout << "		" << "TRUE" << std::endl;
+	//std::cout << "	" << "INPUT" << std::endl;
+	//std::cout << "		" << "TRUE" << std::endl;
 	Message anotherMessage =Message(anotherLoginAuthMessage.getLength(), anotherLoginAuthMessage.getMessageAsCharArray());
 	if(converter.isLoginAuthMessage(anotherMessage))
 	{
 		LoginAuthMessage theLoginAuthMessageConverted = converter.toLoginAuthMessage(anotherMessage);
-		std::cout << "	" << "OUTPUT" << std::endl;
+		//std::cout << "	" << "OUTPUT" << std::endl;
 		if(theLoginAuthMessageConverted.getValidBit() == true)
 		{
-			std::cout << "		" << "TRUE" << std::endl;
+			//std::cout << "		" << "TRUE" << std::endl;
 			testPassed();
 		}
 		else
 		{
-			std::cout << "		" << "FALSE" << std::endl;
+			//std::cout << "		" << "FALSE" << std::endl;
 			testFailed();
 		}
 	}
