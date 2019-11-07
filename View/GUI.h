@@ -20,11 +20,10 @@ class GUI
         // Builds a welcome message.
         void buildLogin();
         // Builds login menu, makes sure that entry is correct by calling "validate" from UserDB.
-        
         void buildUsernameField();
-
+        // Builds username field query.
         void buildPasswordField();
-
+        // Builds password field query.
         void buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications);
         // Builds the menu and returns the option selected by the user (as a char).
         char buildBulletinBoard();

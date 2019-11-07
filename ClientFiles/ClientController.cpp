@@ -6,6 +6,7 @@
  * 
  * NOTE:
  * - have to differentiate appropriate members of class and just normal variables.
+ * - add notifications to the menu later on for more advanced features
  * 
  * Last updated by: Daryl
  */
@@ -50,35 +51,67 @@ void ClientController::communicate()
     int msgLength; // Length of the outgoing message
     int bytesSent; // Number of bytes sent
 
+    string userN, passN;
     /*** PROCESS OF LOGGING IN ***/
     while(1)
     {
-        string userN, passN;
         app.buildUsernameField();
         cin >> userN;
         app.buildUsernameField();
         cin >> passN;
-        LoginMessage userAttempt = theCreator.createLoginMessage(userN, passN);
+        LoginMessage userAttempt = theCreator.createLoginMessage(userN, passN); // Turn login properties into proper message
 
-        fgets(outbuffer, MAXLINE, LoginMessage);
-        msgLength = strlen(outbuffer);
+        strcpy(outBuffer, userAttempt.getMessageAsCharArray()); 
+        msgLength = userAttempt.getLength();
 
-         //Send the message to the server
-        bytesSent = send(sockfd, (char *) &outbuffer, msgLength, 0);
-        if (bytesSent < 0 || bytesSent != msgLength)
+        // Send login info to server
+        bytesSent = send(sock, (char *) &outBuffer, msgLength, 0);
+        checkSending(bytesSent, msgLength); 
+
+        // Receive login info from server
+        bytesRecv = recv(sock, (char *) &inBuffer, msgLength, 0);
+        checkRecv(bytesRecv, msgLength);
+        
+        Message msgFromServer(strlen(inBuffer), inBuffer);
+        if(theConvertor.isLoginAuthMessage(msgFromServer))
         {
-            cout << "error in sending" << endl;
-            exit(1); 
+            LoginAuthMessage userLogin = theConvertor.toLoginAuthMessage(msgFromServer);
+            if(userLogin.getValidBit())
+            {
+                break;
+            }
         }
+        else
+        {
+            cout << "Error" << endl;
+        }
+        
+        
+        // Clears buffer
+        clearBuffer(&outBuffer);
+        clearBuffer(&inBuffer);
+        /*
+        memset(&outBuffer, 0, MAXLINE);
+        memset(&inBuffer, 0, MAXLINE);*/
     }
+
+    // Clear buffer
+    clearBuffer(&outBuffer);
+    clearBuffer(&inBuffer);
+
+
+    /*
+    memset(&outBuffer, 0, MAXLINE);
+    memset(&inBuffer, 0, MAXLINE);*/
 
     /*** LOGIN WAS SUCCESSFUL ***/
     app.buildWelcomeMessage();
-    app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
     char option;
     
     while(1)
     {
+        app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
+        cin >> 
         switch(option)
         {
             case '1':
@@ -140,6 +173,29 @@ void ClientController::createSocket()
     cout << "\tCreated Socket!" << endl;
 }
 
+void ClientController::checkSending(int bytes, int msgLength)
+{
+    if (bytes < 0 || bytes != msgLength)
+    {
+        cerr << "Error in sending..." << endl;
+        exit(1); 
+    }
+}
+
+void ClientController::checkRecv(int bytes, int msgLength)
+{
+    if (bytes <= 0 || bytes != msgLength)
+    {
+        cout << "Error in receiving (or the connection closed)... " << endl;
+        exit(1); 
+    }
+}
+
+void ClientController::clearBuffer(char* buffer)
+{
+    memset(buffer, 0, MAXLINE);
+}
+
 int main(int argc, char *argv[])
 {
     if(argc != 3)
@@ -150,3 +206,4 @@ int main(int argc, char *argv[])
     ClientController theClient(atoi(argv[2]), argv[1]); // Just an example right now.
     theClient.communicate();
 }
+

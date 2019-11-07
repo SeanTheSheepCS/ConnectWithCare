@@ -42,6 +42,13 @@ class ClientController
 
         void createSocket();
         // Helper function for creating the socket.
+        void checkSending(int bytes, int msgLength);
+        // Helper funciton for checking if there was an error in sending message to server.
+        void checkRecv(int bytes, int msgLenght);
+        // Helper function for checking if message was received properly from server.
+        
+        void clearBuffer(char* buffer); // NOT SURE IF THIS WORKS
+        // Helper function for clearing a buffer.
 };
 
 #endif
