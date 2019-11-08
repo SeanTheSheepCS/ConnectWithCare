@@ -92,7 +92,7 @@ void ClientController::communicate()
                 userQuit();
                 break;
             default:
-                cout << "Invalid Input, try again." << endl;
+                cout << "Invalid Input, please try again.\n" << endl;
         }
     }
 }
@@ -387,7 +387,7 @@ void ClientController::loginCase()
         }
         else
         {
-            cout << "Invalid username/password, please try again." << endl;
+            cout << "Invalid username/password, please try again.\n" << endl;
         }
         
         // Clears buffer
