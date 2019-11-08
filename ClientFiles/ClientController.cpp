@@ -404,7 +404,7 @@ void ClientController::loginCase()
     }
 }
 
-int main(int argc, char *argv[])
+int mainClientController(int argc, char *argv[])
 {
     if(argc != 3)
     {

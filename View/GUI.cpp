@@ -180,7 +180,7 @@ char GUI::buildPostsMenu(char** posts, int postsLength)
 void GUI::buildPublicChannel()
 {
     cout << divider << "PUBLIC-CHANNEL" << divider << endl;
-    cout << "Enter Message below! (Type 'leave' to go back or 'quit' to exit program)"
+    cout << "Enter Message below! (Type 'leave' to go back or 'quit' to exit program)";
 }
 
 char GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength)

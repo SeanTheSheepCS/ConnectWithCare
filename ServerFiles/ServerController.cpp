@@ -20,7 +20,7 @@ void checkForCommandLineInputErrors(int argc, char *argv[]) {
     }
 }
 
-int main(int argc, char** argv) {
+int mainServerController(int argc, char** argv) {
 	checkForCommandLineInputErrors(argc, argv);
 	
 	ServerController server( atoi(argv[1]) );
@@ -268,3 +268,4 @@ void ServerController::closeAllClientConnections() {
 			close(sockIndex);
 	}
 }
+

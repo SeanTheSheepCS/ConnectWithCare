@@ -13,12 +13,13 @@
 #include "ServerMessageConverter.h"
 #include "ServerMessageCreator.h"
 
-#define BUFFERSIZE = 32;
-#define MAXPENDING = 10;
+#define BUFFERSIZE 32
+#define MAXPENDING 10
 
 using namespace std;
 
 void checkForCommandLineInputErrors(int argc, char *argv[]);
+int mainServerController(int argc, char** argv);
 
 class ServerController {
 public:
@@ -55,3 +56,4 @@ private:
 };
 
 #endif
+
