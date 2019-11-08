@@ -366,7 +366,7 @@ void ClientController::loginCase()
     {
         app.buildUsernameField();
         cin >> username;
-        app.buildUsernameField();
+        app.buildPasswordField();
         cin >> password;
         LoginMessage userAttempt = theCreator.createLoginMessage(username, password); // Turn login properties into proper message
 
