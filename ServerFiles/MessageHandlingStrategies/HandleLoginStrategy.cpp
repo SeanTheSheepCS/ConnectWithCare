@@ -10,7 +10,7 @@
 #include "../../CommonFiles/AllMessageTypes.h"
 #include "../ServerMessageCreator.h"
 
-HandleLoginStrategy::HandleLoginStrategy() {
+HandleLoginStrategy::HandleLoginStrategy() : ServerMessageHandlingStrategy() {
 }
 
 HandleLoginStrategy::~HandleLoginStrategy() {

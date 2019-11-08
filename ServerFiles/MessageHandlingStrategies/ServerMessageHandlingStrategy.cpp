@@ -7,7 +7,7 @@
 
 #include "ServerMessageHandlingStrategy.h"
 
-ServerMessageHandlingStrategy::ServerMessageHandlingStrategy() {
-	messageCreator = ServerMessageCreator();
-}
+ServerMessageHandlingStrategy::ServerMessageHandlingStrategy(): messageCreator() { }
+
+
 

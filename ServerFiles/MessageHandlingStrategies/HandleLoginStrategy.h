@@ -10,6 +10,9 @@
 
 #include "../../CommonFiles/Message.h"
 #include "../../CommonFiles/AllMessageTypes.h"
+#include "ServerMessageHandlingStrategy.h"
+
+//class ServerMessageHandlingStrategy;
 
 class HandleLoginStrategy : public ServerMessageHandlingStrategy
 {
