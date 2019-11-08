@@ -15,7 +15,8 @@ using namespace std;
 
 void checkForCommandLineInputErrors(int argc, char *argv[]) {
         if (argc != 2) {
-        cout << "Usage: " << argv[0] << " <Listening Port>" << endl;
+        cout << "Usage: " << argv[0] << " <Listening Port>";
+        cout << endl;
         exit(1);
     }
 }
@@ -34,8 +35,8 @@ ServerController::ServerController(int port) {
 	terminated = false;
 	this->port = port;
 	
-	//messageConverter = ServerMessageConverter();
-	//messageCreator   = ServerMessageCreator();
+	messageConverter = ServerMessageConverter();
+	messageHandler   = ServerMessageHandler();
 	
 	initServer();
 }
@@ -140,7 +141,8 @@ int ServerController::establishConnectionWithClient() {
 		cout << "Error in accept()" << endl;
 		terminated = true;
 	}
-	cout << "Accepted a connection from " << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port << endl;
+	cout << "Accepted a connection from " << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port;
+	cout << endl;
 	return clientSock;
 }
 void ServerController::addConnectionToReceiveSocketSet(int& sock) {
@@ -149,19 +151,25 @@ void ServerController::addConnectionToReceiveSocketSet(int& sock) {
 }
 
 void ServerController::processSockets (fd_set readySocks) {
-	string msgFromClient;
+	Message msgFromClient;
+	Message msgToClient;
+
+	//string msgFromClient;
 	// Loop through the descriptors and process
-	for (int sock = 0; sock <= maxDesc; sock++) {
-		if (!FD_ISSET(sock, &readySocks))
+	for (int clientSock = 0; clientSock <= maxDesc; clientSock++) {
+		if (!FD_ISSET(clientSock, &readySocks))
 			continue;
 		
 		// Receive data from the TCP client
-		msgFromClient = receiveData(sock);
-		configureMessageSend(sock, msgFromClient);
+		msgFromClient = messageFromDataReceivedFromClient(clientSock);
+		specifyTypeOfClientMessage(msgFromClient);
+
+		msgToClient = messageHandler.handleMessageFromClient();
+		///configureMessageSend(clientSock, msgFromClient);
 	}
 }
 
-string ServerController::receiveData(int sock) {
+string ServerController::receiveData(int clientSock) {
 	char inBuffer[BUFFERSIZE];
 	string msgBuilder = "";
 	int bytesRecv = 0, totalBytesRecv = 0;
@@ -169,12 +177,12 @@ string ServerController::receiveData(int sock) {
 	do {
 		memset(&inBuffer, 0, BUFFERSIZE);
 		
-		bytesRecv = recv(sock, (char *) &inBuffer, BUFFERSIZE, 0);
+		bytesRecv = recv(clientSock, (char *) &inBuffer, BUFFERSIZE, 0);
 		totalBytesRecv += bytesRecv;
 		
 		if (bytesRecv < 0) {
 			cout << "tcp recv() failed." << endl;
-			FD_CLR(sock, &recvSockSet);
+			FD_CLR(clientSock, &recvSockSet);
 	
 			// Update the max descriptor
 			while (FD_ISSET(maxDesc, &recvSockSet) == false)
@@ -182,7 +190,7 @@ string ServerController::receiveData(int sock) {
 		}
 		else if (bytesRecv == 0) {
 			cout << "tcp connection is closed." << endl;
-			FD_CLR(sock, &recvSockSet);
+			FD_CLR(clientSock, &recvSockSet);
 			
 			// Update the max descriptor
 			while (FD_ISSET(maxDesc, &recvSockSet) == false) 
@@ -200,6 +208,21 @@ string ServerController::receiveData(int sock) {
 	cout << "Client: " << msgBuilder;
 	
 	return msgBuilder;
+}
+
+Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
+	string msgFromClient = receiveData(clientSock);
+	return Message(msgFromClient.size(), msgFromClient.c_str());
+}
+
+void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
+	ServerMessageHandlingStrategy& tempStrategy;
+	if (messageConverter.isLoginMessage(msgFromClient) ) {
+		msgFromClient = messageConverter.toLoginMessage(msgFromClient);
+		messageHandler.setMessage(msgFromClient);
+		tempStrategy = new HandleLoginStrategy();
+		messageHandler.setStrategy(tempStrategy);
+	}
 }
 
 void ServerController::configureMessageSend(int sock, string& msgFromClient) {
@@ -268,4 +291,3 @@ void ServerController::closeAllClientConnections() {
 			close(sockIndex);
 	}
 }
-

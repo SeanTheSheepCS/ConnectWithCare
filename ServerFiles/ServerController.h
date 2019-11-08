@@ -35,8 +35,8 @@ private:
 	int maxDesc;
 	bool terminated;
 	
-	//ServerMessageConverter messageConverter;
-	//ServerMessageCreator   messageCreator;
+	ServerMessageConverter messageConverter;
+	ServerMessageHandler   messageHandler;
 	
 	void initServer();
 	
@@ -45,7 +45,9 @@ private:
 	void addConnectionToReceiveSocketSet(int& sock);
 	
 	void processSockets (fd_set);
+	Message messageFromDataReceivedFromClient(int clientSock);
 	string receiveData(int sock);
+	void specifyTypeOfClientMessage(Message& msgFromClient);
 
 	void configureMessageSend(int sock, string& msgFromClient);
 	void sendData (int sock, string outgoingMsg);
