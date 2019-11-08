@@ -12,7 +12,7 @@
 #include "../CommonFiles/AllMessageTypes.h"
 
 #include "MessageHandlingStrategies/ServerMessageHandlingStrategy.h"
-
+/*
 class ServerMessageHandler {
 public:
 	ServerMessageHandler();
@@ -27,5 +27,6 @@ private:
 	Message msgFromClient;
 	ServerMessageHandlingStrategy& handlingStrategy;
 };
+*/
 
 #endif /* SERVERMESSAGEHANDLER_H_ */

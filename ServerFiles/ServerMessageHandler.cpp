@@ -7,6 +7,7 @@
 
 #include "ServerMessageHandler.h"
 
+/*
 ServerMessageHandler::ServerMessageHandler() { }
 
 ServerMessageHandler::~ServerMessageHandler() {
@@ -25,4 +26,5 @@ void ServerMessageHandler::setMessage(Message msg){
 void ServerMessageHandler::setStrategy(ServerMessageHandlingStrategy& strat) {
 	handlingStrategy = strat;
 }
+*/
 
