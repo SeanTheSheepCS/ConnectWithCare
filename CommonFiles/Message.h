@@ -6,7 +6,8 @@
 class Message
 {
   public:
-    Message(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg);
+    Message();
+	Message(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg);
     Message(const Message& other);
     virtual Message& operator=(const Message& rhs);
     virtual ~Message();

@@ -6,8 +6,9 @@
  */
 
 #include "ServerMessageHandlingStrategy.h"
-
+/*
 ServerMessageHandlingStrategy::ServerMessageHandlingStrategy(): messageCreator() { }
+*/
 
 
 

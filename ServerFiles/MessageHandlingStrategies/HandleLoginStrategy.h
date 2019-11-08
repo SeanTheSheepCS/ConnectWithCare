@@ -11,14 +11,15 @@
 #include "../../CommonFiles/Message.h"
 #include "../../CommonFiles/AllMessageTypes.h"
 #include "ServerMessageHandlingStrategy.h"
+#include "../../ServerModel/LoginDatabaseController.h"
 
 //class ServerMessageHandlingStrategy;
 
+/*
 class HandleLoginStrategy : public ServerMessageHandlingStrategy
 {
 public:
-	HandleLoginStrategy(LoginDatabaseController& loginDB): ServerMessageHandlingStrategy()
-	{ loginDatabase = loginDB; }
+	HandleLoginStrategy(LoginDatabaseController& loginDB);
 
 	~HandleLoginStrategy() {}
 
@@ -26,5 +27,6 @@ public:
 private:
 	LoginDatabaseController& loginDatabase;
 };
+*/
 
 #endif /* HANDLELOGINSTRATEGY_H_ */

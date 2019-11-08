@@ -12,6 +12,7 @@
 #include "../../CommonFiles/AllMessageTypes.h"
 #include "../ServerMessageCreator.h"
 
+/*
 class ServerMessageHandlingStrategy {
 public:
 	ServerMessageHandlingStrategy();
@@ -19,5 +20,6 @@ public:
 protected:
 	ServerMessageCreator messageCreator;
 };
+*/
 
 #endif /* SERVERMESSAGEHANDLINGSTRATEGY_H_ */

@@ -3,6 +3,12 @@
 
 #include "Utilities/VariableLengthQuantityLibrary.h"
 
+Message::Message() {
+	vlqConverter = VariableLengthQuantityConverter();
+	length = 0;
+	messageAsCharArray = nullptr;
+}
+
 Message::Message(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg)
 {
 	vlqConverter = VariableLengthQuantityConverter();

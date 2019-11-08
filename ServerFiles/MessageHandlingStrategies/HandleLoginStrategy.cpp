@@ -10,8 +10,15 @@
 #include "../../CommonFiles/AllMessageTypes.h"
 #include "../ServerMessageCreator.h"
 
-
-Message HandleLoginStrategy::handle(Message msgFromClient) {
-	return messageCreator.createLoginAuthMessage(true);
+/*
+HandleLoginStrategy::HandleLoginStrategy(LoginDatabaseController& loginDB)
+: ServerMessageHandlingStrategy() {
+	loginDatabase = loginDB;
 }
+
+Message HandleLoginStrategy::handle(LoginAuthMessage msgFromClient) {
+	bool validated = loginDatabase.validate(msgFromClient.getUsername(), msgFromClient.getPassword());
+	returnmessageCreator.createLoginAuthMessage(true);
+}
+*/
 

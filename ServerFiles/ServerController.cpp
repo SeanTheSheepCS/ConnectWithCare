@@ -47,7 +47,7 @@ ServerController::ServerController(int port) {
 	terminated = false;
 
 	messageConverter = ServerMessageConverter();
-	messageHandler = ServerMessageHandler();
+	messageCreator = ServerMessageCreator();
 	
 	initServer();
 }
@@ -104,14 +104,6 @@ void ServerController::initServer() {
     addConnectionToReceiveSocketSet(serverSock);
 }
 
-Message ServerController::getMsgFromClient() {
-	return msgFromClient;
-}
-
-void ServerController::setMsgToClient(Message msg) {
-	msgToClient = msg;
-}
-
 void ServerController::addLoginDatabase(LoginDatabaseController lDB) {
 	loginDatabase = lDB;
 }
@@ -136,7 +128,7 @@ void ServerController::communicate() {
 			processIncomingSockets(tempRecvSockSet);
 		}
 	}
-	closeAllConnections()
+	closeAllConnections();
 }
 
 void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet) {
@@ -177,12 +169,10 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 			continue;
 		
 		// Receive data from the TCP client
-		msgFromClient = messageFromDataReceivedFromClient(clientSock);
+		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
-		specifyTypeOfClientMessage(msgFromClient);
-
-		msgToClient = messageHandler.handleMessageFromClient();
-		configureMessageSend(clientSock, msgToClient);
+		Message msgToClient = specifyTypeOfClientMessage(msgFromClient);
+		sendData(clientSock, msgToClient);
 	}
 }
 
@@ -232,35 +222,33 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
 }
 
-void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
+Message ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
+	Message msgToClient;
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
-		msgFromClient = messageConverter.toLoginMessage(msgFromClient);
-		messageHandler.setMessage(msgFromClient);
-		HandleLoginStrategy hls;
-		ServerMessageHandlingStrategy* tempStrategy = hls;
-		messageHandler.setStrategy(tempStrategy);
+		msgToClient = specifyClientMessageAsLoginMessage(msgFromClient);
 	}
+	return msgToClient;
+}
+LoginAuthMessage ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
+	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
+	return messageCreator.createLoginAuthMessage(validated);
 }
 
-void ServerController::configureMessageSend(int sock, string& msgFromClient) {
-
-}
-
-void ServerController::sendData(int sock, Message outgoingMsg) {
+void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
 	
-	//unsigned char* outGoingMsg
-	//
+	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
 	// Sent the data
-	bytesSent = send(sock, outgoingMsg.c_str(), outgoingMsg.size(), 0);
+	bytesSent = send(sock, outGoingMsg, msgToClient.getLength(), 0);
 	
 	if (bytesSent < 0){
 		cout << "tcp error in sending. Bytes sent = " << bytesSent << endl;
 		return;
 	}
 	else {
-		cout << "sent " << bytesSent << " of " << outgoingMsg.size() << endl;
+		cout << "sent " << bytesSent << " of " << msgToClient.getLength() << endl;
 	}
 }
 
