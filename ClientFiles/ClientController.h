@@ -18,7 +18,10 @@
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
 #include "../View/GUI.h"
+#include "ClientMessageConverter.h"
+#include "ClientMessageCreator.h"
 #define BUFFERSIZE 32
+#define MAXLINE 32 
 
 
 class ClientController
@@ -33,17 +36,19 @@ class ClientController
     private:
         int sock; // Socket descriptor
         struct sockaddr_in serverAddr; // Address of the server
-        GUI app;
-
-        //char inBuffer[BUFFERSIZE]; // Buffer for the message from the server
-        //int bytesRecv; // Number of bytes received
-
-        //char outBuffer[BUFFERSIZE]; // Buffer for message to the server
-        //int msgLength; // Length of the outgoing message
-        //int bytesSent; // Number of bytes sent
+        GUI app; // Apllication that the client runs
+        ClientMessageCreator theCreator; // Creates specific client messages to send over to server
+        ClientMessageConverter theConvertor; // Converts messages from server so the client understands
 
         void createSocket();
         // Helper function for creating the socket.
+        void checkSending(int bytes, int msgLength);
+        // Helper funciton for checking if there was an error in sending message to server.
+        void checkRecv(int bytes, int msgLenght);
+        // Helper function for checking if message was received properly from server.
+        
+        void clearBuffer(char* buffer); // NOT SURE IF THIS WORKS
+        // Helper function for clearing a buffer.
 };
 
 #endif

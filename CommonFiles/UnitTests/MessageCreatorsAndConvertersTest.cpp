@@ -11,7 +11,7 @@
 int numberOfTestsPassed = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 int numberOfTestsAdministered = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 
-int main/*MessageUnitTest*/()
+int mainMessageUnitTest()
 {
 	runUnitTestsForMessages();
 	return 0;
