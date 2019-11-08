@@ -250,6 +250,7 @@ void ServerController::sendData(int sock, Message outgoingMsg) {
 	int bytesSent = 0;
 	
 	//unsigned char* outGoingMsg
+	//
 
 	// Sent the data
 	bytesSent = send(sock, outgoingMsg.c_str(), outgoingMsg.size(), 0);
