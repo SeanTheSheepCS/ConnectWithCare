@@ -10,9 +10,6 @@
 #include "ServerController.h"
 #include "ServerMessageConverter.h"
 
-#include "ServerMessageHandler.h"
-#include "MessageHandlingStrategies/ServerMessageHandlingStrategy.h"
-#include "MessageHandlingStrategies/HandleLoginStrategy.h"
 
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
@@ -36,6 +33,7 @@ int mainServerController(int argc, char** argv) {
 	LoginDatabaseController loginController;
 
 	server.addLoginDatabase(loginController);
+	server.communicate();
 
 	return 0;
 }
@@ -227,12 +225,33 @@ Message ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
 		msgToClient = specifyClientMessageAsLoginMessage(msgFromClient);
 	}
+	else if (messageConverter.isLogoutMessage(msgFromClient)) {
+		msgToClient = specifyClientMessageAsLogoutMessage(msgFromClient);
+	}
 	return msgToClient;
 }
-LoginAuthMessage ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
 	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
 	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
+	if (validated) {
+		return specifyClientMessageAsLoginMessageSuccess(validated);
+	}
+	else {
+		return specifyClientMessageAsLoginMessageFailure();
+	}
+
+}
+LoginAuthMessage ServerController::specifyClientMessageAsLoginMessageSuccess (bool validated) {
 	return messageCreator.createLoginAuthMessage(validated);
+}
+ErrorNoAuthMessage ServerController::specifyClientMessageAsLoginMessageFailure () {
+	return messageCreator.createErrorNoAuthMessage();
+
+}
+LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
+	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
+	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
+	LogoutConfirmMessage createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
 }
 
 void ServerController::sendData(int sock, Message msgToClient) {

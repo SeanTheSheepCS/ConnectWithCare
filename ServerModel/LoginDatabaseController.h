@@ -19,6 +19,7 @@ public:
 	virtual ~LoginDatabaseController();
 
 	bool validateUser(string username, string password);
+	bool confirmLogout();
 private:
 	map<string, string> loginDatabase;
 

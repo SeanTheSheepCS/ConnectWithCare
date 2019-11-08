@@ -12,7 +12,6 @@
 
 #include "ServerMessageConverter.h"
 #include "ServerMessageCreator.h"
-#include "ServerMessageHandler.h"
 
 #include "../ServerModel/LoginDatabaseController.h"
 
@@ -60,7 +59,12 @@ private:
 
 	string receiveData(int sock);
 	Message specifyTypeOfClientMessage(Message& msgFromClient);
-	LoginAuthMessage specifyClientMessageAsLoginMessage(Message& msgFromClient);
+
+	Message specifyClientMessageAsLoginMessage(Message& msgFromClient);
+	LoginAuthMessage specifyClientMessageAsLoginMessageSuccess (bool validated);
+	ErrorNoAuthMessage specifyClientMessageAsLoginMessageFailure ();
+
+	LogoutConfirmMessage specifyClientMessageAsLogoutMessage(Message& msgFromClient);
 
 	void sendData (int sock, Message msgToClient);
 
