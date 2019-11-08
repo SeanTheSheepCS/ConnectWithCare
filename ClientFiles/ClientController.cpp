@@ -7,7 +7,7 @@
  * NOTE:
  * - have to differentiate appropriate members of class and just normal variables.
  * - add notifications to the menu later on for more advanced features
- * - have to check the lenght of messages sent and receive, could give errors here later on with creating messages.
+ * - have to check the length of messages sent and receive, could give errors here later on with creating messages.
  * 
  * Last updated by: Daryl
  */
