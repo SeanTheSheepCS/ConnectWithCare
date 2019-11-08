@@ -21,11 +21,33 @@
 
 using namespace std;
 
+void checkForCommandLineInputErrors(int argc, char *argv[]) {
+        if (argc != 2) {
+        cout << "Usage: " << argv[0] << " <Listening Port>";
+        cout << endl;
+        exit(1);
+    }
+}
+
+int mainServerController(int argc, char** argv) {
+	checkForCommandLineInputErrors(argc, argv);
+
+	ServerController server( atoi(argv[1]) );
+	LoginDatabaseController loginController;
+
+	server.addLoginDatabase(loginController);
+
+	return 0;
+}
+
 ServerController::ServerController(int port) {
 	maxDesc = 0;
 	this->port = port;
 	
+	terminated = false;
+
 	messageConverter = ServerMessageConverter();
+	messageHandler = ServerMessageHandler();
 	
 	initServer();
 }
@@ -90,18 +112,15 @@ void ServerController::setMsgToClient(Message msg) {
 	msgToClient = msg;
 }
 
-bool ServerController::canProcessIncomingSockets() {
-	return processIncomingSocketsNow;
+void ServerController::addLoginDatabase(LoginDatabaseController lDB) {
+	loginDatabase = lDB;
 }
 
-fd_set ServerController::getTempRecvSocketSet() {
-	return tempRecvSockSet;
-}
-
-void ServerController::checkForIncomingSocketConnections() {
+void ServerController::communicate() {
 	int clientSock;
 	
 	// Run the server until a "terminate" command is received)
+	while (!terminated)
 	{
 		// copy the receive descriptors to the working set
 		memcpy(&tempRecvSockSet, &recvSockSet, sizeof(recvSockSet));
@@ -114,9 +133,10 @@ void ServerController::checkForIncomingSocketConnections() {
 			addConnectionToReceiveSocketSet(clientSock);
 		}
 		else {
-			processIncomingSocketsNow = true; processIncomingSockets(tempRecvSockSet);
+			processIncomingSockets(tempRecvSockSet);
 		}
 	}
+	closeAllConnections()
 }
 
 void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet) {
@@ -162,7 +182,7 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 		specifyTypeOfClientMessage(msgFromClient);
 
 		msgToClient = messageHandler.handleMessageFromClient();
-		///configureMessageSend(clientSock, msgFromClient);
+		configureMessageSend(clientSock, msgToClient);
 	}
 }
 
@@ -209,7 +229,7 @@ string ServerController::receiveData(int clientSock) {
 
 Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	string msgFromClient = receiveData(clientSock);
-	return Message(msgFromClient.size(), msgFromClient.c_str());
+	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
 }
 
 void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
@@ -223,30 +243,14 @@ void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
 }
 
 void ServerController::configureMessageSend(int sock, string& msgFromClient) {
-	string outgoingMsg = "";
-	if (strncmp( msgFromClient.c_str(), "logout", 6) == 0) {
-		outgoingMsg = "logout complete";
-	}
-	else if (strncmp( msgFromClient.c_str(), "list", 4) == 0) {
-		listFiles( outgoingMsg );
-		cout << "server does list" << endl;
-	}
-	else if (msgFromClient.rfind("echo ", 0) == 0) {
-		// echo <message>
-		msgFromClient.erase(0,5);
-		outgoingMsg = msgFromClient;
-		cout << "server does echo" << endl;
-	}
-	else {
-		// Improper command
-		outgoingMsg = "Unknown command " + msgFromClient;
-	}
-	sendData(sock, outgoingMsg);
+
 }
 
-void ServerController::sendData(int sock, string outgoingMsg) {
+void ServerController::sendData(int sock, Message outgoingMsg) {
 	int bytesSent = 0;
 	
+	//unsigned char* outGoingMsg
+
 	// Sent the data
 	bytesSent = send(sock, outgoingMsg.c_str(), outgoingMsg.size(), 0);
 	
