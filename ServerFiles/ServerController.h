@@ -13,6 +13,8 @@
 #include "ServerMessageConverter.h"
 #include "ServerMessageHandler.h"
 
+#include "../ServerModel/LoginDatabaseController.h"
+
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
 
@@ -21,17 +23,19 @@
 
 using namespace std;
 
+void checkForCommandLineInputErrors(int argc, char *argv[]);
+int mainServerController(int argc, char** argv);
+
 class ServerController {
 public:
 	ServerController(int port);
 	
-	void checkForIncomingSocketConnections();
+	void communicate();
 
 	Message getMsgFromClient();
 	void setMsgToClient(Message msg);
 
-	bool canProcessIncomingSockets();
-	fd_set getTempRecvSocketSet();
+	void addLoginDatabase(LoginDatabaseController lDB);
 
 private:
 	
@@ -40,9 +44,12 @@ private:
 	fd_set recvSockSet;
 	fd_set tempRecvSockSet;
 	int maxDesc;
-	bool processIncomingSocketsNow;
+	bool terminated;
 	
+	LoginDatabaseController loginDatabase;
+
 	ServerMessageConverter messageConverter;
+	ServerMessageHandler messageHandler;
 	Message msgFromClient;
 	Message msgToClient;
 	
