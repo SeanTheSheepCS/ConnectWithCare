@@ -387,14 +387,14 @@ void ClientController::loginCase()
         }
         else
         {
-            cout << "Error" << endl;
+            cout << "Invalid username/password, please try again." << endl;
         }
         
         // Clears buffer
         clearBuffer(outBuffer);
         clearBuffer(inBuffer);
     }
-    // Clear buffer
+    // Clears buffer
 	clearBuffer(outBuffer);
 	clearBuffer(inBuffer);
 }
