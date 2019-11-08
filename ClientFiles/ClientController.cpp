@@ -48,12 +48,7 @@ void ClientController::communicate()
     /*** PROCESS OF LOGGING IN ***/
     loginCase();
 
-    // Clear buffer
-    clearBuffer(outBuffer);
-    clearBuffer(inBuffer);
-    /*
-    memset(&outBuffer, 0, MAXLINE);
-    memset(&inBuffer, 0, MAXLINE);*/
+
 
     /*** LOGIN WAS SUCCESSFUL ***/
     accountType = "individual(testing)"; // TODO Remove later
@@ -398,10 +393,10 @@ void ClientController::loginCase()
         // Clears buffer
         clearBuffer(outBuffer);
         clearBuffer(inBuffer);
-        /*
-        memset(&outBuffer, 0, MAXLINE);
-        memset(&inBuffer, 0, MAXLINE);*/
     }
+    // Clear buffer
+	clearBuffer(outBuffer);
+	clearBuffer(inBuffer);
 }
 
 int mainClientController(int argc, char *argv[])
