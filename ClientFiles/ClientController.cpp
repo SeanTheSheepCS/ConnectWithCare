@@ -48,13 +48,6 @@ void ClientController::communicate()
     /*** PROCESS OF LOGGING IN ***/
     loginCase();
 
-    // Clear buffer
-    clearBuffer(outBuffer);
-    clearBuffer(inBuffer);
-    /*
-    memset(&outBuffer, 0, MAXLINE);
-    memset(&inBuffer, 0, MAXLINE);*/
-
     /*** LOGIN WAS SUCCESSFUL ***/
     accountType = "individual(testing)"; // TODO Remove later
     nameTag = "user(testing)"; // TODO Remove later
@@ -63,23 +56,24 @@ void ClientController::communicate()
     
     while(1)
     {
-        app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
+        app.buildMenu(0, 0, 0); // TODO Need to add notifciation numbers later.
         cin >> option;
         switch(option)
         {
             case '1':
                 cout << "bb selected" << endl;
-                app.buildBulletinBoard(); // NEED TO ADD MORE HERE
+                //TODO need to figure out what to pass inside bb
+                app.buildBulletinBoard();
                 bulletinBoardCase();
                 break; 
             case '2':
                 cout << "chats selected" << endl;
-                app.buildChatsMenu(0,0,0); // NEED tO ADD MORE HERE
+                app.buildChatsMenu(0,0,0); // TODO add notifications later
                 chatsCase();
                 break;    
             case '3':
                 cout << "my posts selected" << endl;
-                app.buildPostsMenu(0 ,0); // NEEED TO ADD MORE HERE
+                app.buildPostsMenu(0 ,0); // TODO add notifications later
                 postsCase();
                 break;
             case '4':
@@ -88,7 +82,7 @@ void ClientController::communicate()
                 break;
             case '5':
                 cout << "friends selected" << endl;
-
+                //app.buildFriendList(); // TODO need to figure out what to pass here to display friends.
                 break;
             case '6':
                 cout << "my account selected" << endl;
@@ -113,7 +107,7 @@ void ClientController::createSocket()
      */
     if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        cout << "socket() failed" << endl;
+        cerr << "Error, socket() failed" << endl;
         exit(1);
     }
 
@@ -127,7 +121,7 @@ void ClientController::createSocket()
     int yes = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0)
     {
-        cout << "setsockopt() failed" << endl;
+        cerr << "Error, setsockopt() failed" << endl;
         exit(1);
     }
     cout << "\tCreated Socket!" << endl;
@@ -146,7 +140,7 @@ void ClientController::checkRecv(int bytes, int msgLength)
 {
     if (bytes <= 0 || bytes != msgLength)
     {
-        cout << "Error in receiving (or the connection closed)... " << endl;
+        cerr << "Error in receiving (or the connection closed)... " << endl;
         exit(1); 
     }
 }
@@ -193,7 +187,7 @@ void ClientController::chatsCase()
 {
     char chatsOption;
     cin >> chatsOption;
-
+    //TODO figure out how to display different chats by different friends (most recent 5)
     switch(chatsOption)
     {
         case '1':
@@ -228,7 +222,7 @@ void ClientController::postsCase()
 {
     char postsOption;
     cin >> postsOption;
-
+    // TODO need to figure out how to display most recent posts (recent 5)
     switch(postsOption)
     {
         case '1':
@@ -261,7 +255,7 @@ void ClientController::postsCase()
 
 void ClientController::publicChannelCase()
 {
-   // TODO SEND MESSAGE to server
+   // TODO SEND MESSAGE to server (advanced)
 }
 
 void ClientController::friendsCase()
@@ -301,7 +295,7 @@ void ClientController::accountCase()
 {
     char accountOption;
     cin >> accountOption;
-
+    //TODO finish adding functionalities to the account menu
     switch(accountOption)
     {
         case '1':
@@ -347,6 +341,7 @@ void ClientController::accountCase()
                 cout << "invalid option, going back anayways" << endl;
                 break;
             }
+            break;
         case 'b':
             cout << "go back selected" << endl;
             /* DO  NOTHING */
@@ -366,7 +361,7 @@ void ClientController::loginCase()
     {
         app.buildUsernameField();
         cin >> username;
-        app.buildUsernameField();
+        app.buildPasswordField();
         cin >> password;
         LoginMessage userAttempt = theCreator.createLoginMessage(username, password); // Turn login properties into proper message
 
@@ -398,10 +393,10 @@ void ClientController::loginCase()
         // Clears buffer
         clearBuffer(outBuffer);
         clearBuffer(inBuffer);
-        /*
-        memset(&outBuffer, 0, MAXLINE);
-        memset(&inBuffer, 0, MAXLINE);*/
     }
+    // Clear buffer
+	clearBuffer(outBuffer);
+	clearBuffer(inBuffer);
 }
 
 int mainClientController(int argc, char *argv[])
