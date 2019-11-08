@@ -8,6 +8,11 @@
 #ifndef SERVERMESSAGEHANDLER_H_
 #define SERVERMESSAGEHANDLER_H_
 
+#include "../CommonFiles/Message.h"
+#include "../CommonFiles/AllMessageTypes.h"
+
+#include "MessageHandlingStrategies/ServerMessageHandlingStrategy.h"
+
 class ServerMessageHandler {
 public:
 	ServerMessageHandler();

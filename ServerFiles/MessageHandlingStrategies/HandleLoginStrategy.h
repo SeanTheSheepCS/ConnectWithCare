@@ -17,10 +17,14 @@
 class HandleLoginStrategy : public ServerMessageHandlingStrategy
 {
 public:
-	HandleLoginStrategy();
-	virtual ~HandleLoginStrategy();
+	HandleLoginStrategy(LoginDatabaseController& loginDB): ServerMessageHandlingStrategy()
+	{ loginDatabase = loginDB; }
+
+	~HandleLoginStrategy() {}
 
 	Message handle(Message msgFromClient);
+private:
+	LoginDatabaseController& loginDatabase;
 };
 
 #endif /* HANDLELOGINSTRATEGY_H_ */

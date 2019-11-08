@@ -10,11 +10,6 @@
 #include "../../CommonFiles/AllMessageTypes.h"
 #include "../ServerMessageCreator.h"
 
-HandleLoginStrategy::HandleLoginStrategy() : ServerMessageHandlingStrategy() {
-}
-
-HandleLoginStrategy::~HandleLoginStrategy() {
-}
 
 Message HandleLoginStrategy::handle(Message msgFromClient) {
 	return messageCreator.createLoginAuthMessage(true);

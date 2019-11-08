@@ -9,34 +9,23 @@
 
 #include "ServerController.h"
 #include "ServerMessageConverter.h"
-#include "ServerMessageCreator.h"
+
+#include "ServerMessageHandler.h"
+#include "MessageHandlingStrategies/ServerMessageHandlingStrategy.h"
+#include "MessageHandlingStrategies/HandleLoginStrategy.h"
+
+#include "../CommonFiles/Message.h"
+#include "../CommonFiles/AllMessageTypes.h"
+
+#include "../ServerModel/LoginDatabaseController.h"
 
 using namespace std;
 
-void checkForCommandLineInputErrors(int argc, char *argv[]) {
-        if (argc != 2) {
-        cout << "Usage: " << argv[0] << " <Listening Port>";
-        cout << endl;
-        exit(1);
-    }
-}
-
-int mainServerController(int argc, char** argv) {
-	checkForCommandLineInputErrors(argc, argv);
-	
-	ServerController server( atoi(argv[1]) );
-	server.runServer();
-	
-	return 0;
-}
-
 ServerController::ServerController(int port) {
 	maxDesc = 0;
-	terminated = false;
 	this->port = port;
 	
 	messageConverter = ServerMessageConverter();
-	messageHandler   = ServerMessageHandler();
 	
 	initServer();
 }
@@ -85,21 +74,35 @@ void ServerController::initServer() {
         cout << "listen() failed" << endl;
         exit(1);
     }
+
+    // Clear the socket sets
+    FD_ZERO(&recvSockSet);
+
+    // Add the listening socket to the set
+    addConnectionToReceiveSocketSet(serverSock);
 }
 
-void ServerController::runServer() {
+Message ServerController::getMsgFromClient() {
+	return msgFromClient;
+}
+
+void ServerController::setMsgToClient(Message msg) {
+	msgToClient = msg;
+}
+
+bool ServerController::canProcessIncomingSockets() {
+	return processIncomingSocketsNow;
+}
+
+fd_set ServerController::getTempRecvSocketSet() {
+	return tempRecvSockSet;
+}
+
+void ServerController::checkForIncomingSocketConnections() {
 	int clientSock;
-	fd_set tempRecvSockSet;
-	
-	
-	// Clear the socket sets
-	FD_ZERO(&recvSockSet);
-	
-	// Add the listening socket to the set
-	addConnectionToReceiveSocketSet(serverSock);
 	
 	// Run the server until a "terminate" command is received)
-	while (!terminated) {
+	{
 		// copy the receive descriptors to the working set
 		memcpy(&tempRecvSockSet, &recvSockSet, sizeof(recvSockSet));
 		
@@ -111,12 +114,9 @@ void ServerController::runServer() {
 			addConnectionToReceiveSocketSet(clientSock);
 		}
 		else {
-			processSockets(tempRecvSockSet);
+			processIncomingSocketsNow = true; processIncomingSockets(tempRecvSockSet);
 		}
 	}
-	
-	closeAllClientConnections();
-	close(serverSock);
 }
 
 void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet) {
@@ -150,11 +150,7 @@ void ServerController::addConnectionToReceiveSocketSet(int& sock) {
 	maxDesc = max(maxDesc, sock);
 }
 
-void ServerController::processSockets (fd_set readySocks) {
-	Message msgFromClient;
-	Message msgToClient;
-
-	//string msgFromClient;
+void ServerController::processIncomingSockets (fd_set readySocks) {
 	// Loop through the descriptors and process
 	for (int clientSock = 0; clientSock <= maxDesc; clientSock++) {
 		if (!FD_ISSET(clientSock, &readySocks))
@@ -162,6 +158,7 @@ void ServerController::processSockets (fd_set readySocks) {
 		
 		// Receive data from the TCP client
 		msgFromClient = messageFromDataReceivedFromClient(clientSock);
+
 		specifyTypeOfClientMessage(msgFromClient);
 
 		msgToClient = messageHandler.handleMessageFromClient();
@@ -216,11 +213,11 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 }
 
 void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
-	ServerMessageHandlingStrategy& tempStrategy;
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
 		msgFromClient = messageConverter.toLoginMessage(msgFromClient);
 		messageHandler.setMessage(msgFromClient);
-		tempStrategy = new HandleLoginStrategy();
+		HandleLoginStrategy hls;
+		ServerMessageHandlingStrategy* tempStrategy = hls;
 		messageHandler.setStrategy(tempStrategy);
 	}
 }
@@ -285,9 +282,10 @@ void ServerController::listFiles(string& data) {
     //cout << data;
 }
 
-void ServerController::closeAllClientConnections() {
+void ServerController::closeAllConnections() {
 	for (int sockIndex = 0; sockIndex <= maxDesc; sockIndex++) {
 		if (FD_ISSET(sockIndex, &recvSockSet))
 			close(sockIndex);
 	}
+	close(serverSock);
 }

@@ -11,32 +11,40 @@
 #include <unistd.h>     // for close()
 
 #include "ServerMessageConverter.h"
-#include "ServerMessageCreator.h"
+#include "ServerMessageHandler.h"
+
+#include "../CommonFiles/Message.h"
+#include "../CommonFiles/AllMessageTypes.h"
 
 #define BUFFERSIZE 32
 #define MAXPENDING 10
 
 using namespace std;
 
-void checkForCommandLineInputErrors(int argc, char *argv[]);
-int mainServerController(int argc, char** argv);
-
 class ServerController {
 public:
 	ServerController(int port);
 	
-	void runServer();
+	void checkForIncomingSocketConnections();
+
+	Message getMsgFromClient();
+	void setMsgToClient(Message msg);
+
+	bool canProcessIncomingSockets();
+	fd_set getTempRecvSocketSet();
 
 private:
 	
 	int serverSock;
 	int port;
 	fd_set recvSockSet;
+	fd_set tempRecvSockSet;
 	int maxDesc;
-	bool terminated;
+	bool processIncomingSocketsNow;
 	
 	ServerMessageConverter messageConverter;
-	ServerMessageHandler   messageHandler;
+	Message msgFromClient;
+	Message msgToClient;
 	
 	void initServer();
 	
@@ -44,15 +52,16 @@ private:
 	int  establishConnectionWithClient();
 	void addConnectionToReceiveSocketSet(int& sock);
 	
-	void processSockets (fd_set);
+	void processIncomingSockets (fd_set);
 	Message messageFromDataReceivedFromClient(int clientSock);
+
 	string receiveData(int sock);
 	void specifyTypeOfClientMessage(Message& msgFromClient);
 
 	void configureMessageSend(int sock, string& msgFromClient);
 	void sendData (int sock, string outgoingMsg);
 
-	void closeAllClientConnections();
+	void closeAllConnections();
 
 	void listFiles(string& data);
 };
