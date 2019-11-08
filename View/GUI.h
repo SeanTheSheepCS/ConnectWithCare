@@ -35,12 +35,17 @@ class GUI
         char buildPostsMenu(char** posts, int postsLength);
         // Builds Posts menu given the posts via a string array, which provides details on 
         //    title and date of the post. Returns a char for the option selected by the user.
+        void buildPublicChannel();
+
         char buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength);
         // Builds Friends list menu given online and offline friends via string arrays.
         //    Returns a char for the option selected by the user.
         char buildAccountMenu(string username, string nameTag, string accountType);
         // Builds Account menu given the user's username, name tag and account type. Returns
         //    a char for the option selected by the user.
+        void deleteAccountMenu();
+        // Builds the delete account interface.
+    
     private:
         //ClientController client;
 };

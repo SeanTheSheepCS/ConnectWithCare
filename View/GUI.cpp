@@ -177,6 +177,12 @@ char GUI::buildPostsMenu(char** posts, int postsLength)
     return option;
 }
 
+void GUI::buildPublicChannel()
+{
+    cout << divider << "PUBLIC-CHANNEL" << divider << endl;
+    cout << "Enter Message below! (Type 'leave' to go back or 'quit' to exit program)"
+}
+
 char GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength)
 {
     cout << divider << "FRIENDS" << divider << endl;
@@ -233,6 +239,13 @@ char GUI::buildAccountMenu(string username, string nameTag, string accountType)
         exit(0);
     }
     return option;
+}
+
+void GUI::deleteAccountMenu()
+{
+    cout << divider << endl;
+    cout << "Are you sure you want to delete your account?\nType 'Y' to confirm or 'b' to go back." << endl;
+    cout << divider << endl;
 }
 /*
 int main() // Testing how it looks.
