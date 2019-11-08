@@ -7,6 +7,7 @@
  * NOTE:
  * - have to differentiate appropriate members of class and just normal variables.
  * - add notifications to the menu later on for more advanced features
+ * - have to check the lenght of messages sent and receive, could give errors here later on with creating messages.
  * 
  * Last updated by: Daryl
  */
@@ -44,98 +45,57 @@ ClientController::ClientController(int portNumber, char* serverIP)
 
 void ClientController::communicate()
 {
-    char inBuffer[BUFFERSIZE]; // Buffer for the message from the server
-    int bytesRecv; // Number of bytes received
-
-    char outBuffer[BUFFERSIZE]; // Buffer for message to the server
-    int msgLength; // Length of the outgoing message
-    int bytesSent; // Number of bytes sent
-
-    string userN, passN;
     /*** PROCESS OF LOGGING IN ***/
-    while(1)
-    {
-        app.buildUsernameField();
-        cin >> userN;
-        app.buildUsernameField();
-        cin >> passN;
-        LoginMessage userAttempt = theCreator.createLoginMessage(userN, passN); // Turn login properties into proper message
-
-        strcpy(outBuffer, userAttempt.getMessageAsCharArray()); 
-        msgLength = userAttempt.getLength();
-
-        // Send login info to server
-        bytesSent = send(sock, (char *) &outBuffer, msgLength, 0);
-        checkSending(bytesSent, msgLength); 
-
-        // Receive login info from server
-        bytesRecv = recv(sock, (char *) &inBuffer, msgLength, 0);
-        checkRecv(bytesRecv, msgLength);
-        
-        Message msgFromServer(strlen(inBuffer), inBuffer);
-        if(theConvertor.isLoginAuthMessage(msgFromServer))
-        {
-            LoginAuthMessage userLogin = theConvertor.toLoginAuthMessage(msgFromServer);
-            if(userLogin.getValidBit())
-            {
-                break;
-            }
-        }
-        else
-        {
-            cout << "Error" << endl;
-        }
-        
-        
-        // Clears buffer
-        clearBuffer(&outBuffer);
-        clearBuffer(&inBuffer);
-        /*
-        memset(&outBuffer, 0, MAXLINE);
-        memset(&inBuffer, 0, MAXLINE);*/
-    }
+    loginCase();
 
     // Clear buffer
-    clearBuffer(&outBuffer);
-    clearBuffer(&inBuffer);
-
-
+    clearBuffer(outBuffer);
+    clearBuffer(inBuffer);
     /*
     memset(&outBuffer, 0, MAXLINE);
     memset(&inBuffer, 0, MAXLINE);*/
 
     /*** LOGIN WAS SUCCESSFUL ***/
+    accountType = "individual(testing)"; // TODO Remove later
+    nameTag = "user(testing)"; // TODO Remove later
     app.buildWelcomeMessage();
     char option;
     
     while(1)
     {
         app.buildMenu(0, 0, 0); // Need to add notifciation numbers later.
-        cin >> 
+        cin >> option;
         switch(option)
         {
             case '1':
                 cout << "bb selected" << endl;
+                app.buildBulletinBoard(); // NEED TO ADD MORE HERE
+                bulletinBoardCase();
                 break; 
             case '2':
                 cout << "chats selected" << endl;
+                app.buildChatsMenu(0,0,0); // NEED tO ADD MORE HERE
+                chatsCase();
                 break;    
             case '3':
                 cout << "my posts selected" << endl;
+                app.buildPostsMenu(0 ,0); // NEEED TO ADD MORE HERE
+                postsCase();
                 break;
             case '4':
-                cout << "public channel selected" << endl;
+                cout << "public channel selected, NOT WORKING YET" << endl;
+                app.buildPublicChannel();
                 break;
             case '5':
                 cout << "friends selected" << endl;
+
                 break;
             case '6':
                 cout << "my account selected" << endl;
+                app.buildAccountMenu(username, nameTag, accountType);
                 break;
             case 'q':
-                cout << "Terminating Program..." << endl;
-                close(sock);
-                exit(0);
+                userQuit();
                 break;
             default:
                 cout << "Invalid Input, try again." << endl;
@@ -191,9 +151,257 @@ void ClientController::checkRecv(int bytes, int msgLength)
     }
 }
 
-void ClientController::clearBuffer(char* buffer)
+void ClientController::clearBuffer(unsigned char* buffer)
 {
     memset(buffer, 0, MAXLINE);
+}
+
+void ClientController::userQuit()
+{
+    cout << "Terminating Program..." << endl;
+    close(sock);
+    exit(0);
+}
+
+void ClientController::bulletinBoardCase()
+{
+    char bbOption; // Options within Bulletin Board
+    cin >> bbOption;
+
+    switch(bbOption)
+    {
+        case '1':
+            cout << "add post selected" << endl;
+            break;
+        case '2':
+            cout << "send message selected" << endl;
+            break;
+        case 'b':
+            cout << "go back selected" << endl;
+            /* DO NOTING */
+            break;
+        case 'q':
+            cout << "quit selected" << endl;
+            userQuit();
+            break;
+        default:
+            cout << "invalid choice (bb)" << endl;
+    }
+}
+
+void ClientController::chatsCase()
+{
+    char chatsOption;
+    cin >> chatsOption;
+
+    switch(chatsOption)
+    {
+        case '1':
+            cout << "display chat 1" << endl;
+            break;
+        case '2':
+            cout << "display chat 2" << endl;
+            break;
+        case '3':
+            cout << "display chat 3" << endl;
+            break;
+        case '4':
+            cout << "display chat 4" << endl;
+            break;
+        case '5':
+            cout << "display chat 5" << endl;
+            break;
+        case 'b':
+            cout << "go back selected" << endl;
+            /* DO  NOTHING */
+            break;
+        case 'q':
+            cout << "quit selected" << endl;
+            userQuit();
+            break;
+        default:
+            cout << "invalid choice (chats)" << endl;
+    }
+}
+
+void ClientController::postsCase()
+{
+    char postsOption;
+    cin >> postsOption;
+
+    switch(postsOption)
+    {
+        case '1':
+            cout << "post 1" << endl;
+            break;
+        case '2':
+            cout << "post 2" << endl;
+            break;
+        case '3':
+            cout << "post 3" << endl;
+            break;
+        case '4':
+            cout << "post 4" << endl;
+            break;
+        case '5':
+            cout << "post 5" << endl;
+            break;
+        case 'b':
+            cout << "go back selected" << endl;
+            /* DO  NOTHING */
+            break;
+        case 'q':
+            cout << "quit selected" << endl;
+            userQuit();
+            break;
+        default:
+            cout << "invalid choice (posts)" << endl;
+    }
+}
+
+void ClientController::publicChannelCase()
+{
+   // TODO SEND MESSAGE to server
+}
+
+void ClientController::friendsCase()
+{
+    char friendsOption;
+    cin >> friendsOption;
+
+    switch(friendsOption)
+    {
+        case '1':
+        {
+            cout << "add friend selected" << endl;
+            string friendUser;
+            cout << "Enter friend's username:";
+            cin >> friendUser;
+            // TODO PASS FRIEND REQUEST TO SERVER
+            break;
+        }
+        case 'b':
+        {
+            cout << "go back selected" << endl;
+            /* DO  NOTHING */
+            break;
+        }
+        case 'q':
+        {
+            cout << "quit selected" << endl;
+            userQuit();
+            break;
+        }
+        default:
+            cout << "invalid choice (posts)" << endl;
+    }
+}
+
+void ClientController::accountCase()
+{
+    char accountOption;
+    cin >> accountOption;
+
+    switch(accountOption)
+    {
+        case '1':
+            cout << "change username selected" << endl;
+            break;
+        case '2':
+            cout << "change password selected" << endl;
+            break;
+        case '3':
+            cout << "update status" << endl;
+            break;
+        case '4':
+            if(accountType == "charity")
+            {
+                cout << "change org informaiton selected" << endl;
+            }
+            else
+            {
+                cout << "Only available for account types Charity" << endl;
+            }
+            break;
+        case '5':
+            cout << "Change account type selected" << endl;
+            break;
+        case '6':
+            cout << "delete account type selected" << endl;
+            app.deleteAccountMenu();
+            char deleteAccount;
+            cin >> deleteAccount;
+            if(deleteAccount == 'Y')
+            {
+                cout << "deleting account" << endl;
+                //TODO tell server to delete account
+                userQuit();
+            }
+            else if(deleteAccount == 'b')
+            {
+                cout << "going back" ;
+                break;
+            }
+            else
+            {
+                cout << "invalid option, going back anayways" << endl;
+                break;
+            }
+        case 'b':
+            cout << "go back selected" << endl;
+            /* DO  NOTHING */
+            break;
+        case 'q':
+            cout << "quit selected" << endl;
+            userQuit();
+            break;
+        default:
+            cout << "invalid choice (posts)" << endl;
+    }
+}
+
+void ClientController::loginCase()
+{
+    while(1)
+    {
+        app.buildUsernameField();
+        cin >> username;
+        app.buildUsernameField();
+        cin >> password;
+        LoginMessage userAttempt = theCreator.createLoginMessage(username, password); // Turn login properties into proper message
+
+        strcpy((char*)outBuffer, (char*)userAttempt.getMessageAsCharArray()); 
+        msgLength = userAttempt.getLength();
+
+        // Send login info to server
+        bytesSent = send(sock, (char *) &outBuffer, msgLength, 0);
+        checkSending(bytesSent, msgLength); 
+
+        // Receive login info from server
+        bytesRecv = recv(sock, (char *) &inBuffer, msgLength, 0); // *** Could spawn error here if the length is not correct
+        checkRecv(bytesRecv, msgLength);
+        
+        Message msgFromServer(strlen((char*)inBuffer), inBuffer);
+        if(theConvertor.isLoginAuthMessage(msgFromServer))
+        {
+            LoginAuthMessage userLogin = theConvertor.toLoginAuthMessage(msgFromServer);
+            if(userLogin.getValidBit())
+            {
+                break;
+            }
+        }
+        else
+        {
+            cout << "Error" << endl;
+        }
+        
+        // Clears buffer
+        clearBuffer(outBuffer);
+        clearBuffer(inBuffer);
+        /*
+        memset(&outBuffer, 0, MAXLINE);
+        memset(&inBuffer, 0, MAXLINE);*/
+    }
 }
 
 int main(int argc, char *argv[])
