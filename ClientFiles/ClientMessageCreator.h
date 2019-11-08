@@ -15,9 +15,9 @@ class ClientMessageCreator
     ClientMessageCreator();
     LoginMessage createLoginMessage(std::string username, std::string password);
     LogoutMessage createLogoutMessage();
+    CreatePostingMessage createCreatePostingMessage(unsigned long int boardIDToPostTo, Posting postToConvertToMessage);
 #if 0
-    Message createCreatePostMessage(Post postToConvertToMessage);
-    Message createCreatePostImageMessage(PostImage postToConvertToMessage);
+    Message createCreatePostingImageMessage(PostingImage postToConvertToMessage);
     Message createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
     Message createSendUserMessageImageMessage(UserImageMessage userImageMessageToConvertToMessage);
 #endif

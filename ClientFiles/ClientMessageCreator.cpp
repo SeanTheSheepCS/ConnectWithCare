@@ -239,3 +239,68 @@ UserMessageHistoryAllMessage ClientMessageCreator::createUserMessageHistoryAllMe
 	delete[] messageAsCharArray;
 	return returnValue;
 }
+
+CreatePostingMessage ClientMessageCreator::createCreatePostingMessage(unsigned long int boardIDToPostTo, Posting postToConvertToMessage)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_CREATEPOST;
+	const unsigned char* boardIDSplitIntoBytes = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(boardIDToPostTo);
+	const unsigned short int lengthOfBoardIDSplitIntoBytes = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const unsigned char* postingDate = postToConvertToMessage.getDateTimePosted().toFiveByteFormat();
+	const unsigned short int lengthOfPostingDate = 5;
+
+	const char* usernameAsCharArray = postToConvertToMessage.getUsernameOfUserWhoCreatedThisPost().c_str();
+	const unsigned short int lengthOfUsername = postToConvertToMessage.getUsernameOfUserWhoCreatedThisPost().size();
+	const unsigned char* usernameLengthFieldAsCharArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsername);
+	const unsigned short int lengthOfUsernameLengthField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const char* postingTextAsCharArray = postToConvertToMessage.getPostText().c_str();
+	const unsigned long int lengthOfPostingText = postToConvertToMessage.getPostText().size();
+
+	unsigned long int dataLengthAsUnsignedLong = lengthOfBoardIDSplitIntoBytes + lengthOfUsernameLengthField + lengthOfUsername + lengthOfPostingDate + lengthOfPostingText;
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(dataLengthAsUnsignedLong);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const unsigned short int totalDataLengthInBytes = 1 /* MESSAGE CODE */ + lengthOfDataLengthInVLQField + dataLengthAsUnsignedLong;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalDataLengthInBytes];
+	int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+	for(unsigned int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfBoardIDSplitIntoBytes; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = boardIDSplitIntoBytes[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfPostingDate; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = postingDate[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameLengthField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameLengthFieldAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsername; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfPostingText; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = postingTextAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+
+	CreatePostingMessage returnValue = CreatePostingMessage(totalDataLengthInBytes, messageAsCharArray);
+	delete[] messageAsCharArray;
+	delete[] dataLengthInVLQ;
+	return returnValue;
+}

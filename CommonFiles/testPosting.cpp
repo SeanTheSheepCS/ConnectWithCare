@@ -9,7 +9,7 @@ using namespace std;
 int mainTP()
 {
   Date date = Date(2019, 11, 05, 8978);
-  Posting post = Posting(string("HI"), date);
+  Posting post = Posting(string("HI"), string("TOM"), date);
 
   post.setPostText("Hello this is the text in the post.");
   string text = post.getPostText();

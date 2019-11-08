@@ -9,6 +9,28 @@ Date::Date(unsigned short int year, unsigned short int month, unsigned short int
 	this->seconds = seconds;
 }
 
+Date::Date(const unsigned char* fiveByteFormat)
+{
+	const unsigned char dateFirstEightBits = fiveByteFormat[0];
+	const unsigned char dateSecondEightBits = fiveByteFormat[1];
+	const unsigned char dateThirdEightBits = fiveByteFormat[2];
+	const unsigned char dateFourthEightBits = fiveByteFormat[3];
+	const unsigned char dateFifthEightBits = fiveByteFormat[4];
+	// 14 bits at the start are a binary representation of the year.
+	unsigned short int dateYear = (dateFirstEightBits << 6) + ((dateSecondEightBits & 0xFC) >> 2);
+	// next 4 bits are a binary representation of the month.
+	unsigned short int dateMonth = ((dateSecondEightBits & 0x3) << 2) + ((dateThirdEightBits & 0xC0) >> 6);
+	// next 5 bits are a binary representation of the day
+	unsigned short int dateDay = ((dateThirdEightBits & 0x3E) >> 1);
+	// next 17 bits are a binary representation of the seconds.
+	unsigned long int dateSeconds = ((dateThirdEightBits & 0x01) << 16) + ((dateFourthEightBits) << 8) + (dateFifthEightBits);
+
+	this->year = dateYear;
+	this->month = dateMonth;
+	this->day = dateDay;
+	this->seconds = dateSeconds;
+}
+
 unsigned short int Date::getYear() const
 {
 	return year;

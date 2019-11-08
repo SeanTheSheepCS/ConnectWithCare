@@ -17,10 +17,11 @@ class ServerMessageConverter
 
     bool isLogoutMessage(Message messageToDetermineTypeOf);
     LogoutMessage toLogoutMessage(Message messageToTurnIntoALogoutMessage); //ONLY CALL ME IF ISALOGOUTMESSAGE WAS TRUE!
-#if 0
+
     bool isCreatePostingMessage(Message messageToDetermineTypeOf);
     CreatePostingMessage toCreatePostingMessage(Message messageToTurnIntoACreatePostingMessage); //ONLY CALL ME IF IS A CREATEPOSTINGMESSAGE WAS TRUE!
 
+#if 0
     bool isCreatePostingImageMessage(Message messageToDetermineTypeOf);
     CreatePostingImageMessage toCreatePostingImageMessage(Message messageToTurnIntoACreatePostingImageMessage); //THIS AND ALL BELOW FOLLOW ABOVE RULES.
 

@@ -178,3 +178,31 @@ UserMessageHistoryAllMessage ServerMessageConverter::toUserMessageHistoryAllMess
 		return UserMessageHistoryAllMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isCreatePostingMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_CREATEPOST)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+CreatePostingMessage ServerMessageConverter::toCreatePostingMessage(Message messageToTurnIntoACreatePostingMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoACreatePostingMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoACreatePostingMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_CREATEPOST)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return CreatePostingMessage(messageLength,messageAsCharArray);
+	}
+}

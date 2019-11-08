@@ -11,7 +11,7 @@
 int numberOfTestsPassed = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 int numberOfTestsAdministered = 0; // ONLY CHANGE ME THROUGH TESTS PASSED AND TESTS FAILED!!!!
 
-int mainMessageUnitTest()
+int main/*MessageUnitTest*/()
 {
 	runUnitTestsForMessages();
 	return 0;
@@ -22,6 +22,7 @@ void runUnitTestsForMessages()
 	std::cout << "--- MESSAGE UNIT TEST ---" << std::endl;
 	runLoginMessageTest();
 	runLogoutMessageTest();
+	runCreatePostingMessageTest();
 	runBoardHistoryMessageTest();
 	runBoardSearchMessageTest();
 	runUserMessageHistoryMessageTest();
@@ -121,6 +122,91 @@ void runLogoutMessageTest()
 	}
 
 	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runCreatePostingMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	unsigned long int testBoardID = 8000;
+	std::string testUsername = string("TESTER");
+	Date testDate = Date(2007,10,30,90);
+	std::string testPostText = string("I AM A TEST");
+	Posting testPosting = Posting(testPostText,testUsername,testDate);
+	CreatePostingMessage thecpMessage = creator.createCreatePostingMessage(testBoardID, testPosting);
+	Message theMessage = Message(thecpMessage.getLength(), thecpMessage.getMessageAsCharArray());
+
+	ServerMessageConverter converter;
+	if(converter.isCreatePostingMessage(theMessage))
+	{
+		CreatePostingMessage cpMessageAgain = converter.toCreatePostingMessage(theMessage);
+		if((cpMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_CREATEPOST)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(cpMessageAgain.getBoardIDThatThePostingBelongsTo() == testBoardID)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(cpMessageAgain.getPosting().getDateTimePosted().equals(testDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+			std::cout << testDate.toString() << std::endl;
+			std::cout << cpMessageAgain.getPosting().getDateTimePosted().toString() << std::endl;
+		}
+
+		if(cpMessageAgain.getPosting().getPostText() == testPostText)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(cpMessageAgain.getPosting().getUsernameOfUserWhoCreatedThisPost() == testUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isLogoutMessage(theMessage))
 	{
 		testFailed();
 	}

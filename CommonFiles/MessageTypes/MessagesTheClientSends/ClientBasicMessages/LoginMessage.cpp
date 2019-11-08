@@ -5,7 +5,6 @@
 
 LoginMessage::LoginMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg) : ClientBasicMessage(lengthArg, messageAsCharArrayArg)
 {
-	vlqConverter = VariableLengthQuantityConverter();
 	const unsigned char* pointerToStartOfMessage = &(Message::getMessageAsCharArray()[0]);
 	unsigned long int indexOfStartOfData = ClientBasicMessage::getIndexOfFirstData();
 	const unsigned char* dataArray = &(pointerToStartOfMessage[indexOfStartOfData]);
