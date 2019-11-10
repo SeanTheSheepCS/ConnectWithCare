@@ -11,7 +11,7 @@
 #include <unistd.h>     // for close()
 
 #include "ServerMessageConverter.h"
-#include "ServerMessageHandler.h"
+#include "ServerMessageCreator.h"
 
 #include "../ServerModel/LoginDatabaseController.h"
 
@@ -32,9 +32,6 @@ public:
 	
 	void communicate();
 
-	Message getMsgFromClient();
-	void setMsgToClient(Message msg);
-
 	void addLoginDatabase(LoginDatabaseController lDB);
 
 private:
@@ -48,10 +45,8 @@ private:
 	
 	LoginDatabaseController loginDatabase;
 
-	ServerMessageConverter messageConverter;
-	ServerMessageHandler messageHandler;
-	Message msgFromClient;
-	Message msgToClient;
+	ServerMessageConverter	 messageConverter;
+	ServerMessageCreator	 messageCreator;
 	
 	void initServer();
 	
@@ -63,10 +58,15 @@ private:
 	Message messageFromDataReceivedFromClient(int clientSock);
 
 	string receiveData(int sock);
-	void specifyTypeOfClientMessage(Message& msgFromClient);
+	Message specifyTypeOfClientMessage(Message& msgFromClient);
 
-	void configureMessageSend(int sock, string& msgFromClient);
-	void sendData (int sock, string outgoingMsg);
+	Message specifyClientMessageAsLoginMessage(Message& msgFromClient);
+	LoginAuthMessage specifyClientMessageAsLoginMessageSuccess (bool validated);
+	ErrorNoAuthMessage specifyClientMessageAsLoginMessageFailure ();
+
+	LogoutConfirmMessage specifyClientMessageAsLogoutMessage(Message& msgFromClient);
+
+	void sendData (int sock, Message msgToClient);
 
 	void closeAllConnections();
 

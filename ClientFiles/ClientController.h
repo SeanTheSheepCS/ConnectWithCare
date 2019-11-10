@@ -35,27 +35,27 @@ class ClientController
         // Communicates functionalities with clients.
         
     private:
-        int sock; // Socket descriptor
-        struct sockaddr_in serverAddr; // Address of the server
-        GUI app; // Apllication that the client runs
-        ClientMessageCreator theCreator; // Creates specific client messages to send over to server
-        ClientMessageConverter theConvertor; // Converts messages from server so the client understands
+        int sock; 								// Socket descriptor
+        struct sockaddr_in serverAddr; 			// Address of the server
+        GUI app; 								// Application that the client runs
+        ClientMessageCreator theCreator; 		// Creates specific client messages to send over to server
+        ClientMessageConverter theConvertor;	// Converts messages from server so the client understands
 
         string username;
         string password;
         string nameTag;
         string accountType;
 
-        unsigned char inBuffer[BUFFERSIZE]; // Buffer for the message from the server
-        int bytesRecv; // Number of bytes received
-        unsigned char outBuffer[BUFFERSIZE]; // Buffer for message to the server
-        int msgLength; // Length of the outgoing message
-        int bytesSent; // Number of bytes sent
+        unsigned char inBuffer[BUFFERSIZE]; 	// Buffer for the message from the server
+        int bytesRecv; 							// Number of bytes received
+        unsigned char outBuffer[BUFFERSIZE]; 	// Buffer for message to the server
+        int msgLength; 							// Length of the outgoing message
+        int bytesSent; 							// Number of bytes sent
 
         void createSocket();
         // Helper function for creating the socket.
         void checkSending(int bytes, int msgLength);
-        // Helper funciton for checking if there was an error in sending message to server.
+        // Helper function for checking if there was an error in sending message to server.
         void checkRecv(int bytes, int msgLenght);
         // Helper function for checking if message was received properly from server.
         void clearBuffer(unsigned char* buffer); // NOT SURE IF THIS WORKS
@@ -68,7 +68,7 @@ class ClientController
         void chatsCase();
         // Handles options inside chat option.
         void postsCase();
-        // Handles optnios inside posts option.
+        // Handles options inside posts option.
         void publicChannelCase();
         // Handles options inside public channel option.
         void friendsCase();

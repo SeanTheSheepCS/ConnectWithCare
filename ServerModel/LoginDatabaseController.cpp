@@ -35,4 +35,8 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 	return false;
 }
 
+bool LoginDatabaseController::confirmLogout() {
+		return true;
+}
+
 

@@ -10,9 +10,6 @@
 #include "ServerController.h"
 #include "ServerMessageConverter.h"
 
-#include "ServerMessageHandler.h"
-#include "MessageHandlingStrategies/ServerMessageHandlingStrategy.h"
-#include "MessageHandlingStrategies/HandleLoginStrategy.h"
 
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
@@ -36,6 +33,7 @@ int mainServerController(int argc, char** argv) {
 	LoginDatabaseController loginController;
 
 	server.addLoginDatabase(loginController);
+	server.communicate();
 
 	return 0;
 }
@@ -47,7 +45,7 @@ ServerController::ServerController(int port) {
 	terminated = false;
 
 	messageConverter = ServerMessageConverter();
-	messageHandler = ServerMessageHandler();
+	messageCreator = ServerMessageCreator();
 	
 	initServer();
 }
@@ -104,14 +102,6 @@ void ServerController::initServer() {
     addConnectionToReceiveSocketSet(serverSock);
 }
 
-Message ServerController::getMsgFromClient() {
-	return msgFromClient;
-}
-
-void ServerController::setMsgToClient(Message msg) {
-	msgToClient = msg;
-}
-
 void ServerController::addLoginDatabase(LoginDatabaseController lDB) {
 	loginDatabase = lDB;
 }
@@ -136,7 +126,7 @@ void ServerController::communicate() {
 			processIncomingSockets(tempRecvSockSet);
 		}
 	}
-	closeAllConnections()
+	closeAllConnections();
 }
 
 void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet) {
@@ -177,12 +167,10 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 			continue;
 		
 		// Receive data from the TCP client
-		msgFromClient = messageFromDataReceivedFromClient(clientSock);
+		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
-		specifyTypeOfClientMessage(msgFromClient);
-
-		msgToClient = messageHandler.handleMessageFromClient();
-		configureMessageSend(clientSock, msgToClient);
+		Message msgToClient = specifyTypeOfClientMessage(msgFromClient);
+		sendData(clientSock, msgToClient);
 	}
 }
 
@@ -232,35 +220,54 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
 }
 
-void ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
+Message ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
+	Message msgToClient;
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
-		msgFromClient = messageConverter.toLoginMessage(msgFromClient);
-		messageHandler.setMessage(msgFromClient);
-		HandleLoginStrategy hls;
-		ServerMessageHandlingStrategy* tempStrategy = hls;
-		messageHandler.setStrategy(tempStrategy);
+		msgToClient = specifyClientMessageAsLoginMessage(msgFromClient);
 	}
+	else if (messageConverter.isLogoutMessage(msgFromClient)) {
+		msgToClient = specifyClientMessageAsLogoutMessage(msgFromClient);
+	}
+	return msgToClient;
+}
+Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
+	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
+	if (validated) {
+		return specifyClientMessageAsLoginMessageSuccess(validated);
+	}
+	else {
+		return specifyClientMessageAsLoginMessageFailure();
+	}
+
+}
+LoginAuthMessage ServerController::specifyClientMessageAsLoginMessageSuccess (bool validated) {
+	return messageCreator.createLoginAuthMessage(validated);
+}
+ErrorNoAuthMessage ServerController::specifyClientMessageAsLoginMessageFailure () {
+	return messageCreator.createErrorNoAuthMessage();
+
+}
+LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
+	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
+	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
+	LogoutConfirmMessage createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
 }
 
-void ServerController::configureMessageSend(int sock, string& msgFromClient) {
-
-}
-
-void ServerController::sendData(int sock, Message outgoingMsg) {
+void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
 	
-	//unsigned char* outGoingMsg
-	//
+	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
 	// Sent the data
-	bytesSent = send(sock, outgoingMsg.c_str(), outgoingMsg.size(), 0);
+	bytesSent = send(sock, outGoingMsg, msgToClient.getLength(), 0);
 	
 	if (bytesSent < 0){
 		cout << "tcp error in sending. Bytes sent = " << bytesSent << endl;
 		return;
 	}
 	else {
-		cout << "sent " << bytesSent << " of " << outgoingMsg.size() << endl;
+		cout << "sent " << bytesSent << " of " << msgToClient.getLength() << endl;
 	}
 }
 
