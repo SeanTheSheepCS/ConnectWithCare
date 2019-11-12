@@ -66,6 +66,36 @@ LogoutConfirmMessage ClientMessageConverter::toLogoutConfirmMessage(Message mess
 	}
 }
 
+bool ClientMessageConverter::isPostingDataMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char* messageAsCharArray = messageToDetermineTypeOf.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_POSTINGDATA)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+PostingDataMessage ClientMessageConverter::toPostingDataMessage(Message messageToTurnIntoPostingDataMessage)
+{
+	//another quick check to be 100% sure this message is a postingDataMessage...
+	const unsigned char* messageAsCharArray = messageToTurnIntoPostingDataMessage.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_POSTINGDATA)
+	{
+		return PostingDataMessage(messageToTurnIntoPostingDataMessage.getLength(), messageToTurnIntoPostingDataMessage.getMessageAsCharArray());
+	}
+	else
+	{
+		std::cout << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+}
+
 bool ClientMessageConverter::isErrorNoAuthMessage(Message messageToDetermineTypeOf)
 {
 	const unsigned char* messageAsCharArray = messageToDetermineTypeOf.getMessageAsCharArray();

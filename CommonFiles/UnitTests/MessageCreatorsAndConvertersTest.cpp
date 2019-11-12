@@ -29,6 +29,7 @@ void runUnitTestsForMessages()
 	runUserMessageHistoryAllMessageTest();
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
+	runPostingDataMessageTest();
 	runServerSpecialMessagesTest();
 	std::cout << "TESTS PASSED: " << std::dec << numberOfTestsPassed << "/" << std::dec << numberOfTestsAdministered << std::endl;
 }
@@ -171,8 +172,6 @@ void runCreatePostingMessageTest()
 		else
 		{
 			testFailed();
-			std::cout << testDate.toString() << std::endl;
-			std::cout << cpMessageAgain.getPosting().getDateTimePosted().toString() << std::endl;
 		}
 
 		if(cpMessageAgain.getPosting().getPostText() == testPostText)
@@ -606,6 +605,91 @@ void runLogoutConfirmMessageTest()
 		{
 			testFailed();
 		}
+	}
+}
+
+void runPostingDataMessageTest()
+{
+	ServerMessageCreator creator = ServerMessageCreator();
+	unsigned long int testBoardID = 2048;
+	std::string testUsername = string("TESTUSER");
+	Date testDate = Date(2080,11,11,0);
+	std::string testPostText = string("ANOTHER TEST POSTING");
+	Posting testPosting = Posting(testPostText,testUsername,testDate);
+	PostingDataMessage thepdMessage = creator.createPostingDataMessage(testPosting, testBoardID);
+	Message theMessage = Message(thepdMessage.getLength(), thepdMessage.getMessageAsCharArray());
+
+	ClientMessageConverter converter;
+	if(converter.isPostingDataMessage(theMessage))
+	{
+		PostingDataMessage thepdMessageAgain = converter.toPostingDataMessage(theMessage);
+		if((thepdMessageAgain.getMessageAsCharArray())[0] == SERVERMESSAGECODE_POSTINGDATA)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thepdMessageAgain.getBoardIDThatThePostingBelongsTo() == testBoardID)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thepdMessageAgain.getPosting().getDateTimePosted().equals(testDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thepdMessageAgain.getPosting().getPostText() == testPostText)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+			std::cout << thepdMessageAgain.getPosting().getPostText() << std::endl;
+			std::cout << testPostText << std::endl;
+		}
+
+		if(thepdMessageAgain.getPosting().getUsernameOfUserWhoCreatedThisPost() == testUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginAuthMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isEndOfDataMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
 	}
 }
 

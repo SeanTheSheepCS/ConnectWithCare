@@ -16,7 +16,7 @@ CreatePostingMessage::CreatePostingMessage(const unsigned long int lengthArg, co
 
 	char* usernameAsCharArray = new char[lengthOfUsernameField+1];
 	const unsigned char* pointerToStartOfUsernameField = &(dataArray[lengthOfBoardIDInVLQ + 5 + lengthOfUsernameLengthInVLQField]);
-	for(int i = 0; i < lengthOfUsernameField; i++)
+	for(unsigned int i = 0; i < lengthOfUsernameField; i++)
 	{
 		usernameAsCharArray[i] = pointerToStartOfUsernameField[i];
 	}

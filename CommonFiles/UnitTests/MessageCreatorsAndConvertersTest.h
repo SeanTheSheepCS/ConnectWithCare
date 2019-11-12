@@ -14,6 +14,7 @@ void runUserMessageHistoryAllMessageTest();
 void runLogoutConfirmMessageTest();
 void runSpecialMessageTest();
 void runServerSpecialMessagesTest();
+void runPostingDataMessageTest();
 
 void testPassed();
 void testFailed();

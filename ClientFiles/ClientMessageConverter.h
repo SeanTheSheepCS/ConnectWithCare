@@ -24,10 +24,10 @@ class ClientMessageConverter
 
     bool isUserMessageImageDataMessage(Message messageToDetermineTypeOf);
     UserMessageImageDataMessage toUserMessageImageDataMessage(Message messageToTurnIntoAUserMessageImageDataMessage); //THIS AND ALL BELOW FOLLOW SAME RESTRICTION WITH THE FUNCTION ABOVE THEM.
-
+#endif
     bool isPostingDataMessage(Message messageToDetermineTypeOf);
     PostingDataMessage toPostingDataMessage(Message messageToTurnIntoPostingDataMessage);
-
+#if 0
     bool isPostingImageDataMessage(Message messageToDetermineTypeOf);
     PostingImageDataMessage toPostingImageDataMessage(Message messageToTurnIntoPostingImageDataMessage);
 #endif

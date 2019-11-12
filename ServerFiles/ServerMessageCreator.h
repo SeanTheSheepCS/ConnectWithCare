@@ -16,7 +16,9 @@ class ServerMessageCreator
 #if 0
     Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
     Message createUserMessageImageDataMessage(UserMessageImage messageImageToConvertToMessage);
-    Message createPostingDataMessage(Posting postingToConvertToMessage);
+#endif
+    PostingDataMessage createPostingDataMessage(Posting postingToConvertToMessage, unsigned long int boardIDThatThePostBelongsTo);
+#if 0
     Message createPostingImageDataMessage(PostingImage postingImageToConvertToMessage);
     //TWO MESSAGES TO IMPLEMENT LATER...
     //ASKCLIENTTOREQEUSTMESSAGEINFO FUNCTION GOES HERE
