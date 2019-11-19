@@ -378,7 +378,7 @@ void ClientController::loginCase()
 
         //checkRecv(bytesRecv, msgLength);
 
-        Message msgFromServer(strlen((char*)inBuffer), inBuffer);
+        Message msgFromServer(bytesRecv, inBuffer);
 
         if(theConvertor.isLoginAuthMessage(msgFromServer))
         {
