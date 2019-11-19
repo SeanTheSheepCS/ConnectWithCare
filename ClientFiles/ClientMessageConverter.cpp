@@ -275,3 +275,32 @@ EndOfDataMessage ClientMessageConverter::toEndOfDataMessage(Message messageToTur
 		exit(1);
 	}
 }
+
+bool ClientMessageConverter::isUserMessageDataMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char* messageAsCharArray = messageToDetermineTypeOf.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_MESSAGEDATA)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+UserMessageDataMessage ClientMessageConverter::toUserMessageDataMessage(Message messageToTurnIntoAUserMessageDataMessage)
+{
+	//another quick check to be 100% sure this message is an userMessageDataMessage message...
+	const unsigned char* messageAsCharArray = messageToTurnIntoAUserMessageDataMessage.getMessageAsCharArray();
+	const unsigned char messageCode = messageAsCharArray[0];
+	if(messageCode == SERVERMESSAGECODE_MESSAGEDATA)
+	{
+		return UserMessageDataMessage(messageToTurnIntoAUserMessageDataMessage.getLength(), messageToTurnIntoAUserMessageDataMessage.getMessageAsCharArray());
+	}
+	else
+	{
+		std::cout << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+}
