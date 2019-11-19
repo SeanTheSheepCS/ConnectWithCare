@@ -169,7 +169,9 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 		// Receive data from the TCP client
 		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
+		cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
 		Message msgToClient = specifyTypeOfClientMessage(msgFromClient);
+		//Message msgToClient = messageCreator.createErrorNoAuthMessage();
 		sendData(clientSock, msgToClient);
 	}
 }
@@ -220,15 +222,16 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
 }
 
-Message ServerController::specifyTypeOfClientMessage(Message& msgFromClient) {
-	Message msgToClient;
+Message ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
+	//Message msgToClient;
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
-		msgToClient = specifyClientMessageAsLoginMessage(msgFromClient);
+		cout<<"TEST";
+		return specifyClientMessageAsLoginMessage(msgFromClient);
 	}
 	else if (messageConverter.isLogoutMessage(msgFromClient)) {
-		msgToClient = specifyClientMessageAsLogoutMessage(msgFromClient);
+		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
-	return msgToClient;
+	//return msgToClient;
 }
 Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
 	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
@@ -237,6 +240,7 @@ Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromCli
 		return specifyClientMessageAsLoginMessageSuccess(validated);
 	}
 	else {
+		cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
 		return specifyClientMessageAsLoginMessageFailure();
 	}
 
@@ -245,8 +249,8 @@ LoginAuthMessage ServerController::specifyClientMessageAsLoginMessageSuccess (bo
 	return messageCreator.createLoginAuthMessage(validated);
 }
 ErrorNoAuthMessage ServerController::specifyClientMessageAsLoginMessageFailure () {
+	cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
 	return messageCreator.createErrorNoAuthMessage();
-
 }
 LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
 	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
@@ -258,6 +262,13 @@ void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
 	
 	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
+
+	//cout << "\n";
+	//for(int i = 0; i < 1; i++)
+	//{
+	//	printf("%X",outGoingMsg[i]);
+	//}
+	//cout << "\n";
 
 	// Sent the data
 	bytesSent = send(sock, outGoingMsg, msgToClient.getLength(), 0);

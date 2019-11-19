@@ -58,7 +58,7 @@ private:
 	Message messageFromDataReceivedFromClient(int clientSock);
 
 	string receiveData(int sock);
-	Message specifyTypeOfClientMessage(Message& msgFromClient);
+	Message specifyTypeOfClientMessage(Message msgFromClient);
 
 	Message specifyClientMessageAsLoginMessage(Message& msgFromClient);
 	LoginAuthMessage specifyClientMessageAsLoginMessageSuccess (bool validated);
