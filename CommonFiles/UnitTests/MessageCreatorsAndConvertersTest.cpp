@@ -30,6 +30,7 @@ void runUnitTestsForMessages()
 	runLoginAuthMessageTest();
 	runLogoutConfirmMessageTest();
 	runPostingDataMessageTest();
+	runUserMessageDataMessageTest();
 	runServerSpecialMessagesTest();
 	std::cout << "TESTS PASSED: " << std::dec << numberOfTestsPassed << "/" << std::dec << numberOfTestsAdministered << std::endl;
 }
@@ -657,8 +658,6 @@ void runPostingDataMessageTest()
 		else
 		{
 			testFailed();
-			std::cout << thepdMessageAgain.getPosting().getPostText() << std::endl;
-			std::cout << testPostText << std::endl;
 		}
 
 		if(thepdMessageAgain.getPosting().getUsernameOfUserWhoCreatedThisPost() == testUsername)
@@ -684,6 +683,98 @@ void runPostingDataMessageTest()
 		testPassed();
 	}
 	if(converter.isEndOfDataMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runUserMessageDataMessageTest()
+{
+	ServerMessageCreator creator = ServerMessageCreator();
+	ClientMessageConverter converter;
+
+	std::string testSenderUsername = "john_lennon";
+	std::string testRecipientUsername = "yoko_ono";
+	Date testDate = Date(1987,10,10,26000);
+	std::string testMessageText = "Imagine all the people...";
+	UserMessage testUserMessage = UserMessage(testSenderUsername, testRecipientUsername, testDate, testMessageText);
+	UserMessageDataMessage umdMessage = creator.createUserMessageDataMessage(testUserMessage);
+	Message theMessage = Message(umdMessage.getLength(), umdMessage.getMessageAsCharArray());
+
+	if(converter.isUserMessageDataMessage(theMessage))
+	{
+		UserMessageDataMessage theuserDataMessageAgain = converter.toUserMessageDataMessage(theMessage);
+		if((theuserDataMessageAgain.getMessageAsCharArray())[0] == SERVERMESSAGECODE_MESSAGEDATA)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theuserDataMessageAgain.getUserMessage().getUsernameOfTheSender() == testSenderUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theuserDataMessageAgain.getUserMessage().getUsernameOfTheRecipient() == testRecipientUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theuserDataMessageAgain.getUserMessage().getDateCreated().equals(testDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theuserDataMessageAgain.getUserMessage().getMessageText() == testMessageText)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginAuthMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isEndOfDataMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isPostingDataMessage(theMessage))
 	{
 		testFailed();
 	}

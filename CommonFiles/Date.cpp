@@ -184,8 +184,8 @@ const unsigned char* Date::toFiveByteFormat() const
 	//Next 5 bits are for day
 	charArray[2] |= (day) << 1;
 	//Next 17 bits are for seconds
-	charArray[2] |= (seconds << 16);
-	charArray[3] |= (seconds << 8);
+	charArray[2] |= (seconds >> 16);
+	charArray[3] |= (seconds >> 8);
 	charArray[4] |= (seconds);
 
 	return charArray;

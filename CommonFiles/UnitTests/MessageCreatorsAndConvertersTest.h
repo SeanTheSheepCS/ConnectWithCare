@@ -12,9 +12,9 @@ void runBoardSearchMessageTest();
 void runUserMessageHistoryMessageTest();
 void runUserMessageHistoryAllMessageTest();
 void runLogoutConfirmMessageTest();
-void runSpecialMessageTest();
-void runServerSpecialMessagesTest();
 void runPostingDataMessageTest();
+void runUserMessageDataMessageTest();
+void runServerSpecialMessagesTest();
 
 void testPassed();
 void testFailed();

@@ -18,10 +18,10 @@ class ClientMessageConverter
 
     bool isLogoutConfirmMessage(Message messageToDetermineTypeOf);
     LogoutConfirmMessage toLogoutConfirmMessage(Message messageToTurnIntoALogoutConfirmMessage); //ONLY TO BE CALLED IF ISLOGOUTCONFIRMMESSAGE RETURNED TRUE!
-#if 0
+
     bool isUserMessageDataMessage(Message messageToDetermineTypeOf);
     UserMessageDataMessage toUserMessageDataMessage(Message messageToTurnIntoAUserMessageDataMessage); //ONLY TO BE CALLED IF ISUSERMESSAGEDATAMESSAGE RETURNED TRUE!
-
+#if 0
     bool isUserMessageImageDataMessage(Message messageToDetermineTypeOf);
     UserMessageImageDataMessage toUserMessageImageDataMessage(Message messageToTurnIntoAUserMessageImageDataMessage); //THIS AND ALL BELOW FOLLOW SAME RESTRICTION WITH THE FUNCTION ABOVE THEM.
 #endif

@@ -13,8 +13,8 @@ class ServerMessageCreator
     ServerMessageCreator();
     LoginAuthMessage createLoginAuthMessage(bool whetherTheLoginWasAccepted);
     LogoutConfirmMessage createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
+    UserMessageDataMessage createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
 #if 0
-    Message createUserMessageDataMessage(UserMessage userMessageToConvertToMessage);
     Message createUserMessageImageDataMessage(UserMessageImage messageImageToConvertToMessage);
 #endif
     PostingDataMessage createPostingDataMessage(Posting postingToConvertToMessage, unsigned long int boardIDThatThePostBelongsTo);
