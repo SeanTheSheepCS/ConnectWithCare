@@ -373,10 +373,13 @@ void ClientController::loginCase()
         checkSending(bytesSent, msgLength); 
 
         // Receive login info from server
+
         bytesRecv = recv(sock, (char *) &inBuffer, msgLength, 0); // *** Could spawn error here if the length is not correct
-        checkRecv(bytesRecv, msgLength);
-        
+
+        //checkRecv(bytesRecv, msgLength);
+
         Message msgFromServer(strlen((char*)inBuffer), inBuffer);
+
         if(theConvertor.isLoginAuthMessage(msgFromServer))
         {
             LoginAuthMessage userLogin = theConvertor.toLoginAuthMessage(msgFromServer);
