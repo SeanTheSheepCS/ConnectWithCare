@@ -169,9 +169,8 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 		// Receive data from the TCP client
 		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
-		cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
+		//cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
 		Message msgToClient = specifyTypeOfClientMessage(msgFromClient);
-		//Message msgToClient = messageCreator.createErrorNoAuthMessage();
 		sendData(clientSock, msgToClient);
 	}
 }
@@ -225,7 +224,7 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 Message ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
 	//Message msgToClient;
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
-		cout<<"TEST";
+		//cout<<"TEST";
 		return specifyClientMessageAsLoginMessage(msgFromClient);
 	}
 	else if (messageConverter.isLogoutMessage(msgFromClient)) {
@@ -240,7 +239,7 @@ Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromCli
 		return specifyClientMessageAsLoginMessageSuccess(validated);
 	}
 	else {
-		cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
+		//cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
 		return specifyClientMessageAsLoginMessageFailure();
 	}
 
@@ -249,7 +248,7 @@ LoginAuthMessage ServerController::specifyClientMessageAsLoginMessageSuccess (bo
 	return messageCreator.createLoginAuthMessage(validated);
 }
 ErrorNoAuthMessage ServerController::specifyClientMessageAsLoginMessageFailure () {
-	cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
+	//cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
 	return messageCreator.createErrorNoAuthMessage();
 }
 LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
