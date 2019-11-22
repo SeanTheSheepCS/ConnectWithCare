@@ -206,3 +206,31 @@ CreatePostingMessage ServerMessageConverter::toCreatePostingMessage(Message mess
 		return CreatePostingMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool ServerMessageConverter::isSendUserMessageMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_SENDMESSAGE)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+SendUserMessageMessage ServerMessageConverter::toSendUserMessageMessage(Message messageToTurnIntoASendUserMessageMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoASendUserMessageMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoASendUserMessageMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_SENDMESSAGE)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return SendUserMessageMessage(messageLength,messageAsCharArray);
+	}
+}

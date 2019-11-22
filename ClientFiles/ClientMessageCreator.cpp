@@ -304,3 +304,80 @@ CreatePostingMessage ClientMessageCreator::createCreatePostingMessage(unsigned l
 	delete[] dataLengthInVLQ;
 	return returnValue;
 }
+
+SendUserMessageMessage ClientMessageCreator::createSendUserMessageMessage(UserMessage userMessageToConvertToMessage)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_SENDMESSAGE;
+	const unsigned short int lengthOfMessageCode = 1;
+
+	const char* usernameOfSenderAsCharArray = userMessageToConvertToMessage.getUsernameOfTheSender().c_str();
+	const unsigned short int lengthOfUsernameOfSender = userMessageToConvertToMessage.getUsernameOfTheSender().size();
+	const unsigned char* usernameOfSenderLengthFieldAsCharArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsernameOfSender);
+	const unsigned short int lengthOfUsernameOfSenderLengthField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const char* usernameOfRecipientAsCharArray = userMessageToConvertToMessage.getUsernameOfTheRecipient().c_str();
+	const unsigned short int lengthOfUsernameOfRecipient = userMessageToConvertToMessage.getUsernameOfTheRecipient().size();
+	const unsigned char* usernameOfRecipientLengthFieldAsCharArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsernameOfRecipient);
+	const unsigned short int lengthOfUsernameOfRecipientLengthField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const unsigned char* dateAsCharArray = userMessageToConvertToMessage.getDateCreated().toFiveByteFormat();
+	const unsigned short int lengthOfDateAsCharArray = 5;
+
+	const char* messageText = userMessageToConvertToMessage.getMessageText().c_str();
+	const unsigned long int lengthOfMessageText = userMessageToConvertToMessage.getMessageText().size();
+
+	unsigned long int dataLengthAsUnsignedLong = lengthOfUsernameOfSenderLengthField + lengthOfUsernameOfSender + lengthOfUsernameOfRecipientLengthField + lengthOfUsernameOfRecipient + lengthOfDateAsCharArray + lengthOfMessageText;
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(dataLengthAsUnsignedLong);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	unsigned long totalMessageLength = lengthOfMessageCode + lengthOfDataLengthInVLQField + dataLengthAsUnsignedLong;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalMessageLength];
+	unsigned long int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+
+	for(unsigned int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfSenderLengthField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfSenderLengthFieldAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfSender; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfSenderAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfRecipientLengthField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfRecipientLengthFieldAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfRecipient; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfRecipientAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfDateAsCharArray; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dateAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfMessageText; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = messageText[i];
+		currentIndexInTheMessage++;
+	}
+
+	SendUserMessageMessage returnValue = SendUserMessageMessage(totalMessageLength, messageAsCharArray);
+	delete[] messageAsCharArray;
+	delete[] usernameOfRecipientLengthFieldAsCharArray;
+	delete[] usernameOfSenderLengthFieldAsCharArray;
+	delete[] dataLengthInVLQ;
+	return returnValue;
+}

@@ -24,10 +24,10 @@ class ServerMessageConverter
 #if 0
     bool isCreatePostingImageMessage(Message messageToDetermineTypeOf);
     CreatePostingImageMessage toCreatePostingImageMessage(Message messageToTurnIntoACreatePostingImageMessage); //THIS AND ALL BELOW FOLLOW ABOVE RULES.
-
+#endif
     bool isSendUserMessageMessage(Message messageToDetermineTypeOf);
     SendUserMessageMessage toSendUserMessageMessage(Message messageToTurnIntoASendUserMessageMessage);
-
+#if 0
     bool isSendUserMessageImageMessage(Message messageToDetermineTypeOf);
     SendUserMessageImageMessage toSendUserMessageImageMessage(Message messageToTurnIntoASendUserMessageImageMessage);
 #endif

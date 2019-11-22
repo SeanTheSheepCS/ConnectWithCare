@@ -8,6 +8,7 @@ class Date
 	public:
 		Date(unsigned short int year, unsigned short int month, unsigned short int day, unsigned long int seconds);
 		Date(const unsigned char* fiveByteFormat);
+		~Date();
 		unsigned short int getYear() const;
 		unsigned short int getMonth() const;
 		unsigned short int getDay() const;

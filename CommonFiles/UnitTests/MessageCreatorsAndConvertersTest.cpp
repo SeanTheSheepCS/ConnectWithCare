@@ -23,6 +23,7 @@ void runUnitTestsForMessages()
 	runLoginMessageTest();
 	runLogoutMessageTest();
 	runCreatePostingMessageTest();
+	runSendUserMessageMessageTest();
 	runBoardHistoryMessageTest();
 	runBoardSearchMessageTest();
 	runUserMessageHistoryMessageTest();
@@ -207,6 +208,114 @@ void runCreatePostingMessageTest()
 		testPassed();
 	}
 	if(converter.isLogoutMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+}
+
+void runSendUserMessageMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	ServerMessageConverter converter;
+
+	std::string testSenderUsername = "darth_vader";
+	std::string testRecipientUsername = "luke_skywalker";
+	Date testDate = Date(1980,5,21,40000);
+	std::string testMessageText = "No, I am your father.";
+	UserMessage testUserMessage = UserMessage(testSenderUsername, testRecipientUsername, testDate, testMessageText);
+	SendUserMessageMessage sumMessage = creator.createSendUserMessageMessage(testUserMessage);
+	Message theMessage = Message(sumMessage.getLength(), sumMessage.getMessageAsCharArray());
+
+	if(converter.isSendUserMessageMessage(theMessage))
+	{
+		SendUserMessageMessage theSendUserMessageMessageAgain = converter.toSendUserMessageMessage(theMessage);
+		if((theSendUserMessageMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_SENDMESSAGE)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theSendUserMessageMessageAgain.getUserMessage().getUsernameOfTheSender() == testSenderUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theSendUserMessageMessageAgain.getUserMessage().getUsernameOfTheRecipient() == testRecipientUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theSendUserMessageMessageAgain.getUserMessage().getDateCreated().equals(testDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(theSendUserMessageMessageAgain.getUserMessage().getMessageText() == testMessageText)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isUserMessageHistoryAllMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isUserMessageHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isBoardHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isCreatePostingMessage(theMessage))
 	{
 		testFailed();
 	}

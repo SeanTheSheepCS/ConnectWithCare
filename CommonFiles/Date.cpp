@@ -31,6 +31,14 @@ Date::Date(const unsigned char* fiveByteFormat)
 	this->seconds = dateSeconds;
 }
 
+Date::~Date()
+{
+	year = 0;
+	month = 0;
+	day = 0;
+	seconds = 0;
+}
+
 unsigned short int Date::getYear() const
 {
 	return year;
