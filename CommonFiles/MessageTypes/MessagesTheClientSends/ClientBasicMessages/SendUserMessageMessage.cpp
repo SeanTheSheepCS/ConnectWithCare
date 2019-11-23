@@ -1,5 +1,6 @@
 #include "SendUserMessageMessage.h"
-#include "../../../UserMessage.h"
+
+#include "../../../UserMessages/UserMessage.h"
 
 SendUserMessageMessage::SendUserMessageMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg) : ClientBasicMessage(lengthArg, messageAsCharArrayArg)
 {

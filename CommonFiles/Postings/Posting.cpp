@@ -1,4 +1,5 @@
 #include "Posting.h"
+
 #include <ctime>
 #include <cstdlib>
 #include <iostream>

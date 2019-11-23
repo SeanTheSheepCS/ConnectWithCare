@@ -1,7 +1,7 @@
 #ifndef USER_MESSAGE_DATA_MESSAGE_H
 #define USER_MESSAGE_DATA_MESSAGE_H
 
-#include "../../../UserMessage.h"
+#include "../../../UserMessages/UserMessage.h"
 #include "../ServerRequestReplyMessages.h"
 
 class UserMessageDataMessage : public ServerRequestReplyMessage

@@ -2,10 +2,10 @@
 #define SERVER_MESSAGE_CONVERTER_H
 
 #include "../CommonFiles/MessageCodes.h"
-#include "../CommonFiles/Posting.h"
 #include "../CommonFiles/Message.h"
-#include "../CommonFiles/UserMessage.h"
+#include "../CommonFiles/UserMessages/UserMessage.h"
 #include "../CommonFiles/AllMessageTypes.h"
+#include "../CommonFiles/Postings/Posting.h"
 
 class ServerMessageConverter
 {

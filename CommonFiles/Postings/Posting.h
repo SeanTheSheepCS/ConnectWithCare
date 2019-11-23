@@ -1,7 +1,7 @@
 #ifndef POSTING_H
 #define POSTING_H
 
-#include "Date.h"
+#include "../Date.h"
 #include <string>
 #include <ctime>
 

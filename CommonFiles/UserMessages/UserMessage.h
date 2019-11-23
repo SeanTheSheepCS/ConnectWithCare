@@ -1,7 +1,7 @@
 #ifndef USER_MESSAGE_H
 #define USER_MESSAGE_H
 
-#include "Date.h"
+#include "../Date.h"
 #include <string>
 
 class UserMessage
