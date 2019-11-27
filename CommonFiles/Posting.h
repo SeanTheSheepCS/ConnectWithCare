@@ -12,7 +12,7 @@ class Posting
 	private:
 		string postText; //the contents of the post
 		string usernameOfTheUserWhoCreatedThisPost;
-		Date* dateTimePosted;//date;
+		Date*  dateTimePosted;//date;
 	public:
 		Posting(std::string postText, std::string usernameOfTheUserWhoCreatedThisPost, Date datePosted);
 		Posting(const Posting& other);
@@ -22,7 +22,7 @@ class Posting
 		string getPostText() const;
 		Date getDateTimePosted() const;
 		string getUsernameOfUserWhoCreatedThisPost() const;
-		
+
 		bool operator<(const Posting& rhs) const;
 		// Need to define functor with () operator in order to place in set<Posting>
 };
