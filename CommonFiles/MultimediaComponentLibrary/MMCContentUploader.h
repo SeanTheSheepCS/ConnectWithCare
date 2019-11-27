@@ -14,7 +14,7 @@ class MMCContentUploader
 	private:
 		bool isUploadInProgress;
 		unsigned long int multimediaComponentIDcurrentlyBeingUploaded;
-		std::ofstream multimediaFileReader;
+		std::ifstream multimediaFileReader;
 };
 
 #endif
