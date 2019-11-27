@@ -22,6 +22,8 @@ class Posting
 		string getPostText() const;
 		Date getDateTimePosted() const;
 		string getUsernameOfUserWhoCreatedThisPost() const;
+
+		bool operator<(const Posting& rhs) const;
 };
 
 #endif
