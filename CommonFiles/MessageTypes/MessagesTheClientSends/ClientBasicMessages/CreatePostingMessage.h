@@ -2,9 +2,10 @@
 #define CREATE_POSTING_MESSAGE_H
 
 #include <string>
+
+#include "../../../Postings/Posting.h"
 #include "../ClientBasicMessages.h"
 #include "../../../Utilities/VariableLengthQuantityLibrary.h"
-#include "../../../Posting.h"
 
 class CreatePostingMessage : public ClientBasicMessage
 {

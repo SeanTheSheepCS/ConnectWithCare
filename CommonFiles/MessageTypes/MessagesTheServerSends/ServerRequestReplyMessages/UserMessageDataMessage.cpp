@@ -1,7 +1,7 @@
 #include "UserMessageDataMessage.h"
-#include "../../../UserMessage.h"
 #include <string>
 #include <iostream>
+#include "../../../UserMessages/UserMessage.h"
 
 UserMessageDataMessage::UserMessageDataMessage(const unsigned long int lengthArg, const unsigned char* messageAsCharArrayArg) : ServerRequestReplyMessage(lengthArg, messageAsCharArrayArg)
 {

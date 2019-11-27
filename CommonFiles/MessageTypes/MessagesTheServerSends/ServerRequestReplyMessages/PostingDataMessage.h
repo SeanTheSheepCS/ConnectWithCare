@@ -1,8 +1,8 @@
 #ifndef POSTING_DATA_MESSAGE_H
 #define POSTING_DATA_MESSAGE_H
 
+#include "../../../Postings/Posting.h"
 #include "../ServerRequestReplyMessages.h"
-#include "../../../Posting.h"
 
 class PostingDataMessage : public ServerRequestReplyMessage
 {

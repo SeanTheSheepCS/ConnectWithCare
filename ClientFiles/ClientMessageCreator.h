@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include "../CommonFiles/MessageCodes.h"
-#include "../CommonFiles/Posting.h"
 #include "../CommonFiles/Message.h"
-#include "../CommonFiles/UserMessage.h"
+#include "../CommonFiles/UserMessages/UserMessage.h"
 #include "../CommonFiles/AllMessageTypes.h"
+#include "../CommonFiles/Postings/Posting.h"
 #include "../CommonFiles/Utilities/VariableLengthQuantityLibrary.h"
 
 class ClientMessageCreator
@@ -18,7 +18,9 @@ class ClientMessageCreator
     CreatePostingMessage createCreatePostingMessage(unsigned long int boardIDToPostTo, Posting postToConvertToMessage);
 #if 0
     Message createCreatePostingImageMessage(PostingImage postToConvertToMessage);
-    Message createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
+#endif
+    SendUserMessageMessage createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
+#if 0
     Message createSendUserMessageImageMessage(UserImageMessage userImageMessageToConvertToMessage);
 #endif
     UserMessageHistoryMessage createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet);

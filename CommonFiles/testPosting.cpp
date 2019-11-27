@@ -1,8 +1,8 @@
-#include "Posting.h"
 #include "Date.h"
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
+#include "Postings/Posting.h"
 
 using namespace std;
 

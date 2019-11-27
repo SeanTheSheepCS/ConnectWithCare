@@ -6,6 +6,7 @@ void runUnitTestsForMessages();
 void runLoginMessageTest();
 void runLogoutMessageTest();
 void runCreatePostingMessageTest();
+void runSendUserMessageMessageTest();
 void runLoginAuthMessageTest();
 void runBoardHistoryMessageTest();
 void runBoardSearchMessageTest();
