@@ -20,6 +20,8 @@
 #include "../View/GUI.h"
 #include "ClientMessageConverter.h"
 #include "ClientMessageCreator.h"
+#include "../CommonFiles/AllMessageTypes.h"
+
 #define BUFFERSIZE 32
 #define MAXLINE 32 
 
@@ -61,6 +63,11 @@ class ClientController
         void clearBuffer(unsigned char* buffer); // NOT SURE IF THIS WORKS
         // Helper function for clearing a buffer.
         
+        void sendMessageToServer(Message m);
+        // Sends a message to Server.
+        Message recvMessageFromServer();
+        // Receives message from Server.
+
         void loginCase();
         // Handles logging in process.
         void bulletinBoardCase();

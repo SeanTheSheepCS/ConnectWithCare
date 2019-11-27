@@ -13,6 +13,7 @@
  */
 #include "ClientController.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -53,7 +54,11 @@ void ClientController::communicate()
     nameTag = "user(testing)"; // TODO Remove later
     app.buildWelcomeMessage();
     char option;
-    
+
+    Date startDate = Date(2019, 11, 27, 0);
+    Date endDate = Date(2020, 11 , 27, 0);
+    unsigned long int boardID = 69;
+
     while(1)
     {
         app.buildMenu(0, 0, 0); // TODO Need to add notifciation numbers later.
@@ -61,9 +66,32 @@ void ClientController::communicate()
         switch(option)
         {
             case '1':
-                cout << "bb selected" << endl;
-                //TODO need to figure out what to pass inside bb
-                app.buildBulletinBoard();
+                cout << "\tBulletin board selected..." << endl;
+
+                BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, 69);
+                sendMessageToServer(theBoard);
+
+                vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
+
+                Message post (recvMessageFromServer());// First initial post.
+                while(theConvertor.isEndOfDataMessage(post))
+                {
+                	if(!theConvertor.isPostingDataMessage(post))
+					{
+						cout << "\tError has occured when receiving posts from bulletin board.\n";
+						exit(1);
+					}
+					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
+					post = recvMessageFromServer(); // Keep checking from server.
+                }
+
+                vector<const unsigned char*> bulletinBoardPostsAsChar;
+                for(int i = 0; i < bulletinBoardPosts.size(); i++)
+                {
+                	bulletinBoardPostsAsChar.push_back(bulletinBoardPosts[i].getMessageAsCharArray());
+                }
+
+                app.buildBulletinBoard(bulletinBoardPostsAsChar); // TODO not updating GUI class arguments
                 bulletinBoardCase();
                 break; 
             case '2':
@@ -171,7 +199,7 @@ void ClientController::bulletinBoardCase()
             cout << "send message selected" << endl;
             break;
         case 'b':
-            cout << "go back selected" << endl;
+            cout << "\tGoing back..." << endl;
             /* DO NOTING */
             break;
         case 'q':
@@ -398,6 +426,23 @@ void ClientController::loginCase()
         clearBuffer(inBuffer);
     }
     // Clears buffer
+	clearBuffer(outBuffer);
+	clearBuffer(inBuffer);
+}
+
+void ClientController::sendMessageToServer(Message m)
+{
+	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
+	msgLength = m.getLength();
+	bytesSent = send(sock, (char*) &inBuffer, msgLength, 0);
+	checkSending(bytesSent, msgLength);
+}
+
+Message ClientController::recvMessageFromServer()
+{
+	bytesRecv = recv(sock, (char*) &inBuffer, msgLength, 0);
+	Message msgFromServer(bytesRecv, inBuffer);
+	return msgFromServer;
 	clearBuffer(outBuffer);
 	clearBuffer(inBuffer);
 }
