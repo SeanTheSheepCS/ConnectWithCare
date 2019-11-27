@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 #include "../ServerFiles/ServerMessageCreator.h"
-#include "../CommonFiles/Posting.h"
+#include "../CommonFiles/Postings/Posting.h"
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
 

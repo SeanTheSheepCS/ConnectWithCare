@@ -11,7 +11,7 @@
 
 #include <map>
 #include <set>
-#include "../CommonFiles/Posting.h"
+#include "../CommonFiles/Postings/Posting.h"
 #include "../CommonFiles/MessageCodes.h"
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
