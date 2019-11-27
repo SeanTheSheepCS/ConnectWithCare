@@ -14,9 +14,11 @@
 #include "ServerMessageCreator.h"
 
 #include "../ServerModel/LoginDatabaseController.h"
+#include "../ServerModel/PostDatabaseController.h"
 
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
+#include "../CommonFiles/MessageCodes.h"
 
 #define BUFFERSIZE 32
 #define MAXPENDING 10
@@ -33,7 +35,7 @@ public:
 	void communicate();
 
 	void addLoginDatabase(LoginDatabaseController lDB);
-
+	void addBulBoDatabase(PostDatabaseController pDB);
 private:
 	
 	int serverSock;
@@ -44,6 +46,7 @@ private:
 	bool terminated;
 	
 	LoginDatabaseController loginDatabase;
+	PostDatabaseController postDatabase;
 
 	ServerMessageConverter	 messageConverter;
 	ServerMessageCreator	 messageCreator;
@@ -61,10 +64,8 @@ private:
 	Message specifyTypeOfClientMessage(Message msgFromClient);
 
 	Message specifyClientMessageAsLoginMessage(Message& msgFromClient);
-	LoginAuthMessage specifyClientMessageAsLoginMessageSuccess (bool validated);
-	ErrorNoAuthMessage specifyClientMessageAsLoginMessageFailure ();
-
 	LogoutConfirmMessage specifyClientMessageAsLogoutMessage(Message& msgFromClient);
+	Message specifyClientMessageAsPostingMessage(Message& msgFromClient);
 
 	void sendData (int sock, Message msgToClient);
 

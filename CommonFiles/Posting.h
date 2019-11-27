@@ -22,6 +22,9 @@ class Posting
 		string getPostText() const;
 		Date getDateTimePosted() const;
 		string getUsernameOfUserWhoCreatedThisPost() const;
+		
+		bool operator<(const Posting& rhs) const;
+		// Need to define functor with () operator in order to place in set<Posting>
 };
 
 #endif

@@ -105,6 +105,9 @@ void ServerController::initServer() {
 void ServerController::addLoginDatabase(LoginDatabaseController lDB) {
 	loginDatabase = lDB;
 }
+void ServerController::addBulBoDatabase(PostDatabaseController pDB) {
+	postDatabase = pDB;
+}
 
 void ServerController::communicate() {
 	int clientSock;
@@ -230,32 +233,47 @@ Message ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
 	else if (messageConverter.isLogoutMessage(msgFromClient)) {
 		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
-	//return msgToClient;
+	else if (messageConverter.isCreatePostingMessage(msgFromClient) ) {
+		return specifyClientMessageAsPostingMessage(msgFromClient);
+	}
 }
 Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
 	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
 	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
 	if (validated) {
-		return specifyClientMessageAsLoginMessageSuccess(validated);
+		return messageCreator.createLoginAuthMessage(validated);
 	}
 	else {
 		//cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
-		return specifyClientMessageAsLoginMessageFailure();
+		return messageCreator.createErrorNoAuthMessage();
 	}
 
-}
-LoginAuthMessage ServerController::specifyClientMessageAsLoginMessageSuccess (bool validated) {
-	return messageCreator.createLoginAuthMessage(validated);
-}
-ErrorNoAuthMessage ServerController::specifyClientMessageAsLoginMessageFailure () {
-	//cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
-	return messageCreator.createErrorNoAuthMessage();
 }
 LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
 	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
 	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
-	LogoutConfirmMessage createLogoutConfirmMessage(bool whetherTheLogoutWasSuccessful);
+	return messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful);
 }
+Message ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
+	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
+	unsigned long int specialMessageCode = postDatabase.addNewPostAndReturnSpecialMessageCode(postingMsgFromClient);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND)
+		return messageCreator.createErrorBoardNotFoundMessage();
+	else if (specialMessageCode == SERVERMESSAGECODE_WRITESUCCESSFUL)
+		return messageCreator.createWriteSuccessfulMessage();
+	else
+		return messageCreator.createErrorWriteFailedMessage();
+}
+
+
+
+
+
+
+
+
+
+
 
 void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
