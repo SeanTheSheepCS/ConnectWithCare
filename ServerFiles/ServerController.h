@@ -9,6 +9,7 @@
 #include <stdlib.h>     // for atoi() and exit()
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
+#include <queue>
 
 #include "ServerMessageConverter.h"
 #include "ServerMessageCreator.h"
@@ -63,10 +64,14 @@ private:
 	string receiveData(int sock);
 	Message specifyTypeOfClientMessage(Message msgFromClient);
 
-	Message specifyClientMessageAsLoginMessage(Message& msgFromClient);
-	LogoutConfirmMessage specifyClientMessageAsLogoutMessage(Message& msgFromClient);
-	Message specifyClientMessageAsPostingMessage(Message& msgFromClient);
+	queue<Message> specifyClientMessageAsLoginMessage(Message& msgFromClient);
+	queue<Message> specifyClientMessageAsLogoutMessage(Message& msgFromClient);
 
+	queue<Message> specifyClientMessageAsPostingMessage(Message& msgFromClient);
+	queue<Message> specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient);
+	queue<Message> specifyClientMessageAsBoardSearchMessage(Message& msgFromClient);
+
+	void popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient);
 	void sendData (int sock, Message msgToClient);
 
 	void closeAllConnections();

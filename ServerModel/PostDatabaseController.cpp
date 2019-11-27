@@ -49,13 +49,15 @@ unsigned long int PostDatabaseController::writePostToDatabase(CreatePostingMessa
 		return SERVERMESSAGECODE_ERRORWRITEFAILED;
 	else {
 		bulletinBoardsDatabase[boardIDTheUserWantsToPostTo].insert( postingMsgFromClient.getPosting() );
+		masterBulletinBoard.insert( postingMsgFromClient.getPosting() );
 		return SERVERMESSAGECODE_WRITESUCCESSFUL;
 	}
 
 }
 
-	ErrorWriteFailedMessage createErrorWriteFailedMessage();
-	WriteSuccessfulMessage createWriteSuccessfulMessage();
+vector<Message> PostDatabaseController::getBoardHistory() {
+
+}
 
 void PostDatabaseController::populateMapWithHardCodedEntries() {
 	// need to decide how board IDs are set up

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <queue>
 
 #include "ServerController.h"
 #include "ServerMessageConverter.h"
@@ -173,8 +174,8 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
 		//cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
-		Message msgToClient = specifyTypeOfClientMessage(msgFromClient);
-		sendData(clientSock, msgToClient);
+		queue<Message> msgQueueToClient = specifyTypeOfClientMessage(msgFromClient);
+		popQueueAndSendDataToClient(clientSock, msgQueueToClient);
 	}
 }
 
@@ -224,10 +225,8 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
 }
 
-Message ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
-	//Message msgToClient;
+queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
-		//cout<<"TEST";
 		return specifyClientMessageAsLoginMessage(msgFromClient);
 	}
 	else if (messageConverter.isLogoutMessage(msgFromClient)) {
@@ -236,33 +235,62 @@ Message ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
 	else if (messageConverter.isCreatePostingMessage(msgFromClient) ) {
 		return specifyClientMessageAsPostingMessage(msgFromClient);
 	}
+	else if (messageConverter.isBoardHistoryMessage(msgFromClient)) {
+		return specifyClientMessageAsBoardHistoryMessage(msgFromClient);
+	}
+	else if (messageConverter.isBoardSearchMessage(msgFromClient)) {
+		return specifyClientMessageAsBoardSearchMessage(msgFromClient);
+	}
 }
-Message ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+	queue<Message> msgToClientInQueue;
 	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
 	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
 	if (validated) {
-		return messageCreator.createLoginAuthMessage(validated);
+		msgToClientInQueue.push( messageCreator.createLoginAuthMessage(validated) );
+		return msgToClientInQueue;
 	}
 	else {
+		msgToClientInQueue.push( messageCreator.createErrorNoAuthMessage() );
+		return msgToClientInQueue;
 		//cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
-		return messageCreator.createErrorNoAuthMessage();
 	}
 
 }
-LogoutConfirmMessage ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
+queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
+	queue<Message> msgToClientInQueue;
 	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
 	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
-	return messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful);
+
+	msgToClientInQueue.push( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
+	return msgToClientInQueue;
 }
-Message ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
+queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
+	queue<Message> msgToClientInQueue;
 	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.addNewPostAndReturnSpecialMessageCode(postingMsgFromClient);
-	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND)
-		return messageCreator.createErrorBoardNotFoundMessage();
-	else if (specialMessageCode == SERVERMESSAGECODE_WRITESUCCESSFUL)
-		return messageCreator.createWriteSuccessfulMessage();
-	else
-		return messageCreator.createErrorWriteFailedMessage();
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		msgToClientInQueue.push( messageCreator.createErrorBoardNotFoundMessage() );
+		return msgToClientInQueue;
+	}
+	else if (specialMessageCode == SERVERMESSAGECODE_WRITESUCCESSFUL) {
+		msgToClientInQueue.push( messageCreator.createWriteSuccessfulMessage() );
+		return msgToClientInQueue;
+	}
+	else {
+		msgToClientInQueue.push( messageCreator.createErrorWriteFailedMessage() );
+		return msgToClientInQueue;
+	}
+}
+queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Message& msgFromClient) {
+	queue<Message> msgToClientInQueue;
+	BoardSearchMessage boardSearchMsgFromClient = messageConverter.toBoardSearchMessage(msgFromClient);
+
+}
+queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
+	queue<Message> msgToClientInQueue;
+	BoardHistoryMessage toBoardHistoryMessage(Message messageToTurnIntoABoardHistoryMessage);
+
 }
 
 
@@ -275,17 +303,16 @@ Message ServerController::specifyClientMessageAsPostingMessage(Message& msgFromC
 
 
 
+void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
+	while (msgQueueToClient.empty() == false) {
+		sendData(sock, msgQueueToClient.front());
+		msgQueueToClient.pop();
+	}
+}
 void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
-	
-	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
-	//cout << "\n";
-	//for(int i = 0; i < 1; i++)
-	//{
-	//	printf("%X",outGoingMsg[i]);
-	//}
-	//cout << "\n";
+	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
 	// Sent the data
 	bytesSent = send(sock, outGoingMsg, msgToClient.getLength(), 0);
