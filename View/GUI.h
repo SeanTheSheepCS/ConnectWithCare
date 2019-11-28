@@ -9,6 +9,7 @@
 
 #include <string.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -26,7 +27,8 @@ class GUI
         // Builds password field query.
         void buildMenu(unsigned int bbNotifications, unsigned int chatNotifications, unsigned int publicNotifications);
         // Builds the menu and returns the option selected by the user (as a char).
-        char buildBulletinBoard();
+
+        void buildBulletinBoard(vector<const unsigned char*> bulletinBoard);
         // Builds bulletin board and returns the option seleceted by the user (as a char).
         char buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength);
         // Builds Chats menu given the public chat notifications and an array of friends

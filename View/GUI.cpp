@@ -105,22 +105,17 @@ void GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications
     cout << "Enter option (or type 'q' to exit):";
 }
 
-char GUI::buildBulletinBoard()
+void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
 {
     cout << divider << "BULLETIN-BOARD" << divider << endl;
 
-    // NEED TO FIGURE OUT REST OF IMPLEMENTATION HERE
+    for(int i = 0; i < bulletinBoard.size(); i++)
+    {
+    	cout << bulletinBoard[i] << endl;
+    }
 
     cout << divider << "--------------" << divider << endl;
     cout << "  (1) Add Post  (2) Send Message  (b) Go Back  (q) Quit Program" << endl;
-    char option;
-    cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
 }
 
 char GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength)
