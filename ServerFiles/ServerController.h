@@ -62,13 +62,16 @@ private:
 	Message messageFromDataReceivedFromClient(int clientSock);
 
 	string receiveData(int sock);
-	Message specifyTypeOfClientMessage(Message msgFromClient);
+	queue<Message> specifyTypeOfClientMessage(Message msgFromClient);
+
+	queue<Message> putSingleMessageInQueue(Message msg);
 
 	queue<Message> specifyClientMessageAsLoginMessage(Message& msgFromClient);
 	queue<Message> specifyClientMessageAsLogoutMessage(Message& msgFromClient);
 
 	queue<Message> specifyClientMessageAsPostingMessage(Message& msgFromClient);
 	queue<Message> specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient);
+		queue<Message> putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf);
 	queue<Message> specifyClientMessageAsBoardSearchMessage(Message& msgFromClient);
 
 	void popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient);

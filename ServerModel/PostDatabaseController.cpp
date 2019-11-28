@@ -6,6 +6,8 @@
  */
 
 #include "PostDatabaseController.h"
+#include <string>
+#include <locale> // for toupper()
 #include <map>
 #include <set>
 #include <vector>
@@ -56,14 +58,61 @@ unsigned long int PostDatabaseController::writePostToDatabase(CreatePostingMessa
 
 }
 
-vector<Posting> PostDatabaseController::getBoardHistory(BoardHistoryMessage boardHistoryMessage) {
-	vector<Posting> selectedPostings;
+unsigned long int PostDatabaseController::searchBoardAndPlaceResultsInVector(BoardSearchMessage boardSearchMessage, vector<Posting>& selectedPosts) {
+	unsigned long int boardIDTheUserWantsHistoryOf = boardSearchMessage.getBoardID();
+	if ( checkIfDesiredBoardExists(boardIDTheUserWantsHistoryOf) != ORIGINAL_MESSAGE_CODE ) {
+		return SERVERMESSAGECODE_ERRORBOARDNOTFOUND;
+	}
+	return iterateThroughDatabaseToFindSearchKeywords(boardSearchMessage, boardIDTheUserWantsHistoryOf, selectedPosts);
+}
+unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeywords(BoardSearchMessage boardSearchMessage, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
+	// could potentially take too long computationally
+	for (Posting p : bulletinBoardsDatabase[boardIDTheUserWantsHistoryOf]) {
+		string postText = p.getPostText();
+		string keyword = boardSearchMessage.getSearchKeyword();
+		if ( postText.find(keyword) != string::npos
+			|| postText.find( capitalizeWord(keyword) ) != string::npos
+			|| postText.find( allCapsWord(keyword) ) != string::npos )
+		{
+			selectedPosts.push_back(p);
+		}
+	}
+	return SERVERMESSAGECODE_ENDOFDATA;
+}
+string PostDatabaseController::allCapsWord(string word) {
+	string allCapsWord = "";
+	for (string::size_type i = 0; i < word.length(); ++i)
+		allCapsWord += toupper(word[i]);
+	return allCapsWord;
+}
+string PostDatabaseController::capitalizeWord(string word) {
+	string capitalizedWord = "";
+	if (word.length() != 0) {
+		capitalizedWord += toupper(word[0]);
+		for (string::size_type i = 1; i < word.length(); ++i)
+			capitalizedWord += word[i];
+	}
+	return capitalizedWord;
+}
+unsigned long int PostDatabaseController::getBoardHistoryAndPlaceInVector(BoardHistoryMessage boardHistoryMessage, vector<Posting>& selectedPosts) {
 	unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
 	if ( checkIfDesiredBoardExists(boardIDTheUserWantsHistoryOf) != ORIGINAL_MESSAGE_CODE ) {
-		return selectedPostings; // size of queue is zero, indicating error
+		return SERVERMESSAGECODE_ERRORBOARDNOTFOUND;
 	}
+	return iterateThroughDatabaseToGetHistory(boardHistoryMessage, boardIDTheUserWantsHistoryOf, selectedPosts);
+}
 
-	return selectedPostings;
+unsigned long int PostDatabaseController::iterateThroughDatabaseToGetHistory(BoardHistoryMessage& boardHistoryMessage, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
+	Date startDate = boardHistoryMessage.getStartDate();
+	Date endDate   = boardHistoryMessage.getEndDate();
+	for (Posting p : bulletinBoardsDatabase[boardIDTheUserWantsHistoryOf]) {
+		if ( (p.getDateTimePosted().equals(startDate) || p.getDateTimePosted().isAfter(startDate))
+				&& (p.getDateTimePosted().equals(endDate) || p.getDateTimePosted().isBefore(endDate)) )
+		{
+			selectedPosts.push_back(p);
+		}
+	}
+	return SERVERMESSAGECODE_ENDOFDATA;
 }
 
 void PostDatabaseController::populateMapWithHardCodedEntries() {

@@ -242,61 +242,75 @@ queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClien
 		return specifyClientMessageAsBoardSearchMessage(msgFromClient);
 	}
 }
-queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
+queue<Message> ServerController::putSingleMessageInQueue(Message msg) {
 	queue<Message> msgToClientInQueue;
+	msgToClientInQueue.push(msg);
+	return msgToClientInQueue;
+}
+
+queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msgFromClient) {
 	LoginMessage loginMessageFromClient = messageConverter.toLoginMessage(msgFromClient);
 	bool validated = loginDatabase.validateUser(loginMessageFromClient.getUsername(), loginMessageFromClient.getPassword());
 	if (validated) {
-		msgToClientInQueue.push( messageCreator.createLoginAuthMessage(validated) );
-		return msgToClientInQueue;
+		return putSingleMessageInQueue(messageCreator.createLoginAuthMessage(validated) );
 	}
 	else {
-		msgToClientInQueue.push( messageCreator.createErrorNoAuthMessage() );
-		return msgToClientInQueue;
+		return putSingleMessageInQueue(messageCreator.createErrorNoAuthMessage() );
 		//cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
 	}
 
 }
 queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
-	queue<Message> msgToClientInQueue;
 	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
 	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
 
-	msgToClientInQueue.push( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
-	return msgToClientInQueue;
+	return putSingleMessageInQueue( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
 }
 queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
-	queue<Message> msgToClientInQueue;
 	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.addNewPostAndReturnSpecialMessageCode(postingMsgFromClient);
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
-		msgToClientInQueue.push( messageCreator.createErrorBoardNotFoundMessage() );
-		return msgToClientInQueue;
+		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
 	}
 	else if (specialMessageCode == SERVERMESSAGECODE_WRITESUCCESSFUL) {
-		msgToClientInQueue.push( messageCreator.createWriteSuccessfulMessage() );
-		return msgToClientInQueue;
+		return putSingleMessageInQueue( messageCreator.createWriteSuccessfulMessage() );
 	}
 	else {
-		msgToClientInQueue.push( messageCreator.createErrorWriteFailedMessage() );
-		return msgToClientInQueue;
+		return putSingleMessageInQueue( messageCreator.createErrorWriteFailedMessage() );
 	}
 }
 queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Message& msgFromClient) {
-	queue<Message> msgToClientInQueue;
-	BoardSearchMessage boardSearchMsgFromClient = messageConverter.toBoardSearchMessage(msgFromClient);
-
-}
-queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
-	queue<Message> msgToClientInQueue;
-	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
-	vector<Posting> selectedPostings = postDatabase.getBoardHistory(boardHistoryMessage);
-	if (selectedPostings.size() == 0) {
-		msgToClientInQueue.push( messageCreator.createErrorBoardNotFoundMessage() );
-		return msgToClientInQueue;
+	vector<Posting> selectedPosts;
+	BoardSearchMessage boardSearchMessage = messageConverter.toBoardSearchMessage(msgFromClient);
+	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, selectedPosts);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
+	}
+	else {
+		unsigned long int boardIDTheUserWantsSearchedPostsFrom = boardSearchMessage.getBoardID();
+		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsSearchedPostsFrom);
 	}
 }
-
+queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
+	vector<Posting> selectedPosts;
+	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
+	unsigned long int specialMessageCode = postDatabase.getBoardHistoryAndPlaceInVector(boardHistoryMessage, selectedPosts);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
+	}
+	else {
+		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
+		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
+	}
+}
+queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
+	queue<Message> msgToClientInQueue;
+	for (Posting p : selectedPosts) {
+		msgToClientInQueue.push( messageCreator.createPostingDataMessage(p, boardIDTheUserWantsHistoryOf) );
+	}
+	msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
+	return msgToClientInQueue;
+}
 
 
 
