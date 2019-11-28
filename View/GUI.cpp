@@ -111,14 +111,20 @@ void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
 
     for(int i = 0; i < bulletinBoard.size(); i++)
     {
-    	cout << bulletinBoard[i] << endl;
+    	cout << bulletinBoard[i] << endl; // Adds posts to bulletin board.
     }
 
     cout << divider << "--------------" << divider << endl;
     cout << "  (1) Add Post  (2) Send Message  (b) Go Back  (q) Quit Program" << endl;
 }
 
-char GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength)
+void GUI::addPostMenu()
+{
+	cout << divider << "ADDING-POST" << divider << endl;
+	cout << "Please enter post (press enter once finished): " << endl;
+}
+
+void GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength)
 {
     cout << divider << "CHATS-MENU" << divider << endl;
 
@@ -143,15 +149,9 @@ char GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int frien
     cout << " (#) Enter number to view chat history  (b) Go Back  (q) Quit program" << endl;
     char option;
     cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
 }
 
-char GUI::buildPostsMenu(char** posts, int postsLength)
+void GUI::buildPostsMenu(char** posts, int postsLength)
 {
     cout << divider << "YOUR-POSTS" << divider << endl;
 
@@ -161,15 +161,7 @@ char GUI::buildPostsMenu(char** posts, int postsLength)
     }
 
     cout << divider << "----------" << divider << endl;
-    cout << " (1) Add Post  (2) Search  (b) Go Back  (q) Quit program" << endl;
-    char option;
-    cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
+    cout << " (1) Search  (b) Go Back  (q) Quit program" << endl;
 }
 
 void GUI::buildPublicChannel()
@@ -178,7 +170,7 @@ void GUI::buildPublicChannel()
     cout << "Enter Message below! (Type 'leave' to go back or 'quit' to exit program)";
 }
 
-char GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength)
+void GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength)
 {
     cout << divider << "FRIENDS" << divider << endl;
 
@@ -199,17 +191,9 @@ char GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offline
     }
     cout << divider << "-------" << divider << endl;
     cout << " (1) Add Friend  (b) Go Back  (q) Quit program" << endl;
-    char option;
-    cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
 }
 
-char GUI::buildAccountMenu(string username, string nameTag, string accountType)
+void GUI::buildAccountMenu(string username, string nameTag, string accountType)
 {
     cout << divider << "ACCOUNT-MENU" << divider << endl;
 
@@ -226,14 +210,6 @@ char GUI::buildAccountMenu(string username, string nameTag, string accountType)
     cout << "[q] Quit Program" << endl;
     cout << divider << "------------" << divider << endl;
     cout << "Enter Option: ";
-    char option;
-    cin >> option;
-    if(option == 'q')
-    {
-        cout << "Program terminating..." << endl;
-        exit(0);
-    }
-    return option;
 }
 
 void GUI::deleteAccountMenu()
@@ -242,14 +218,3 @@ void GUI::deleteAccountMenu()
     cout << "Are you sure you want to delete your account?\nType 'Y' to confirm or 'b' to go back." << endl;
     cout << divider << endl;
 }
-/*
-int main() // Testing how it looks.
-{
-    cout << "testing GUI" << endl;
-    GUI theView;
-    theView.buildLogin();
-    char opt = theView.buildMenu(2, 27, 121);
-    cout << opt << endl;
-    return 0;
-}
-*/
