@@ -18,8 +18,6 @@ class GUI
         GUI ();
         void buildWelcomeMessage();
         // Builds a welcome message.
-        void buildLogin();
-        // Builds login menu, makes sure that entry is correct by calling "validate" from UserDB.
         void buildUsernameField();
         // Builds username field query.
         void buildPasswordField();

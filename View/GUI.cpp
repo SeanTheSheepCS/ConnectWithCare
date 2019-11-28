@@ -27,29 +27,6 @@ void GUI::buildWelcomeMessage()
     cout << "*** Welcome to Connect With Care! ****" << endl;
 }
 
-void GUI::buildLogin()
-{
-    cout << "---Enter username and password---" << endl;
-   
-    cout << "Username:";
-    string userN;
-    cin >> userN;
-    while(/*validate login(userN)*/0)
-    {
-        cout << "Invalid, try again.";
-        cin >> userN;
-    }
-
-    cout << "Password:";
-    string passN;
-    cin >> passN;
-    while(/*validate login(passN)*/0)
-    {
-        cout << "Invalid, try again.";
-        cin >> passN;
-    }
-}
-
 void GUI::buildUsernameField()
 {
     cout << "Username:";

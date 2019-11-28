@@ -53,8 +53,8 @@ void ClientController::communicate()
     app.buildWelcomeMessage();
     char option;
 
-    Date startDate = Date(2019, 11, 27, 0);
-    Date endDate = Date(2020, 11 , 27, 0);
+    Date startDate = Date(2019, 11, 27, 0); // todo hard-coded start and end dates, might want to make this userfriendly and selectable
+    Date endDate = createCurrentDate(); //Date(2020, 11 , 27, 0);
 
     while(1)
     {
@@ -65,7 +65,7 @@ void ClientController::communicate()
             case '1':
             {
                 cout << "\tBulletin board selected..." << endl;
-                unsigned long int boardID = 69;
+                unsigned long int boardID = 69; // Up for change, for now only having one bulletin board.
 
                 BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, boardID);
                 sendMessageToServer(theBoard);
@@ -275,7 +275,6 @@ void ClientController::bulletinBoardCase()
         }
         case 'q':
         {
-            cout << "\tQuiting..." << endl;
             userQuit();
             break;
         }
@@ -294,29 +293,44 @@ void ClientController::chatsCase()
     switch(chatsOption)
     {
         case '1':
+        {
             cout << "display chat 1" << endl;
             break;
+        }
         case '2':
+        {
             cout << "display chat 2" << endl;
             break;
+        }
         case '3':
+        {
             cout << "display chat 3" << endl;
             break;
+        }
         case '4':
+        {
             cout << "display chat 4" << endl;
             break;
+        }
         case '5':
+        {
             cout << "display chat 5" << endl;
             break;
+        }
         case 'b':
+        {
         	userBack();
             break;
+        }
         case 'q':
-            cout << "quit selected" << endl;
+        {
             userQuit();
             break;
+        }
         default:
+        {
             cout << "invalid choice (chats)" << endl;
+        }
     }
 }
 
@@ -328,28 +342,44 @@ void ClientController::postsCase()
     switch(postsOption)
     {
         case '1':
+        {
             cout << "post 1" << endl;
             break;
+        }
         case '2':
+        {
             cout << "post 2" << endl;
             break;
+        }
         case '3':
+        {
             cout << "post 3" << endl;
             break;
+        }
         case '4':
+        {
             cout << "post 4" << endl;
             break;
+        }
         case '5':
+        {
             cout << "post 5" << endl;
             break;
+        }
         case 'b':
+        {
         	userBack();
             break;
+        }
         case 'q':
+        {
             userQuit();
             break;
+        }
         default:
+        {
             cout << "invalid choice (posts)" << endl;
+        }
     }
 }
 
@@ -367,7 +397,7 @@ void ClientController::friendsCase()
     {
         case '1':
         {
-            cout << "add friend selected" << endl;
+            cout << "\tAdd friend selected." << endl;
             string friendUser;
             cout << "Enter friend's username: ";
             cin >> friendUser;
@@ -397,41 +427,56 @@ void ClientController::accountCase()
     switch(accountOption)
     {
         case '1':
-            cout << "change username selected" << endl;
+        {
+            cout << "\tChange username selected." << endl;
+            // todo
             break;
+        }
         case '2':
-            cout << "change password selected" << endl;
+        {
+            cout << "\tChange password selected." << endl;
+            // todo
             break;
+        }
         case '3':
-            cout << "update status" << endl;
+        {
+            cout << "\tUpdate status selected." << endl;
+            // todo
             break;
+        }
         case '4':
+        {
             if(accountType == "charity")
             {
-                cout << "change org informaiton selected" << endl;
+                cout << "\tChange organization option selected." << endl;
+                //todo
             }
             else
             {
-                cout << "Only available for account types Charity" << endl;
+                cout << "\t Operation unavailable. Only available for account types 'charity'." << endl;
             }
             break;
+        }
         case '5':
-            cout << "Change account type selected" << endl;
+        {
+            cout << "\tChange account type selected." << endl;
             break;
+        }
         case '6':
-            cout << "delete account type selected" << endl;
+        {
+            cout << "\tDelete account type selected" << endl;
             app.deleteAccountMenu();
             char deleteAccount;
             cin >> deleteAccount;
             if(deleteAccount == 'Y')
             {
-                cout << "deleting account" << endl;
+                cout << "\tDeleting Account..." << endl;
                 //TODO tell server to delete account
                 userQuit();
             }
             else if(deleteAccount == 'b')
             {
-                cout << "going back" ;
+               	userBack();
                 break;
             }
             else
@@ -440,14 +485,21 @@ void ClientController::accountCase()
                 break;
             }
             break;
+        }
         case 'b':
+        {
         	userBack();
             break;
+        }
         case 'q':
+        {
             userQuit();
             break;
+        }
         default:
+        {
             cout << "invalid choice (posts)" << endl;
+        }
     }
 }
 
