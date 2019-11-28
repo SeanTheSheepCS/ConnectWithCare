@@ -117,4 +117,26 @@ unsigned long int PostDatabaseController::iterateThroughDatabaseToGetHistory(Boa
 
 void PostDatabaseController::populateMapWithHardCodedEntries() {
 	// need to decide how board IDs are set up
+	unsigned long int boardIDTheUserWantsToPostTo = 69;
+	bulletinBoardsDatabase[boardIDTheUserWantsToPostTo].insert(
+			Posting("Hello! I'm stuck in the past and my time machine broke.\n If you find this message please tell my children I love them.\n", "IMissThePresent", Date(1262, 1, 29, 1200)) );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
