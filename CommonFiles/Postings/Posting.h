@@ -20,6 +20,7 @@ class Posting
 		virtual ~Posting();
 		void setPostText(string text);
 		string getPostText() const;
+		//void setDateTimePosted(time_t now);
 		Date getDateTimePosted() const;
 		string getUsernameOfUserWhoCreatedThisPost() const;
 

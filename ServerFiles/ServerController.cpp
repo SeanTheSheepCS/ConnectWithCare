@@ -289,8 +289,12 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 }
 queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
 	queue<Message> msgToClientInQueue;
-	BoardHistoryMessage toBoardHistoryMessage(Message messageToTurnIntoABoardHistoryMessage);
-
+	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
+	vector<Posting> selectedPostings = postDatabase.getBoardHistory(boardHistoryMessage);
+	if (selectedPostings.size() == 0) {
+		msgToClientInQueue.push( messageCreator.createErrorBoardNotFoundMessage() );
+		return msgToClientInQueue;
+	}
 }
 
 

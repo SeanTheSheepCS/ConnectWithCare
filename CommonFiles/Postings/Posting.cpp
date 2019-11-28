@@ -60,8 +60,10 @@ bool Posting::operator<(const Posting& rhs) const {
 	return postText.compare(rhs.getPostText()) < 0;
 }
 
-//void Posting::setDateTimePosted(time_t now) //pass in current time. Gets converted to a string.
-//{
-//	char* dt = ctime(&now);
-//	dateTimePosted = dt;
-//}
+/*
+void Posting::setDateTimePosted(time_t now) //pass in current time. Gets converted to a string.
+{
+	unsigned char* dt = ctime(&now);
+	dateTimePosted = dt;
+}
+*/
