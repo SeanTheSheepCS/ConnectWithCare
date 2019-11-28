@@ -17,6 +17,8 @@
 #include <stdlib.h>     // for atoi() and exit()
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
+#include <vector>
+#include <ctime>
 #include "../View/GUI.h"
 #include "ClientMessageConverter.h"
 #include "ClientMessageCreator.h"
@@ -36,6 +38,7 @@ class ClientController
         void communicate();
         // Communicates functionalities with clients.
         
+        static unsigned long int boardID = 69;
     private:
         int sock; 								// Socket descriptor
         struct sockaddr_in serverAddr; 			// Address of the server
@@ -67,6 +70,8 @@ class ClientController
         // Sends a message to Server.
         Message recvMessageFromServer();
         // Receives message from Server.
+        Date createCurrentDate();
+        // Creates current date.
 
         void loginCase();
         // Handles logging in process.
@@ -84,6 +89,7 @@ class ClientController
         // Handles options inside account option.
         void userQuit();
         // Helper function that is activated when user presses 'q' at any time and quits program.
+
 };
 
 #endif

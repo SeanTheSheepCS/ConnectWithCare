@@ -13,7 +13,6 @@
  */
 #include "ClientController.h"
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -57,7 +56,6 @@ void ClientController::communicate()
 
     Date startDate = Date(2019, 11, 27, 0);
     Date endDate = Date(2020, 11 , 27, 0);
-    unsigned long int boardID = 69;
 
     while(1)
     {
@@ -66,9 +64,10 @@ void ClientController::communicate()
         switch(option)
         {
             case '1':
+            {
                 cout << "\tBulletin board selected..." << endl;
 
-                BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, 69);
+                BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, boardID);
                 sendMessageToServer(theBoard);
 
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
@@ -88,39 +87,54 @@ void ClientController::communicate()
                 vector<const unsigned char*> bulletinBoardPostsAsChar;
                 for(int i = 0; i < bulletinBoardPosts.size(); i++)
                 {
-                	bulletinBoardPostsAsChar.push_back(bulletinBoardPosts[i].getMessageAsCharArray());
+                	bulletinBoardPostsAsChar.push_back(bulletinBoardPosts[i].getMessageAsCharArray()); // Convert the posts to char array.
                 }
 
-                app.buildBulletinBoard(bulletinBoardPostsAsChar); // TODO not updating GUI class arguments
+                app.buildBulletinBoard(bulletinBoardPostsAsChar);
                 bulletinBoardCase();
                 break; 
+            }
             case '2':
+            {
                 cout << "chats selected" << endl;
                 app.buildChatsMenu(0,0,0); // TODO add notifications later
                 chatsCase();
                 break;    
+            }
             case '3':
+            {
                 cout << "my posts selected" << endl;
                 app.buildPostsMenu(0 ,0); // TODO add notifications later
                 postsCase();
                 break;
+            }
             case '4':
+            {
                 cout << "public channel selected, NOT WORKING YET" << endl;
                 app.buildPublicChannel();
                 break;
+            }
             case '5':
+            {
                 cout << "friends selected" << endl;
                 //app.buildFriendList(); // TODO need to figure out what to pass here to display friends.
                 break;
+            }
             case '6':
+            {
                 cout << "my account selected" << endl;
                 app.buildAccountMenu(username, nameTag, accountType);
                 break;
+            }
             case 'q':
+            {
                 userQuit();
                 break;
+            }
             default:
+            {
                 cout << "Invalid Input, please try again.\n " << endl;
+            }
         }
     }
 }
@@ -193,21 +207,39 @@ void ClientController::bulletinBoardCase()
     switch(bbOption)
     {
         case '1':
-            cout << "add post selected" << endl;
+        {
+            cout << "\tAdd post selected." << endl;
+            app.addPostMenu();
+            string postContent;
+            cin >> postContent;
+
+            Date postDate = createCurrentDate(); // Get current date.
+            Posting toPost(postContent, username, postDate); // Create post
+            CreatePostingMessage postCreated = theCreator.createCreatePostingMessage(boardID, toPost); // Create CreatePostingMessage to send to server.
+            sendMessageToServer(postCreated);
             break;
+        }
         case '2':
-            cout << "send message selected" << endl;
+        {
+            cout << "\tSend Message selected" << endl;
             break;
+        }
         case 'b':
+        {
             cout << "\tGoing back..." << endl;
             /* DO NOTING */
             break;
+        }
         case 'q':
-            cout << "quit selected" << endl;
+        {
+            cout << "\tQuiting..." << endl;
             userQuit();
             break;
+        }
         default:
+        {
             cout << "invalid choice (bb)" << endl;
+        }
     }
 }
 
@@ -443,10 +475,18 @@ Message ClientController::recvMessageFromServer()
 	bytesRecv = recv(sock, (char*) &inBuffer, msgLength, 0);
 	Message msgFromServer(bytesRecv, inBuffer);
 	return msgFromServer;
+	// Clear buffer.
 	clearBuffer(outBuffer);
 	clearBuffer(inBuffer);
 }
 
+Date ClientController::createCurrentDate()
+{
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	Date date(ltm->tm_year, ltm->tm_mon, ltm->tm_mday, ltm->tm_sec);
+	return date;
+}
 int mainClientController(int argc, char *argv[])
 {
     if(argc != 3)
