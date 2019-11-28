@@ -10,7 +10,6 @@
  * EXTRA STUFF FOR LATER:
  * - add number of friends to the top of friends list.
  * 
- * Last updated by: Daryl
  */
 #include "GUI.h"
 #include <iostream>

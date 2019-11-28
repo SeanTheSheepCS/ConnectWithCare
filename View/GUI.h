@@ -2,7 +2,6 @@
  * ConnectWithCare
  * "GUI.h"
  * 
- * Last updated by: Daryl
  */
 #ifndef GUI_CLASS
 #define GUI_CLASS

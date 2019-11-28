@@ -9,7 +9,6 @@
  * - add notifications to the menu later on for more advanced features
  * - have to check the length of messages sent and receive, could give errors here later on with creating messages.
  * 
- * Last updated by: Daryl
  */
 #include "ClientController.h"
 #include <iostream>
@@ -66,6 +65,7 @@ void ClientController::communicate()
             case '1':
             {
                 cout << "\tBulletin board selected..." << endl;
+                unsigned long int boardID = 69;
 
                 BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, boardID);
                 sendMessageToServer(theBoard);
@@ -194,13 +194,45 @@ void ClientController::clearBuffer(unsigned char* buffer)
 
 void ClientController::userQuit()
 {
-    cout << "Terminating Program..." << endl;
+    cout << "\tTerminating Program..." << endl;
     close(sock);
     exit(0);
 }
 
+void ClientController::userBack()
+{
+    cout << "\tGoing back..." << endl;
+}
+
+void ClientController::sendMessageToServer(Message m)
+{
+	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
+	msgLength = m.getLength();
+	bytesSent = send(sock, (char*) &inBuffer, msgLength, 0);
+	checkSending(bytesSent, msgLength);
+}
+
+Message ClientController::recvMessageFromServer()
+{
+	bytesRecv = recv(sock, (char*) &inBuffer, msgLength, 0);
+	Message msgFromServer(bytesRecv, inBuffer);
+	return msgFromServer;
+	// Clear buffer.
+	clearBuffer(outBuffer);
+	clearBuffer(inBuffer);
+}
+
+Date ClientController::createCurrentDate()
+{
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	Date date(ltm->tm_year, ltm->tm_mon, ltm->tm_mday, ltm->tm_sec);
+	return date;
+}
+
 void ClientController::bulletinBoardCase()
 {
+	unsigned long int boardID = 69; // Up for change, for now only having one bulletin board.
     char bbOption; // Options within Bulletin Board
     cin >> bbOption;
 
@@ -222,12 +254,23 @@ void ClientController::bulletinBoardCase()
         case '2':
         {
             cout << "\tSend Message selected" << endl;
+            cout << "Please enter a username of who you want to send a message to: " << endl;
+            string usernameToSend;
+            cin >> usernameToSend;
+            // MIGHT HAVE TO VALIDATE USERNAME IS CORRECT first?
+            cout << "Please enter your message: " << endl;
+            string messageToUser;
+            cin >> messageToUser;
+
+            UserMessage messageToSend(username, usernameToSend, createCurrentDate(), messageToUser);
+            SendUserMessageMessage messageMessageToSend = theCreator.createSendUserMessageMessage(messageToSend); // Create message notifying a user message is going to send to server.
+            sendMessageToServer(messageMessageToSend);
+            //recvMessageToServer (want to recv a success or failure);s
             break;
         }
         case 'b':
         {
-            cout << "\tGoing back..." << endl;
-            /* DO NOTING */
+        	userBack();
             break;
         }
         case 'q':
@@ -266,8 +309,7 @@ void ClientController::chatsCase()
             cout << "display chat 5" << endl;
             break;
         case 'b':
-            cout << "go back selected" << endl;
-            /* DO  NOTHING */
+        	userBack();
             break;
         case 'q':
             cout << "quit selected" << endl;
@@ -301,11 +343,9 @@ void ClientController::postsCase()
             cout << "post 5" << endl;
             break;
         case 'b':
-            cout << "go back selected" << endl;
-            /* DO  NOTHING */
+        	userBack();
             break;
         case 'q':
-            cout << "quit selected" << endl;
             userQuit();
             break;
         default:
@@ -329,20 +369,18 @@ void ClientController::friendsCase()
         {
             cout << "add friend selected" << endl;
             string friendUser;
-            cout << "Enter friend's username:";
+            cout << "Enter friend's username: ";
             cin >> friendUser;
             // TODO PASS FRIEND REQUEST TO SERVER
             break;
         }
         case 'b':
         {
-            cout << "go back selected" << endl;
-            /* DO  NOTHING */
+        	userBack();
             break;
         }
         case 'q':
         {
-            cout << "quit selected" << endl;
             userQuit();
             break;
         }
@@ -403,11 +441,9 @@ void ClientController::accountCase()
             }
             break;
         case 'b':
-            cout << "go back selected" << endl;
-            /* DO  NOTHING */
+        	userBack();
             break;
         case 'q':
-            cout << "quit selected" << endl;
             userQuit();
             break;
         default:
@@ -462,31 +498,6 @@ void ClientController::loginCase()
 	clearBuffer(inBuffer);
 }
 
-void ClientController::sendMessageToServer(Message m)
-{
-	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
-	msgLength = m.getLength();
-	bytesSent = send(sock, (char*) &inBuffer, msgLength, 0);
-	checkSending(bytesSent, msgLength);
-}
-
-Message ClientController::recvMessageFromServer()
-{
-	bytesRecv = recv(sock, (char*) &inBuffer, msgLength, 0);
-	Message msgFromServer(bytesRecv, inBuffer);
-	return msgFromServer;
-	// Clear buffer.
-	clearBuffer(outBuffer);
-	clearBuffer(inBuffer);
-}
-
-Date ClientController::createCurrentDate()
-{
-	time_t now = time(0);
-	tm *ltm = localtime(&now);
-	Date date(ltm->tm_year, ltm->tm_mon, ltm->tm_mday, ltm->tm_sec);
-	return date;
-}
 int mainClientController(int argc, char *argv[])
 {
     if(argc != 3)

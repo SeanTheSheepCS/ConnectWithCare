@@ -4,9 +4,7 @@
  * 
  * TCP type client.
  * 
- * Last updated by: Daryl
  */
-
 
 #ifndef CLIENT_CONTROLLER
 #define CLIENT_CONTROLLER
@@ -38,7 +36,7 @@ class ClientController
         void communicate();
         // Communicates functionalities with clients.
         
-        static unsigned long int boardID = 69;
+
     private:
         int sock; 								// Socket descriptor
         struct sockaddr_in serverAddr; 			// Address of the server
@@ -89,6 +87,7 @@ class ClientController
         // Handles options inside account option.
         void userQuit();
         // Helper function that is activated when user presses 'q' at any time and quits program.
+        void userBack();
 
 };
 
