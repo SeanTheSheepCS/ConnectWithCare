@@ -20,11 +20,11 @@ class ClientBasicMessage: public Message
     unsigned long int indexOfFirstData;
 };
 
-#include "ClientBasicMessages/CreatePostingImageMessage.h"
+#include "ClientBasicMessages/CreatePostingJPEGImageMessage.h"
 #include "ClientBasicMessages/CreatePostingMessage.h"
 #include "ClientBasicMessages/LoginMessage.h"
 #include "ClientBasicMessages/LogoutMessage.h"
-#include "ClientBasicMessages/SendUserMessageImageMessage.h"
+#include "ClientBasicMessages/SendUserMessageJPEGImageMessage.h"
 #include "ClientBasicMessages/SendUserMessageMessage.h"
 
 #endif
