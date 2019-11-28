@@ -73,6 +73,12 @@ void ClientController::communicate()
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
 
                 Message post (recvMessageFromServer());// First initial post.
+                if(theConvertor.isErrorBoardNotFoundMessage(post))
+                {
+                	cout << "\tError with receiving the bulletin board." << endl;
+                	break;
+                }
+
                 while(theConvertor.isEndOfDataMessage(post))
                 {
                 	if(!theConvertor.isPostingDataMessage(post))
@@ -249,6 +255,15 @@ void ClientController::bulletinBoardCase()
             Posting toPost(postContent, username, postDate); // Create post
             CreatePostingMessage postCreated = theCreator.createCreatePostingMessage(boardID, toPost); // Create CreatePostingMessage to send to server.
             sendMessageToServer(postCreated);
+            Message msg = recvMessageFromServer();
+            if(theConvertor.isWriteSuccessfulMessage(recvMessageFromServer()))
+            {
+            	cout << "\tPost has been added." << endl;
+            }
+            else
+            {
+            	cout << "\tPost was NOT able to be added." << endl;
+            }
             break;
         }
         case '2':
@@ -268,6 +283,40 @@ void ClientController::bulletinBoardCase()
             //recvMessageToServer (want to recv a success or failure);s
             break;
         }
+        case '3':
+		{
+        	unsigned int year;
+        	unsigned int month;
+        	unsigned int day;
+        	string searchKeyword;
+        	cout << "\tSearch selected" << endl;
+        	cout << "Please enter start year: ";
+        	cin >> year;
+        	cout << "\nEnter start month: ";
+        	cin >> month;
+        	cout << "\nEnter start day: ";
+        	cin >> day;
+        	cout << "\nPlease enter search keyword: ";
+        	cin >> searchKeyword;
+
+        	Date startDate(year, month, day, 0);
+        	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, createCurrentDate(), boardID, searchKeyword);
+        	sendMessageToServer(bsm);
+
+        	cout << "\tSearch results will be generated below..." << endl;
+        	Message post = recvMessageFromServer();
+        	if(theConvertor.isErrorBoardNotFoundMessage(post))
+        	{
+        		cout << "\tNo results found or error in searching..." << endl;
+        		break;
+        	}
+
+        	while(theConvertor.isEndOfDataMessage(post))
+        	{
+
+        	}
+        	break;
+		}
         case 'b':
         {
         	userBack();

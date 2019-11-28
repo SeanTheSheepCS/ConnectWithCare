@@ -91,7 +91,7 @@ void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
     }
 
     cout << divider << "--------------" << divider << endl;
-    cout << "  (1) Add Post  (2) Send Message  (b) Go Back  (q) Quit Program" << endl;
+    cout << "  (1) Add Post  (2) Send Message (3)Search (b) Go Back  (q) Quit Program" << endl;
 }
 
 void GUI::addPostMenu()
