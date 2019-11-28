@@ -52,13 +52,10 @@ SendUserMessageJPEGImageMessage::SendUserMessageJPEGImageMessage(const unsigned 
 		const unsigned char* dataArrayStartingAtCurrentMMCComponent = &(dataArrayStartingAtMultimediaContent[lengthOfNumberOfMultimediaContentsOnTheMessageField]);
 		for(unsigned int i = 0; i < numberOfMultimediaContentsOnTheMessage; i++)
 		{
-			unsigned long int lengthOfMultimediaComponentID = vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(dataArrayStartingAtCurrentMMCComponent);
-			unsigned long int lengthOflengthOfMultimediaComponentIDField = vlqConverter.getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
+			unsigned long int multimediaContentID = vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(dataArrayStartingAtCurrentMMCComponent);
+			unsigned short int byteLengthOfMutlimediaContentID = vlqConverter.getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 
-			const unsigned char* dataArrayStartingAtCurrentMMCComponentID = &(dataArrayStartingAtCurrentMMCComponent[lengthOflengthOfMultimediaComponentIDField]);
-			unsigned long int multimediaContentID = vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(dataArrayStartingAtCurrentMMCComponentID);
-
-			const unsigned char* dataArrayStartingAtCurrentMMCComponentFilenameLengthField = &(dataArrayStartingAtCurrentMMCComponentID[lengthOfMultimediaComponentID]);
+			const unsigned char* dataArrayStartingAtCurrentMMCComponentFilenameLengthField = &(dataArrayStartingAtCurrentMMCComponent[byteLengthOfMutlimediaContentID]);
 			unsigned long int lengthOfMMCComponentFilename = vlqConverter.convertVariableLengthQuantityToUnsignedLongInt(dataArrayStartingAtCurrentMMCComponentFilenameLengthField);
 			unsigned short int lengthOfLengthOfMMCComponentFilenameField = vlqConverter.getVariableLengthQuantityByteLengthOfLastConversionFromVLQToUnsignedLongInt();
 

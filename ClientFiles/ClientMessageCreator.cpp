@@ -381,3 +381,157 @@ SendUserMessageMessage ClientMessageCreator::createSendUserMessageMessage(UserMe
 	delete[] dataLengthInVLQ;
 	return returnValue;
 }
+
+SendUserMessageJPEGImageMessage ClientMessageCreator::createSendUserMessageJPEGImageMessage(UserMessage userMessageToConvertToUserMessageWithAJPEGImage, std::vector<MultimediaComponent> multimediaComponents)
+{
+	unsigned char messageCode = CLIENTMESSAGECODE_SENDMESSAGEIMG;
+	const unsigned short int lengthOfMessageCode = 1;
+
+	const char* usernameOfSenderAsCharArray = userMessageToConvertToUserMessageWithAJPEGImage.getUsernameOfTheSender().c_str();
+	const unsigned short int lengthOfUsernameOfSender = userMessageToConvertToUserMessageWithAJPEGImage.getUsernameOfTheSender().size();
+	const unsigned char* usernameOfSenderLengthFieldAsCharArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsernameOfSender);
+	const unsigned short int lengthOfUsernameOfSenderLengthField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const char* usernameOfRecipientAsCharArray = userMessageToConvertToUserMessageWithAJPEGImage.getUsernameOfTheRecipient().c_str();
+	const unsigned short int lengthOfUsernameOfRecipient = userMessageToConvertToUserMessageWithAJPEGImage.getUsernameOfTheRecipient().size();
+	const unsigned char* usernameOfRecipientLengthFieldAsCharArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfUsernameOfRecipient);
+	const unsigned short int lengthOfUsernameOfRecipientLengthField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	const unsigned char* dateAsCharArray = userMessageToConvertToUserMessageWithAJPEGImage.getDateCreated().toFiveByteFormat();
+	const unsigned short int lengthOfDateAsCharArray = 5;
+
+	const char* messageText = userMessageToConvertToUserMessageWithAJPEGImage.getMessageText().c_str();
+	const unsigned long int lengthOfMessageText = userMessageToConvertToUserMessageWithAJPEGImage.getMessageText().size();
+
+	unsigned long int lengthOfAllMultimediaComponentDataAddedTogether = 0;
+	std::vector<const unsigned char*>* vectorFilledWithEveryMMCComponentAsACharArray = new std::vector<const unsigned char*>;
+	std::vector<unsigned long int>* vectorFilledWithTheLengthOfEveryMMCComponentAsCharArray = new std::vector<unsigned long int>;
+
+	//HANDLE MMC STUFF
+
+	unsigned long int numberOfMultimediaComponentsAttachedToMessage = multimediaComponents.size();
+	const unsigned char* numberOfMultimediaComponentsAttachedToMessageAsVLQArray = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(numberOfMultimediaComponentsAttachedToMessage);
+	unsigned short int lengthOfNumberOfMultimediaComponentsField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+	lengthOfAllMultimediaComponentDataAddedTogether += lengthOfNumberOfMultimediaComponentsField;
+	if(numberOfMultimediaComponentsAttachedToMessage != 0)
+	{
+		for(unsigned int i = 0; i < numberOfMultimediaComponentsAttachedToMessage; i++)
+		{
+			MultimediaComponent currentMultimediaComponent = multimediaComponents.at(i);
+
+			unsigned long int idOfCurrentComponent = currentMultimediaComponent.getMultimediaComponentID();
+			const unsigned char* idOfCurrentComponentInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(idOfCurrentComponent);
+			unsigned short int lengthOfIDOfCurrentComponentField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+			std::string filenameOfCurrentComponent = currentMultimediaComponent.getFilename();
+			unsigned long int lengthOfFilename = filenameOfCurrentComponent.size();
+			const unsigned char* lengthOfFilenameInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfFilename);
+			unsigned short int lengthOfLengthOfFilenameField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+			char* filenameAsCharArray = new char[lengthOfFilename+1];
+			for(unsigned int i = 0; i < lengthOfFilename; i++)
+			{
+				filenameAsCharArray[i] = filenameOfCurrentComponent[i];
+			}
+			filenameAsCharArray[lengthOfFilename] = '\0';
+
+			unsigned long int multimediaComponentAsCharArrayLength = lengthOfIDOfCurrentComponentField + lengthOfLengthOfFilenameField + lengthOfFilename;
+			unsigned char* multimediaComponentAsCharArray = new unsigned char[multimediaComponentAsCharArrayLength];
+			for(int i = 0; i < lengthOfIDOfCurrentComponentField; i++)
+			{
+				multimediaComponentAsCharArray[i] = idOfCurrentComponentInVLQ[i];
+			}
+			for(int i = 0; i < lengthOfLengthOfFilenameField; i++)
+			{
+				multimediaComponentAsCharArray[i + lengthOfIDOfCurrentComponentField] = lengthOfFilenameInVLQ[i];
+			}
+			for(unsigned int i = 0; i < lengthOfFilename; i++)
+			{
+				multimediaComponentAsCharArray[i + lengthOfIDOfCurrentComponentField + lengthOfLengthOfFilenameField] = filenameAsCharArray[i];
+			}
+			vectorFilledWithEveryMMCComponentAsACharArray->push_back(multimediaComponentAsCharArray);
+			vectorFilledWithTheLengthOfEveryMMCComponentAsCharArray->push_back(multimediaComponentAsCharArrayLength);
+			lengthOfAllMultimediaComponentDataAddedTogether += multimediaComponentAsCharArrayLength;
+			delete[] idOfCurrentComponentInVLQ;
+			delete[] lengthOfFilenameInVLQ;
+			delete[] filenameAsCharArray;
+		}
+	}
+
+	// END HANDLE MMC STUFF
+
+	unsigned long int dataLengthAsUnsignedLong = lengthOfUsernameOfSenderLengthField + lengthOfUsernameOfSender + lengthOfUsernameOfRecipientLengthField + lengthOfUsernameOfRecipient + lengthOfDateAsCharArray + lengthOfMessageText + lengthOfAllMultimediaComponentDataAddedTogether;
+	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(dataLengthAsUnsignedLong);
+	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
+
+	unsigned long totalMessageLength = lengthOfMessageCode + lengthOfDataLengthInVLQField + dataLengthAsUnsignedLong;
+
+	unsigned char* messageAsCharArray = new unsigned char[totalMessageLength];
+	unsigned long int currentIndexInTheMessage = 0;
+
+	messageAsCharArray[currentIndexInTheMessage] = messageCode;
+	currentIndexInTheMessage++;
+
+	for(unsigned int i = 0; i < lengthOfDataLengthInVLQField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dataLengthInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfSenderLengthField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfSenderLengthFieldAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfSender; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfSenderAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfRecipientLengthField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfRecipientLengthFieldAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfUsernameOfRecipient; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = usernameOfRecipientAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfDateAsCharArray; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = dateAsCharArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfMessageText; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = messageText[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < lengthOfNumberOfMultimediaComponentsField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = numberOfMultimediaComponentsAttachedToMessageAsVLQArray[i];
+		currentIndexInTheMessage++;
+	}
+	for(unsigned int i = 0; i < vectorFilledWithEveryMMCComponentAsACharArray->size(); i++)
+	{
+		unsigned const char* currentMMCComponentAsCharArray = vectorFilledWithEveryMMCComponentAsACharArray->at(i);
+		unsigned long int lengthOfCurrentMMCComponentAsCharArray = vectorFilledWithTheLengthOfEveryMMCComponentAsCharArray->at(i);
+		for(unsigned int i = 0; i < lengthOfCurrentMMCComponentAsCharArray; i++)
+		{
+			messageAsCharArray[currentIndexInTheMessage] = currentMMCComponentAsCharArray[i];
+			currentIndexInTheMessage++;
+		}
+	}
+
+	SendUserMessageJPEGImageMessage returnValue = SendUserMessageJPEGImageMessage(totalMessageLength, messageAsCharArray);
+	for(unsigned int i = 0; i < vectorFilledWithEveryMMCComponentAsACharArray->size(); i++)
+	{
+		delete[] vectorFilledWithEveryMMCComponentAsACharArray->at(i);
+	}
+	delete vectorFilledWithEveryMMCComponentAsACharArray;
+	delete vectorFilledWithTheLengthOfEveryMMCComponentAsCharArray;
+	delete[] messageAsCharArray;
+	delete[] usernameOfRecipientLengthFieldAsCharArray;
+	delete[] usernameOfSenderLengthFieldAsCharArray;
+	delete[] dataLengthInVLQ;
+	return returnValue;
+}

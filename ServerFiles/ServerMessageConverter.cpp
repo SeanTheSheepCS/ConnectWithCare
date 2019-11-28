@@ -234,3 +234,31 @@ SendUserMessageMessage ServerMessageConverter::toSendUserMessageMessage(Message 
 		return SendUserMessageMessage(messageLength,messageAsCharArray);
 	}
 }
+
+bool isSendUserMessageJPEGImageMessage(Message messageToDetermineTypeOf)
+{
+	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
+	if(messageCode == CLIENTMESSAGECODE_SENDMESSAGEIMG)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(Message messageToTurnIntoASendUserMessageJPEGImageMessage)
+{
+	unsigned long int messageLength = messageToTurnIntoASendUserMessageJPEGImageMessage.getLength();
+	const unsigned char* messageAsCharArray = messageToTurnIntoASendUserMessageJPEGImageMessage.getMessageAsCharArray();
+	if(messageAsCharArray[0] != CLIENTMESSAGECODE_SENDMESSAGEIMG)
+	{
+		std::cerr << "ERROR: MADE ILLEGAL MESSAGE CONVERSION" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		return SendUserMessageJPEGImageMessage(messageLength,messageAsCharArray);
+	}
+}

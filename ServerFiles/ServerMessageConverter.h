@@ -27,10 +27,9 @@ class ServerMessageConverter
 #endif
     bool isSendUserMessageMessage(Message messageToDetermineTypeOf);
     SendUserMessageMessage toSendUserMessageMessage(Message messageToTurnIntoASendUserMessageMessage);
-#if 0
-    bool isSendUserMessageImageMessage(Message messageToDetermineTypeOf);
-    SendUserMessageImageMessage toSendUserMessageImageMessage(Message messageToTurnIntoASendUserMessageImageMessage);
-#endif
+
+    bool isSendUserMessageJPEGImageMessage(Message messageToDetermineTypeOf);
+    SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(Message messageToTurnIntoASendUserMessageJPEGImageMessage);
 
     bool isUserMessageHistoryMessage(Message messageToDetermineTypeOf);
     UserMessageHistoryMessage toUserMessageHistoryMessage(Message messageToTurnIntoAUserMessageHistoryMessage);

@@ -7,6 +7,7 @@
 #include "../CommonFiles/UserMessages/UserMessage.h"
 #include "../CommonFiles/AllMessageTypes.h"
 #include "../CommonFiles/Postings/Posting.h"
+#include "../CommonFiles/MultimediaComponentLibrary/MultimediaComponents/AllMultimediaComponents.h"
 #include "../CommonFiles/Utilities/VariableLengthQuantityLibrary.h"
 
 class ClientMessageCreator
@@ -20,9 +21,7 @@ class ClientMessageCreator
     Message createCreatePostingImageMessage(PostingImage postToConvertToMessage);
 #endif
     SendUserMessageMessage createSendUserMessageMessage(UserMessage userMessageToConvertToMessage);
-#if 0
-    Message createSendUserMessageImageMessage(UserImageMessage userImageMessageToConvertToMessage);
-#endif
+    SendUserMessageJPEGImageMessage createSendUserMessageJPEGImageMessage(UserMessage userMessageToConvertToUserMessageWithAJPEGImage, std::vector<MultimediaComponent> multimediaComponents);
     UserMessageHistoryMessage createUserMessageHistoryMessage(Date startDate, Date endDate, std::string usernameWhoseHistoryWithYouYouWantToGet);
     UserMessageHistoryAllMessage createUserMessageHistoryAllMessage(Date startDate, Date endDate);
     BoardHistoryMessage createBoardHistoryMessage(Date startDate, Date endDate, unsigned long int boardID);
