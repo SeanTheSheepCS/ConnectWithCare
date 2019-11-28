@@ -25,22 +25,22 @@ MultimediaComponent::MultimediaComponent(std::string filenameArg, unsigned long 
 	lengthOfTerminatorArray = 0;
 }
 
-std::string MultimediaComponent::getFilename()
+std::string MultimediaComponent::getFilename() const
 {
 	return filename;
 }
 
-unsigned long int MultimediaComponent::getMultimediaComponentID()
+unsigned long int MultimediaComponent::getMultimediaComponentID() const
 {
 	return multimediaComponentID;
 }
 
-const unsigned char* MultimediaComponent::getTerminatorArray()
+const unsigned char* MultimediaComponent::getTerminatorArray() const
 {
 	return terminatorArray;
 }
 
-const unsigned short int MultimediaComponent::getLengthOfTerminatorArray()
+const unsigned short int MultimediaComponent::getLengthOfTerminatorArray() const
 {
 	return lengthOfTerminatorArray;
 }

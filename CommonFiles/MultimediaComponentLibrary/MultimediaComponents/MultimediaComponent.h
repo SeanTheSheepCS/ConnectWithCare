@@ -10,10 +10,10 @@ class MultimediaComponent
 		MultimediaComponent(const MultimediaComponent& other);
 		virtual MultimediaComponent& operator=(const MultimediaComponent& rhs);
 		virtual ~MultimediaComponent();
-		std::string getFilename();
-		unsigned long int getMultimediaComponentID();
-		const unsigned char* getTerminatorArray();
-		const unsigned short int getLengthOfTerminatorArray();
+		std::string getFilename() const;
+		unsigned long int getMultimediaComponentID() const;
+		const unsigned char* getTerminatorArray() const;
+		const unsigned short int getLengthOfTerminatorArray() const;
 	protected:
 		unsigned char* terminatorArray;
 		unsigned short int lengthOfTerminatorArray;

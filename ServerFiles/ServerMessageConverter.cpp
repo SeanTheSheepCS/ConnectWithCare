@@ -235,7 +235,7 @@ SendUserMessageMessage ServerMessageConverter::toSendUserMessageMessage(Message 
 	}
 }
 
-bool isSendUserMessageJPEGImageMessage(Message messageToDetermineTypeOf)
+bool ServerMessageConverter::isSendUserMessageJPEGImageMessage(Message messageToDetermineTypeOf)
 {
 	const unsigned char messageCode = (messageToDetermineTypeOf.getMessageAsCharArray())[0];
 	if(messageCode == CLIENTMESSAGECODE_SENDMESSAGEIMG)
@@ -248,7 +248,7 @@ bool isSendUserMessageJPEGImageMessage(Message messageToDetermineTypeOf)
 	}
 }
 
-SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(Message messageToTurnIntoASendUserMessageJPEGImageMessage)
+SendUserMessageJPEGImageMessage ServerMessageConverter::toSendUserMessageJPEGImageMessage(Message messageToTurnIntoASendUserMessageJPEGImageMessage)
 {
 	unsigned long int messageLength = messageToTurnIntoASendUserMessageJPEGImageMessage.getLength();
 	const unsigned char* messageAsCharArray = messageToTurnIntoASendUserMessageJPEGImageMessage.getMessageAsCharArray();

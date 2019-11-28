@@ -24,6 +24,7 @@ void runUnitTestsForMessages()
 	runLogoutMessageTest();
 	runCreatePostingMessageTest();
 	runSendUserMessageMessageTest();
+	runSendUserMessageJPEGImageMessageTest();
 	runBoardHistoryMessageTest();
 	runBoardSearchMessageTest();
 	runUserMessageHistoryMessageTest();
@@ -323,6 +324,158 @@ void runSendUserMessageMessageTest()
 	{
 		testPassed();
 	}
+}
+
+void runSendUserMessageJPEGImageMessageTest()
+{
+	ClientMessageCreator creator = ClientMessageCreator();
+	ServerMessageConverter converter;
+
+	std::string testSenderUsername = "tom_boop";
+	std::string testRecipientUsername = "kim_beep";
+	Date testDate = Date(2001,8,20,39899);
+	std::string testMessageText = "beep-boop here are two pictures of a robot.";
+	UserMessage testUserMessage = UserMessage(testSenderUsername, testRecipientUsername, testDate, testMessageText);
+	vector<MultimediaComponent>* multimediaComponents = new vector<MultimediaComponent>();
+	MultimediaComponent* testMultimediaComponentOne = new MMCImageJPEG("robotpictureone.jpeg", 200);
+	MultimediaComponent* testMultimediaComponentTwo = new MMCImageJPEG("robotpicturetwo.jpeg", 400);
+	multimediaComponents->push_back(*testMultimediaComponentOne);
+	multimediaComponents->push_back(*testMultimediaComponentTwo);
+	SendUserMessageJPEGImageMessage jpegImageMessage = creator.createSendUserMessageJPEGImageMessage(testUserMessage, *multimediaComponents);
+	Message theMessage = Message(jpegImageMessage.getLength(), jpegImageMessage.getMessageAsCharArray());
+	if(converter.isSendUserMessageJPEGImageMessage(theMessage))
+	{
+		SendUserMessageJPEGImageMessage thejpegImageMessageAgain = converter.toSendUserMessageJPEGImageMessage(theMessage);
+		if((thejpegImageMessageAgain.getMessageAsCharArray())[0] == CLIENTMESSAGECODE_SENDMESSAGEIMG)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getUserMessage().getUsernameOfTheSender() == testSenderUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getUserMessage().getUsernameOfTheRecipient() == testRecipientUsername)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getUserMessage().getDateCreated().equals(testDate))
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getUserMessage().getMessageText() == testMessageText)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getMultimediaComponents().at(0).getFilename() == "robotpictureone.jpeg")
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getMultimediaComponents().at(0).getMultimediaComponentID() == 200)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getMultimediaComponents().at(1).getFilename() == "robotpicturetwo.jpeg")
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+
+		if(thejpegImageMessageAgain.getMultimediaComponents().at(0).getMultimediaComponentID() == 400)
+		{
+			testPassed();
+		}
+		else
+		{
+			testFailed();
+		}
+	}
+	else
+	{
+		testFailed();
+	}
+
+	if(converter.isLoginMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isUserMessageHistoryAllMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isUserMessageHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isBoardHistoryMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+	if(converter.isCreatePostingMessage(theMessage))
+	{
+		testFailed();
+	}
+	else
+	{
+		testPassed();
+	}
+
+	delete testMultimediaComponentOne;
+	delete testMultimediaComponentTwo;
+	delete multimediaComponents;
 }
 
 void runBoardHistoryMessageTest()
