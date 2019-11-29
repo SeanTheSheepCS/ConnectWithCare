@@ -1,5 +1,6 @@
 #include "Message.h"
 #include <string.h>
+#include <iostream>
 
 #include "Utilities/VariableLengthQuantityLibrary.h"
 
@@ -45,12 +46,20 @@ Message::~Message()
 	delete[] messageAsCharArray;
 }
 
-unsigned long int Message::getLength()
+unsigned long int Message::getLength() const
 {
 	return length;
 }
 
-const unsigned char* Message::getMessageAsCharArray()
+const unsigned char* Message::getMessageAsCharArray() const
 {
 	return messageAsCharArray;
+}
+
+void Message::printMessageToStdOut() const
+{
+	for(unsigned int i = 0; i < this->length; i++)
+	{
+		std::cout << std::hex << (this->messageAsCharArray)[i] << std::endl;
+	}
 }
