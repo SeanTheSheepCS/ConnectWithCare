@@ -335,7 +335,6 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 	}
 }
 queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
-	/*
 	vector<Posting> selectedPosts;
 	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
 	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
@@ -348,7 +347,6 @@ queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Messa
 		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
 	}
-	*/
 }
 queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
 	queue<Message> msgToClientInQueue;
