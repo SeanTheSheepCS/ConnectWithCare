@@ -13,6 +13,7 @@
 
 #include "ServerMessageConverter.h"
 #include "ServerMessageCreator.h"
+#include "ClientConnectionInformation.h"
 
 #include "../ServerModel/LoginDatabaseController.h"
 #include "../ServerModel/PostDatabaseController.h"

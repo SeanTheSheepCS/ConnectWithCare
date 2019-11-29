@@ -117,9 +117,13 @@ unsigned long int PostDatabaseController::iterateThroughDatabaseToGetHistory(Boa
 
 void PostDatabaseController::populateMapWithHardCodedEntries() {
 	// need to decide how board IDs are set up
-	unsigned long int boardIDTheUserWantsToPostTo = 69;
+	unsigned long int boardIDTheUserWantsToPostTo = DEFAULT_BOARD_ID;
 	bulletinBoardsDatabase[boardIDTheUserWantsToPostTo].insert(
 			Posting("Hello! I'm stuck in the past and my time machine broke.\n If you find this message please tell my children I love them.\n", "IMissThePresent", Date(1262, 1, 29, 1200)) );
+	bulletinBoardsDatabase[boardIDTheUserWantsToPostTo].insert(
+			Posting("Hey, my fridge broke. If anyone could help me fix it that'd be so helpful.", "QuincyShelinger", Date(2019, 7, 12, 1200)) );
+	bulletinBoardsDatabase[boardIDTheUserWantsToPostTo].insert(
+			Posting("Hey, my fridge broke. If anyone could help me fix it that'd be so helpful.", "QuincyShelinger", Date(2019, 7, 12, 1200)) );
 }
 
 

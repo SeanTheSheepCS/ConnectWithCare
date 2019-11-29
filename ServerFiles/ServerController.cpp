@@ -1,5 +1,5 @@
-#include <iostream>             // for listFiles, openFile
-#include <fstream>
+#include <iostream>
+#include <fstream> // for listFiles, openFile
 #include <string>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -12,10 +12,11 @@
 #include "ServerMessageConverter.h"
 
 
+
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
 
-#include "../ServerModel/LoginDatabaseController.h"
+//#include "../ServerModel/LoginDatabaseController.h"
 
 using namespace std;
 
