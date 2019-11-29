@@ -59,3 +59,12 @@ std::string UserMessage::getUsernameOfTheRecipient() const
 {
 	return *usernameOfTheRecipient;
 }
+
+bool UserMessage::operator<(const UserMessage& rhs) const {
+	if (this->getDateCreated().equals( rhs.getDateCreated() ) == false) {
+		return this->getDateCreated().isBefore( rhs.getDateCreated() );
+	}
+	else {
+		return this->getMessageText().compare(rhs.getMessageText()) < 0;
+	}
+}

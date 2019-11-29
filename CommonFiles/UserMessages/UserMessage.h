@@ -15,6 +15,8 @@ class UserMessage
 		std::string getMessageText() const;
 		std::string getUsernameOfTheSender() const;
 		std::string getUsernameOfTheRecipient() const;
+
+		bool operator<(const UserMessage& rhs) const;
 	protected:
 		//
 	private:

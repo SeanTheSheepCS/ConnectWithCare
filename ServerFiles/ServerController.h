@@ -9,6 +9,7 @@
 #include <stdlib.h>     // for atoi() and exit()
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
+#include <map>
 #include <queue>
 #include <vector>
 
@@ -18,6 +19,7 @@
 
 #include "../ServerModel/LoginDatabaseController.h"
 #include "../ServerModel/PostDatabaseController.h"
+#include "../ServerModel/MessageDatabaseController.h"
 
 #include "../CommonFiles/Message.h"
 #include "../CommonFiles/AllMessageTypes.h"
@@ -39,6 +41,7 @@ public:
 
 	void addLoginDatabase(LoginDatabaseController lDB);
 	void addBulBoDatabase(PostDatabaseController pDB);
+	void addMessageDatabase(MessageDatabaseController mDB);
 private:
 	
 	int serverSock;
@@ -48,8 +51,11 @@ private:
 	int maxDesc;
 	bool terminated;
 	
+	map<string, ClientConnectionInformation> onlineUsers;
+
 	LoginDatabaseController loginDatabase;
 	PostDatabaseController postDatabase;
+	MessageDatabaseController messageDatabase;
 
 	ServerMessageConverter	 messageConverter;
 	ServerMessageCreator	 messageCreator;
@@ -64,16 +70,17 @@ private:
 	Message messageFromDataReceivedFromClient(int clientSock);
 
 	vector<char> receiveData(int sock);
-	queue<Message> specifyTypeOfClientMessage(Message msgFromClient);
+	queue<Message> specifyTypeOfClientMessage(Message msgFromClient, ClientConnectionInformation& clientInfo);
 
 	queue<Message> putSingleMessageInQueue(Message msg);
 
 	queue<Message> specifyClientMessageAsLoginMessage(Message& msgFromClient);
 	queue<Message> specifyClientMessageAsLogoutMessage(Message& msgFromClient);
 
-	queue<Message> clarifyClientMessageAsSendUserMessage(Message& msgFromClient);
-	queue<Message> clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient);
-	queue<Message> clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient);
+	queue<Message> clarifyClientMessageAsSendUserMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo);
+	queue<Message> clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo);
+	queue<Message> clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo);
+		queue<Message> putUserMessagesInQueueAndReturnToClient(vector<UserMessage>& selectedMsgs);
 	queue<Message> clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient);
 
 	queue<Message> specifyClientMessageAsPostingMessage(Message& msgFromClient);

@@ -32,9 +32,15 @@ int mainServerController(int argc, char** argv) {
 	checkForCommandLineInputErrors(argc, argv);
 
 	ServerController server( atoi(argv[1]) );
-	LoginDatabaseController loginController;
 
-	server.addLoginDatabase(loginController);
+	LoginDatabaseController logDB;
+	PostDatabaseController pDB;
+	MessageDatabaseController mDB;
+
+	server.addLoginDatabase(logDB);
+	server.addBulBoDatabase(pDB);
+	server.addMessageDatabase(mDB);
+
 	server.communicate();
 
 	return 0;
@@ -110,6 +116,9 @@ void ServerController::addLoginDatabase(LoginDatabaseController lDB) {
 void ServerController::addBulBoDatabase(PostDatabaseController pDB) {
 	postDatabase = pDB;
 }
+void ServerController::addMessageDatabase(MessageDatabaseController mDB) {
+	messageDatabase = mDB;
+}
 
 void ServerController::communicate() {
 	int clientSock;
@@ -170,12 +179,12 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 	for (int clientSock = 0; clientSock <= maxDesc; clientSock++) {
 		if (!FD_ISSET(clientSock, &readySocks))
 			continue;
-		
+		ClientConnectionInformation clientInfo;
 		// Receive data from the TCP client
 		Message msgFromClient = messageFromDataReceivedFromClient(clientSock);
 
 		//cout << hex << (messageCreator.createErrorNoAuthMessage().getMessageAsCharArray())[0] << endl;
-		queue<Message> msgQueueToClient = specifyTypeOfClientMessage(msgFromClient);
+		queue<Message> msgQueueToClient = specifyTypeOfClientMessage(msgFromClient, clientInfo);
 		popQueueAndSendDataToClient(clientSock, msgQueueToClient);
 	}
 }
@@ -246,7 +255,7 @@ Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	return Message(msgFromClientVector.size(), msgFromClientArray );
 }
 
-queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
+queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient, ClientConnectionInformation& clientInfo) {
 	if (messageConverter.isLoginMessage(msgFromClient) ) {
 		return specifyClientMessageAsLoginMessage(msgFromClient);
 	}
@@ -254,13 +263,13 @@ queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClien
 		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
 	else if (messageConverter.isSendUserMessageMessage(msgFromClient)) {
-		return clarifyClientMessageAsSendUserMessage(msgFromClient);
+		return clarifyClientMessageAsSendUserMessage(msgFromClient, clientInfo);
 	}
 	else if (messageConverter.isSendUserMessageJPEGImageMessage(msgFromClient)) {
 		//SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(
 	}
 	else if (messageConverter.isUserMessageHistoryMessage(msgFromClient)) {
-		//UserMessageHistoryMessage toUserMessageHistoryMessage(
+		return clarifyClientMessageAsUserMessageHistoryMessage(msgFromClient, clientInfo);//UserMessageHistoryMessage toUserMessageHistoryMessage(
 	}
 	else if (messageConverter.isUserMessageHistoryAllMessage(msgFromClient)) {
 		//UserMessageHistoryAllMessage toUserMessageHistoryAllMessage(
@@ -305,29 +314,33 @@ queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& ms
 
 	return putSingleMessageInQueue( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
 }
-queue<Message> ServerController::clarifyClientMessageAsSendUserMessage(Message& msgFromClient) {
+queue<Message> ServerController::clarifyClientMessageAsSendUserMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo) {
 	SendUserMessageMessage sendUserMessageMessage = messageConverter.toSendUserMessageMessage(msgFromClient);
 }
-queue<Message> ServerController::clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient) {
+queue<Message> ServerController::clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo) {
 	SendUserMessageJPEGImageMessage sendUserJPEGMessage = messageConverter.toSendUserMessageJPEGImageMessage(msgFromClient);
 }
-queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient) {
-	/*
-	vector<Posting> selectedPosts;
+queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient, ClientConnectionInformation& clientInfo) {
+
+	vector<UserMessage> selectedMsgs;
 	UserMessageHistoryMessage userMessageHistoryMessage = messageConverter.toUserMessageHistoryMessage(msgFromClient);
-	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
-	unsigned long int specialMessageCode = postDatabase.getBoardHistoryAndPlaceInVector(boardHistoryMessage, selectedPosts);
-	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
-		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
+	unsigned long int specialMessageCode = messageDatabase.getConversationHistoryAndPlaceInVector(userMessageHistoryMessage, clientInfo.getUsername(), selectedMsgs);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORUSERNOTFOUND) {
+		return putSingleMessageInQueue( messageCreator.createErrorUserNotFoundMessage() );
 	}
 	else {
 		cout << "successful getHistory"<< "\n";
-		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
-		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
+		return putUserMessagesInQueueAndReturnToClient(selectedMsgs);
 	}
-	*/
-	queue<Message> z;
-	return z;
+}
+queue<Message> ServerController::putUserMessagesInQueueAndReturnToClient(vector<UserMessage>& selectedMsgs) {
+	queue<Message> msgToClientInQueue;
+	for (int p = 0; p < selectedMsgs.size(); p++) {
+		msgToClientInQueue.push( messageCreator.createUserMessageDataMessage( selectedMsgs[p] ) );
+	}
+	msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
+	//msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
+	return msgToClientInQueue;
 }
 queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient) {
 	UserMessageHistoryAllMessage userMessageHistoryAllMessage = messageConverter.toUserMessageHistoryAllMessage(msgFromClient);
