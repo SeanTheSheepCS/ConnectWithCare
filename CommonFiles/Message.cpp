@@ -27,7 +27,7 @@ Message::Message(const Message& other)
 
 Message& Message::operator=(const Message& rhs)
 {
-	if(this == &rhs)
+	if(this != &rhs)
 	{
 		this->length = rhs.length;
 		delete[] messageAsCharArray;
