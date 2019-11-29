@@ -64,8 +64,8 @@ private:
 	void initServer();
 	
 	void selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet);
-	ClientConnectionInformation  establishConnectionWithClient();
-	void addConnectionToReceiveSocketSet(int& sock);
+	int  establishConnectionWithClient();
+	void addConnectionToReceiveSocketSet(int sock);
 	
 	void processIncomingSockets (fd_set);
 	Message messageFromDataReceivedFromClient(int clientSock);

@@ -59,19 +59,19 @@ unsigned long int PostDatabaseController::writePostToDatabase(CreatePostingMessa
 
 }
 
-unsigned long int PostDatabaseController::searchBoardAndPlaceResultsInVector(BoardSearchMessage boardSearchMessage, vector<Posting>& selectedPosts) {
+unsigned long int PostDatabaseController::searchBoardAndPlaceResultsInVector(BoardSearchMessage boardSearchMessage, string key, vector<Posting>& selectedPosts) {
 	unsigned long int boardIDTheUserWantsHistoryOf = boardSearchMessage.getBoardID();
 	if ( checkIfDesiredBoardExists(boardIDTheUserWantsHistoryOf) != ORIGINAL_MESSAGE_CODE ) {
 		return SERVERMESSAGECODE_ERRORBOARDNOTFOUND;
 	}
-	return iterateThroughDatabaseToFindSearchKeywords(boardSearchMessage, boardIDTheUserWantsHistoryOf, selectedPosts);
+	return iterateThroughDatabaseToFindSearchKeywords(key, boardIDTheUserWantsHistoryOf, selectedPosts);
 }
-unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeywords(BoardSearchMessage boardSearchMessage, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
+unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeywords(string key, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
 	// could potentially take too long computationally
-	cout << "starting search in postDB for " << boardSearchMessage.getSearchKeyword() << "\n";
+	cout << "starting search in postDB for " << key << "\n";
 	for (Posting p : bulletinBoardsDatabase[boardIDTheUserWantsHistoryOf]) {
 		string postText = p.getPostText();
-		string keyword = boardSearchMessage.getSearchKeyword();
+		string keyword = key;
 		if ( postText.find(keyword) != string::npos
 			|| postText.find( capitalizeWord(keyword) ) != string::npos
 			|| postText.find( allCapsWord(keyword) ) != string::npos )

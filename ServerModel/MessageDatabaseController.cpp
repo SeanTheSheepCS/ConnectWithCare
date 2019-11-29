@@ -63,11 +63,13 @@ unsigned long int MessageDatabaseController::getConversationHistoryAndPlaceInVec
 	int whichTag;
 	string convoTag1 = historyMessage.getUsernameToGetHistoryWith() + "++" + userWhoAskedForHistory;
 	string convoTag2 = userWhoAskedForHistory + "++" + historyMessage.getUsernameToGetHistoryWith();
-	cout << "in convo controller getHistory, client wants to access tag" << convoTag1 << "\n";
+	cout << "in convo controller getHistory, client wants to access tag" << convoTag1 << " or " << convoTag2 <<"\n";
+	/*
 	if ( (whichTag = checkIfDesiredConvoExists(convoTag1, convoTag2) ) == TAG_NOT_FOUND ) {
 		return SERVERMESSAGECODE_ERRORUSERNOTFOUND;
 	}
-	string useThisConvoTag = (whichTag == 1) ? convoTag1 : convoTag2;
+	*/
+	string useThisConvoTag = "QuinnC++DarylD" /*(whichTag == 1) ? convoTag1 : convoTag2 */;
 	return iterateThroughDatabaseToGetHistory(historyMessage, useThisConvoTag, selectedMsgs);
 }
 unsigned long int MessageDatabaseController::iterateThroughDatabaseToGetHistory(UserMessageHistoryMessage historyMessage, string& tag, vector<UserMessage>& selectedMsgs) {
@@ -84,8 +86,8 @@ unsigned long int MessageDatabaseController::iterateThroughDatabaseToGetHistory(
 }
 
 void MessageDatabaseController::hardcode() {
-	startNewConversation("MeaW", "Asif");
-	string tag = "MeaW++Asif";
-	conversationsDatabase[tag].insert( UserMessage("MeaW","Asif",Date(2019, 11, 17, 40),"Hello Asif!") );
-	conversationsDatabase[tag].insert( UserMessage("Asif","MeaW",Date(2019, 11, 17, 40),"Hello!") );
+	startNewConversation("QuinnC", "DarylD");
+	string tag = "QuinnC++DarylD";
+	conversationsDatabase[tag].insert( UserMessage("QuinnC","DarylD",Date(2019, 11, 17, 40),"Hello Asif!") );
+	conversationsDatabase[tag].insert( UserMessage("DarylD","QuinnC",Date(2019, 11, 17, 40),"Hello!") );
 }

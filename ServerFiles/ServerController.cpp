@@ -136,7 +136,12 @@ void ServerController::communicate() {
 		
 		// First, process new connection request, if any.
 		if (FD_ISSET(serverSock, &tempRecvSockSet) ) {
-			ClientConnectionInformation CCI = establishConnectionWithClient();
+
+			clientSock = establishConnectionWithClient();
+			//ClientConnectionInformation CCI =establishConnectionWithClient();
+			//activeConnections.push_back( establishConnectionWithClient() );
+			//clientSock = CCI.getCurrentClientSocket();
+			//addConnectionToReceiveSocketSet(activeConnections[0].getCurrentClientSocket());
 			addConnectionToReceiveSocketSet(clientSock);
 		}
 		else {
@@ -158,7 +163,7 @@ void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tem
 	}
 }
 
-ClientConnectionInformation ServerController::establishConnectionWithClient() {
+int ServerController::establishConnectionWithClient() {
     struct sockaddr_in clientAddr;
 	unsigned int sizeClientAddr = sizeof(clientAddr);
 	int clientSock;
@@ -170,10 +175,10 @@ ClientConnectionInformation ServerController::establishConnectionWithClient() {
 	}
 	cout << "Accepted a connection from " << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port;
 	cout << endl;
-	ClientConnectionInformation clientInfo = ClientConnectionInformation(clientAddr, clientSock);
-	return clientInfo;
+	//ClientConnectionInformation clientInfo = ClientConnectionInformation(clientAddr, clientSock);
+	return clientSock;
 }
-void ServerController::addConnectionToReceiveSocketSet(int& sock) {
+void ServerController::addConnectionToReceiveSocketSet(int sock) {
 	FD_SET(sock, &recvSockSet);
 	maxDesc = max(maxDesc, sock);
 }
@@ -367,7 +372,7 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 	vector<Posting> selectedPosts;
 	cout << "board search method" << "\n";
 	BoardSearchMessage boardSearchMessage = messageConverter.toBoardSearchMessage(msgFromClient);
-	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, selectedPosts);
+	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, boardSearchMessage.getSearchKeyword(), selectedPosts);
 	cout << "Looking for " << boardSearchMessage.getSearchKeyword() << " in " << boardSearchMessage.getBoardID() << "\n";
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
 		cout << "boardNotFound" << "\n";
@@ -415,6 +420,7 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
 	long int loopsToWait = 100000;
 	long int waitingArray[10];
+	cout << "bisy" << "\n";
 	for (long int i = 0L, z = 0L; i < loopsToWait; i++)
 	{
 		waitingArray[z] = i;
@@ -439,16 +445,25 @@ void ServerController::sendData(int sock, Message msgToClient) {
 	msgToClient.printMessageToStdOut();
 	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
+	cout << "outgoingmsg" << "\n";
 	// Sent the data
 	bytesSent = send(sock, outGoingMsg, msgToClient.getLength(), 0);
 	
 	if (bytesSent < 0){
 		cout << "tcp error in sending. Bytes sent = " << bytesSent << endl;
+		FD_CLR(sock, &recvSockSet);
+
+		// Update the max descriptor
+		while (FD_ISSET(maxDesc, &recvSockSet) == false)
+			maxDesc -= 1;
+
 		return;
 	}
 	else {
 		cout << "sent " << bytesSent << " of " << msgToClient.getLength() << endl;
 	}
+	cout << "endOfSend" << "\n";
+
 }
 
 void ServerController::listFiles(string& data) {
