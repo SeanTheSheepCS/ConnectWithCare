@@ -402,6 +402,8 @@ SendUserMessageJPEGImageMessage ClientMessageCreator::createSendUserMessageJPEGI
 
 	const char* messageText = userMessageToConvertToUserMessageWithAJPEGImage.getMessageText().c_str();
 	const unsigned long int lengthOfMessageText = userMessageToConvertToUserMessageWithAJPEGImage.getMessageText().size();
+	const unsigned char* lengthOfMessageTextInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(lengthOfMessageText);
+	const unsigned long int lengthOfLengthOfMessageTextField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
 
 	unsigned long int lengthOfAllMultimediaComponentDataAddedTogether = 0;
 	std::vector<const unsigned char*>* vectorFilledWithEveryMMCComponentAsACharArray = new std::vector<const unsigned char*>;
@@ -459,7 +461,7 @@ SendUserMessageJPEGImageMessage ClientMessageCreator::createSendUserMessageJPEGI
 
 	// END HANDLE MMC STUFF
 
-	unsigned long int dataLengthAsUnsignedLong = lengthOfUsernameOfSenderLengthField + lengthOfUsernameOfSender + lengthOfUsernameOfRecipientLengthField + lengthOfUsernameOfRecipient + lengthOfDateAsCharArray + lengthOfMessageText + lengthOfAllMultimediaComponentDataAddedTogether;
+	unsigned long int dataLengthAsUnsignedLong = lengthOfUsernameOfSenderLengthField + lengthOfUsernameOfSender + lengthOfUsernameOfRecipientLengthField + lengthOfUsernameOfRecipient + lengthOfDateAsCharArray + lengthOfLengthOfMessageTextField + lengthOfMessageText + lengthOfAllMultimediaComponentDataAddedTogether;
 	const unsigned char* dataLengthInVLQ = vlqConverter.convertUnsignedLongIntToVariableLengthQuantity(dataLengthAsUnsignedLong);
 	const unsigned short int lengthOfDataLengthInVLQField = vlqConverter.getArrayLengthFromLastConversionFromUnsignedLongIntToVLQ();
 
@@ -501,6 +503,12 @@ SendUserMessageJPEGImageMessage ClientMessageCreator::createSendUserMessageJPEGI
 		messageAsCharArray[currentIndexInTheMessage] = dateAsCharArray[i];
 		currentIndexInTheMessage++;
 	}
+	for(unsigned int i = 0; i < lengthOfLengthOfMessageTextField; i++)
+	{
+		messageAsCharArray[currentIndexInTheMessage] = lengthOfMessageTextInVLQ[i];
+		currentIndexInTheMessage++;
+	}
+
 	for(unsigned int i = 0; i < lengthOfMessageText; i++)
 	{
 		messageAsCharArray[currentIndexInTheMessage] = messageText[i];
