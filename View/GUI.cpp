@@ -105,7 +105,7 @@ void GUI::buildSearchResults(vector<string> searchResults)
 		cout << searchResults[i] << endl;
 	}
 
-	cout << divider << "--------------" << divider << endl;
+	cout << divider << "--------------" << divider << endl << endl;
 }
 void GUI::addPostMenu()
 {
@@ -113,7 +113,7 @@ void GUI::addPostMenu()
 	cout << "Please enter post (press enter once finished): " << endl;
 }
 
-void GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength)
+void GUI::buildChatsMenu(unsigned int pcNotifications, vector<string> friends, vector<string> messages)
 {
     cout << divider << "CHATS-MENU" << divider << endl;
 
@@ -125,19 +125,34 @@ void GUI::buildChatsMenu(unsigned int pcNotifications, char** friends, int frien
     cout << "(" << pcNotifications << ")" << endl;
     cout.unsetf(ios::right);
 
-    for(int i = 0; i < friendsLength; i++)
+    for(int i = 0; i < friends.size(); i++)
     {
         cout.setf(ios::left);
         cout.width(25);
         cout << "[" << (i + 1) << "]";
-        /***** PRINT FRIEND NAME AND NOTIFICAITONS HERE *****/
+        cout << friends[i];
         cout << endl;
     }
 
     cout << divider << "----------" << divider << endl;
     cout << " (#) Enter number to view chat history  (b) Go Back  (q) Quit program" << endl;
-    char option;
-    cin >> option;
+    char charOption;
+    cin >> charOption;
+    if(charOption >= '0' && charOption <= '9')
+    {
+    	int option = charOption - '0';
+    	cout << "Chat history with " << friends[option] << endl;
+    	cout << messages[option] << endl;
+    }
+    else if(charOption == 'b')
+    {
+    	//go back;
+    }
+    else if(charOption == 'q')
+    {
+    	exit(1);
+    }
+
 }
 
 void GUI::buildPostsMenu(char** posts, int postsLength)
@@ -187,7 +202,6 @@ void GUI::buildAccountMenu(string username, string nameTag, string accountType)
     cout << divider << "ACCOUNT-MENU" << divider << endl;
 
     cout << "   Username: <" << username << ">" << endl;
-    cout << "   Nametag: <" << nameTag << ">" << endl;
     cout << "   Account Type: <" << accountType << ">" << endl;
     cout << "\n[1] Change Username" << endl;
     cout << "[2] Change Password" << endl;

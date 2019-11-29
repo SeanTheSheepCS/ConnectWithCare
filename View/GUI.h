@@ -31,7 +31,7 @@ class GUI
         // Builds the search results inquired from the bulletin board.
         void addPostMenu();
         // Builds adding post menu.
-        void buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength);
+        void buildChatsMenu(unsigned int pcNotifications, vector<string> friends, vector<string> messages);
         // Builds Chats menu given the public chat notifications and an array of friends
         //    with their name and notifications. Returns a char for the option selected
         //    by the user.

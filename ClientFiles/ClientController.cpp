@@ -48,8 +48,6 @@ void ClientController::communicate()
     loginCase();
 
     /*** LOGIN WAS SUCCESSFUL ***/
-    accountType = "individual(testing)"; // TODO Remove later, get information from server
-
     app.buildWelcomeMessage();
     char option;
 
@@ -106,7 +104,36 @@ void ClientController::communicate()
             case '2':
             {
                 cout << "\tChats selected." << endl;
-                app.buildChatsMenu(0,0,0); // TODO add notifications later
+                sendMessageToServer(theCreator.createUserMessageHistoryMessage(startDate, endDate, username));
+
+                vector<UserMessageDataMessage> userChats;
+                Message chat(recvMessageFromServer());
+                if(theConvertor.isErrorUserNotFoundMessage(chat))
+                {
+                	cout << "\tError with receiving the chats." << endl;
+                	break;
+                }
+
+                while(bytesRecv != 1)
+                {
+                	if(theConvertor.isUserMessageDataMessage(chat))
+                	{
+                		cout << "\tError has occurred when receiving chat history.\n";
+						exit(1);
+                	}
+                	userChats.push_back(theConvertor.toUserMessageDataMessage(chat));
+                	Message newChat(recvMessageFromServer());
+                	chat = Message(newChat);
+                }
+
+                vector<string> userChatsStrings;
+                vector<string> recipients;
+                for(unsigned int i = 0; i < userChats.size(); i++)
+                {
+                	userChatsStrings.push_back(userChats[i].getUserMessage().getMessageText());
+                	recipients.push_back(userChats[i].getUserMessage().getUsernameOfTheRecipient());
+                }
+                app.buildChatsMenu(5,recipients,userChatsStrings); // TODO add notifications later
                 chatsCase();
                 break;    
             }
@@ -121,18 +148,21 @@ void ClientController::communicate()
             {
                 cout << "\tPublic Channel selected." << endl;
                 app.buildPublicChannel();
+                publicChannelCase();
                 break;
             }
             case '5':
             {
                 cout << "\tFriends selected." << endl;
                 app.buildFriendList(); // TODO need to figure out what to pass here to display friends.
+                friendsCase();
                 break;
             }
             case '6':
             {
                 cout << "\tAccount selected." << endl;
                 app.buildAccountMenu(username, nameTag, accountType);
+                accountCase();
                 break;
             }
             case 'q':
@@ -329,6 +359,7 @@ void ClientController::bulletinBoardCase()
         	cin >> month;
         	while(month == 0)
 			{
+
 				cout << "\tInvalid month." << endl;
 				cout << "\nEnter start month (ie.1 = January): ";
 				cin >> month;
@@ -346,7 +377,7 @@ void ClientController::bulletinBoardCase()
 
         	Date startDate(year, month, day, 40000); // time = 40 000
         	Date endDate(3000, 1, 1, 40000); // time = 40 000
-        	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, createCurrentDate(), BOARD_ID, searchKeyword);
+        	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, endDate, BOARD_ID, searchKeyword);
         	sendMessageToServer(bsm);
 
         	cout << "\tSearch results will be generated below..." << endl;
@@ -359,19 +390,23 @@ void ClientController::bulletinBoardCase()
 
         	vector<PostingDataMessage> searchResultsFromBulletin;
 
-        	while(theConvertor.isEndOfDataMessage(postFound))
+        	while(bytesRecv != 1)
         	{
+        		//cout << "test" << endl;
+
         		if(!theConvertor.isPostingDataMessage(postFound))
         		{
         			cout << "\tError in receiving search results..." << endl;
         			break;
         		}
+        		//postFound.printMessageToStdOut();
         		searchResultsFromBulletin.push_back(theConvertor.toPostingDataMessage(postFound));
-        		postFound = recvMessageFromServer(); // Keep checking from server.
+        		Message newPostFound(recvMessageFromServer());
+        		postFound = Message(newPostFound); // Keep checking from server.
         	}
 
         	vector<string> searchedPosts;
-			for(int i = 0; i < searchResultsFromBulletin.size(); i++)
+			for(unsigned int i = 0; i < searchResultsFromBulletin.size(); i++)
 			{
 				searchedPosts.push_back(searchResultsFromBulletin[i].getPosting().getPostText()); // Convert the posts to char array.
 			}
@@ -397,7 +432,7 @@ void ClientController::bulletinBoardCase()
 }
 
 void ClientController::chatsCase()
-{
+{/*
     char chatsOption;
     cin >> chatsOption;
     //TODO figure out how to display different chats by different friends (most recent 5)
@@ -442,7 +477,7 @@ void ClientController::chatsCase()
         {
             cout << "invalid choice (chats)" << endl;
         }
-    }
+    }*/
 }
 
 void ClientController::postsCase()
@@ -555,9 +590,12 @@ void ClientController::accountCase()
         case '1':
         {
             cout << "\tChange username selected." << endl;
+            cout << "Please enter new username: " << endl;
+            string newUsername;
+            cin >> newUsername;
             unsigned char* changeUsernameMessageArray = new unsigned char[1];
             changeUsernameMessageArray[0] = SERVERMESSAGECODE_CHANGEUSERNAME;
-            Message changeUsernameMessage(1, changeUsernameMessageArray);
+            Message changeUsernameMessage(1, changeUsernameMessageArray); // Send this to server.
             delete changeUsernameMessageArray;
             // todo
             break;
@@ -565,6 +603,9 @@ void ClientController::accountCase()
         case '2':
         {
             cout << "\tChange password selected." << endl;
+            cout << "Please enter new password: " << endl;
+            string newPassword;
+            cin >> newPassword;
             unsigned char* changePasswordMessageArray = new unsigned char[1];
             changePasswordMessageArray[0] = SERVERMESSAGECODE_CHANGEPASSWORD;
             Message changePasswordMessage(1, changePasswordMessageArray);
@@ -575,6 +616,9 @@ void ClientController::accountCase()
         case '3':
         {
             cout << "\tChange account type selected." << endl;
+            cout << "Please enter new account type: " << endl;
+            string newAccount;
+            cin >> newAccount;
             unsigned char* changeAccountMessageArray = new unsigned char[1];
             changeAccountMessageArray[0] = SERVERMESSAGECODE_CHANGEACCOUNTTYPE;
             Message changeAccountMessage(1, changeAccountMessageArray);
@@ -670,12 +714,12 @@ void ClientController::loginCase()
 
     // Successful login.
     Message accountTypeMessageWrapper = recvMessageFromServer();
-        unsigned int accountTypeLength = accountTypeMessageWrapper.getLength();
-        unsigned char aType[accountTypeLength + 1];
-        strcpy((char*)aType, (char*)accountTypeMessageWrapper.getMessageAsCharArray() );
-        //*(++aType) = '\0';
-        accountType = std::string( (char*)aType );
-        cout << accountType << endl;
+	unsigned int accountTypeLength = accountTypeMessageWrapper.getLength();
+	unsigned char aType[accountTypeLength + 1];
+	strcpy((char*)aType, (char*)accountTypeMessageWrapper.getMessageAsCharArray() );
+	//*(++aType) = '\0';
+	accountType = std::string( (char*)aType );
+	cout << accountType << endl;
 }
 
 int mainClientController(int argc, char *argv[])
