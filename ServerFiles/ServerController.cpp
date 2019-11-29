@@ -226,7 +226,7 @@ string ServerController::receiveData(int clientSock) {
 
 Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	string msgFromClient = receiveData(clientSock);
-	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
+	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str() );
 }
 
 queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
@@ -289,10 +289,25 @@ queue<Message> ServerController::clarifyClientMessageAsSendUserJPEGImageMessage(
 	SendUserMessageJPEGImageMessage sendUserJPEGMessage = messageConverter.toSendUserMessageJPEGImageMessage(msgFromClient);
 }
 queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient) {
+	/*
+	vector<Posting> selectedPosts;
 	UserMessageHistoryMessage userMessageHistoryMessage = messageConverter.toUserMessageHistoryMessage(msgFromClient);
+	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
+	unsigned long int specialMessageCode = postDatabase.getBoardHistoryAndPlaceInVector(boardHistoryMessage, selectedPosts);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
+	}
+	else {
+		cout << "successful getHistory"<< "\n";
+		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
+		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
+	}
+	*/
+	return putSingleMessageInQueue(messageCreator.createEndOfDataMessage() );
 }
 queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient) {
 	UserMessageHistoryAllMessage userMessageHistoryAllMessage = messageConverter.toUserMessageHistoryAllMessage(msgFromClient);
+	return putSingleMessageInQueue(userMessageHistoryAllMessage);
 }
 queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
 	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
@@ -320,6 +335,7 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 	}
 }
 queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
+	/*
 	vector<Posting> selectedPosts;
 	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
 	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
@@ -332,6 +348,7 @@ queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Messa
 		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
 	}
+	*/
 }
 queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
 	queue<Message> msgToClientInQueue;
@@ -349,11 +366,17 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 
 
 
-
+void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
+	int loopsToWait = 50;
+	if (msgQueueToClient.size() == 2) {
+		for (int i = 0; i < loopsToWait; i++);
+	}
+}
 
 void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
 	while (msgQueueToClient.empty() == false) {
 		sendData(sock, msgQueueToClient.front());
+		waitBeforeSendingLastMessage(msgQueueToClient);
 		msgQueueToClient.pop();
 	}
 }
