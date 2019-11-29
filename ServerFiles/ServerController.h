@@ -70,6 +70,11 @@ private:
 	queue<Message> specifyClientMessageAsLoginMessage(Message& msgFromClient);
 	queue<Message> specifyClientMessageAsLogoutMessage(Message& msgFromClient);
 
+	queue<Message> clarifyClientMessageAsSendUserMessage(Message& msgFromClient);
+	queue<Message> clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient);
+	queue<Message> clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient);
+	queue<Message> clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient);
+
 	queue<Message> specifyClientMessageAsPostingMessage(Message& msgFromClient);
 	queue<Message> specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient);
 		queue<Message> putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf);

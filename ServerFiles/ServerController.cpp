@@ -185,12 +185,15 @@ string ServerController::receiveData(int clientSock) {
 	string msgBuilder = "";
 	int bytesRecv = 0, totalBytesRecv = 0;
 	
+	cout << "Server receiving message:" << "\n";
 	do {
 		memset(&inBuffer, 0, BUFFERSIZE);
 		
 		bytesRecv = recv(clientSock, (char *) &inBuffer, BUFFERSIZE, 0);
 		totalBytesRecv += bytesRecv;
 		
+		cout << inBuffer << "\n";
+
 		if (bytesRecv < 0) {
 			cout << "tcp recv() failed." << endl;
 			FD_CLR(clientSock, &recvSockSet);
@@ -234,7 +237,7 @@ queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClien
 		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
 	else if (messageConverter.isSendUserMessageMessage(msgFromClient)) {
-		//SendUserMessageMessage toSendUserMessageMessage(
+		return clarifyClientMessageAsSendUserMessage(msgFromClient);
 	}
 	else if (messageConverter.isSendUserMessageJPEGImageMessage(msgFromClient)) {
 		//SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(
@@ -278,6 +281,18 @@ queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& ms
 	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
 
 	return putSingleMessageInQueue( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
+}
+queue<Message> ServerController::clarifyClientMessageAsSendUserMessage(Message& msgFromClient) {
+	SendUserMessageMessage sendUserMessageMessage = messageConverter.toSendUserMessageMessage(msgFromClient);
+}
+queue<Message> ServerController::clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient) {
+	SendUserMessageJPEGImageMessage sendUserJPEGMessage = messageConverter.toSendUserMessageJPEGImageMessage(msgFromClient);
+}
+queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient) {
+	UserMessageHistoryMessage userMessageHistoryMessage = messageConverter.toUserMessageHistoryMessage(msgFromClient);
+}
+queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient) {
+	UserMessageHistoryAllMessage userMessageHistoryAllMessage = messageConverter.toUserMessageHistoryAllMessage(msgFromClient);
 }
 queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
 	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
