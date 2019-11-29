@@ -16,6 +16,7 @@ using namespace std;
 class ClientConnectionInformation {
 public:
 	ClientConnectionInformation(struct 	sockaddr_in clientAddr, int currentClientSocket);
+	ClientConnectionInformation();
 
 	struct sockaddr_in getClientAddr();
 	int getCurrentClientSocket();

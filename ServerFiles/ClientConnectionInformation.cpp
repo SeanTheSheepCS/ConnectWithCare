@@ -13,6 +13,7 @@ ClientConnectionInformation::ClientConnectionInformation(struct sockaddr_in clie
 	this->clientAddr = clientAddr;
 	this->currentClientSocket = currentClientSocket;
 }
+ClientConnectionInformation::ClientConnectionInformation() {}
 
 struct sockaddr_in ClientConnectionInformation::getClientAddr() {
 	return clientAddr;
