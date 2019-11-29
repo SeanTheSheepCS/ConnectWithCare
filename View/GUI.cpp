@@ -81,7 +81,7 @@ void GUI::buildMenu(unsigned int bbNotifications, unsigned int chatNotifications
     cout << "Enter option (or type 'q' to exit):";
 }
 
-void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
+void GUI::buildBulletinBoard(vector<string> bulletinBoard)
 {
     cout << divider << "BULLETIN-BOARD" << divider << endl;
 
@@ -94,7 +94,7 @@ void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
     cout << "  (1) Add Post  (2) Send Message (3)Search (b) Go Back  (q) Quit Program" << endl;
 }
 
-void GUI::buildSearchResults(vector<const unsigned char*> searchResults)
+void GUI::buildSearchResults(vector<string> searchResults)
 {
 	cout << endl;
 	cout << divider << "SEARCH-RESULTS" << divider << endl;
