@@ -12,7 +12,6 @@
  */
 #include "ClientController.h"
 #include <iostream>
-#define BOARD_ID 69
 
 using namespace std;
 
@@ -33,7 +32,7 @@ ClientController::ClientController(int portNumber, char* serverIP)
     /* Connect to the server
      * sock: the socket for this connection.
      * serverAddr: the server address.
-     * sizeof(*): the size fo the rserver address
+     * sizeof(*): the size of the server address
      */
     if (connect(sock, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0)
     {
@@ -49,8 +48,9 @@ void ClientController::communicate()
     loginCase();
 
     /*** LOGIN WAS SUCCESSFUL ***/
-    accountType = "individual(testing)"; // TODO Remove later
-    nameTag = "user(testing)"; // TODO Remove later
+    accountType = "individual(testing)"; // TODO Remove later, get information from server
+    nameTag = "user(testing)"; // TODO Remove later, get information from server
+
     app.buildWelcomeMessage();
     char option;
 
@@ -450,7 +450,22 @@ void ClientController::postsCase()
 
 void ClientController::publicChannelCase()
 {
-   // TODO SEND MESSAGE to server (advanced)
+	string userMessageInPublic;
+	while(1)
+	{
+		cin >> userMessageInPublic;
+		if(userMessageInPublic.compare("leave") == 0)
+		{
+			break;
+		}
+		else if(userMessageInPublic.compare("quit") == 0)
+		{
+			userQuit();
+		}
+
+		// TODO SEND MESSAGE to server (advanced)
+	}
+	cout << "\tLeaving Public Channel..." << endl;
 }
 
 void ClientController::friendsCase()

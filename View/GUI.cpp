@@ -87,10 +87,11 @@ void GUI::buildBulletinBoard(vector<string> bulletinBoard)
 
     for(int i = 0; i < bulletinBoard.size(); i++)
     {
+    	cout << "Post " << i << endl;
     	cout << bulletinBoard[i] << endl; // Adds posts to bulletin board.
+    	cout << divider << "--------------" << divider << endl;
     }
 
-    cout << divider << "--------------" << divider << endl;
     cout << "  (1) Add Post  (2) Send Message (3)Search (b) Go Back  (q) Quit Program" << endl;
 }
 

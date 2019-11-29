@@ -24,6 +24,7 @@
 
 #define BUFFERSIZE 32
 #define MAXLINE 32 
+#define BOARD_ID 10
 
 int mainClientController(int argc, char** argv);
 
