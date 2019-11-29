@@ -2,7 +2,7 @@
 #include "ServerFiles/ServerController.h"
 #include "CommonFiles/UnitTests/MessageCreatorsAndConvertersTest.h"
 
-#define CLIENT_MODE
+//#define CLIENT_MODE
 
 int main(int argc, char** argv)
 {

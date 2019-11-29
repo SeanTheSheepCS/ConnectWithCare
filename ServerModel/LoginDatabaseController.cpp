@@ -45,13 +45,13 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 	map<string,string>::iterator it = loginDatabase.begin();
 	for ( ; it != loginDatabase.end(); it++) {
 		//cout << endl << it->first << endl << it->second <<endl;
-		if (it->first.compare(username) == 0 && it->first.compare(password) == 0)
+		if (it->first.compare(username) == 0 && it->second.compare(password) == 0)
 		{
-			//cout << "GOOD";
+			cout << "GOOD\n";
 			return true;
 		}
 	}
-	//cout <<"BAD";
+	cout <<"BAD\n";
 	return false;
 }
 

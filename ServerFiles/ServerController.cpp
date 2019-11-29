@@ -52,6 +52,9 @@ ServerController::ServerController(int port) {
 	
 	terminated = false;
 
+	activeConnections = vector<ClientConnectionInformation>();
+	onlineUsers = map<string, ClientConnectionInformation>();
+
 	messageConverter = ServerMessageConverter();
 	messageCreator = ServerMessageCreator();
 	
@@ -133,7 +136,7 @@ void ServerController::communicate() {
 		
 		// First, process new connection request, if any.
 		if (FD_ISSET(serverSock, &tempRecvSockSet) ) {
-			clientSock = establishConnectionWithClient();
+			ClientConnectionInformation CCI = establishConnectionWithClient();
 			addConnectionToReceiveSocketSet(clientSock);
 		}
 		else {
@@ -155,7 +158,7 @@ void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tem
 	}
 }
 
-int ServerController::establishConnectionWithClient() {
+ClientConnectionInformation ServerController::establishConnectionWithClient() {
     struct sockaddr_in clientAddr;
 	unsigned int sizeClientAddr = sizeof(clientAddr);
 	int clientSock;
@@ -167,7 +170,8 @@ int ServerController::establishConnectionWithClient() {
 	}
 	cout << "Accepted a connection from " << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port;
 	cout << endl;
-	return clientSock;
+	ClientConnectionInformation clientInfo = ClientConnectionInformation(clientAddr, clientSock);
+	return clientInfo;
 }
 void ServerController::addConnectionToReceiveSocketSet(int& sock) {
 	FD_SET(sock, &recvSockSet);
@@ -189,9 +193,9 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 	}
 }
 
-vector<char> ServerController::receiveData(int clientSock) {
+vector<unsigned char> ServerController::receiveData(int clientSock) {
 	char inBuffer[BUFFERSIZE];
-	vector<char> msgBuilder;
+	vector<unsigned char> msgBuilder;
 	int bytesRecv = 0, totalBytesRecv = 0;
 	bool continueToReceiveMsg = true;
 	
@@ -239,7 +243,7 @@ vector<char> ServerController::receiveData(int clientSock) {
 }
 
 Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
-	vector<char> msgFromClientVector = receiveData(clientSock);
+	vector<unsigned char> msgFromClientVector = receiveData(clientSock);
 	cout << "Vector ";
 	for (int p = 0; p < msgFromClientVector.size(); p++) {
 		cout << msgFromClientVector[p] << "\n";
@@ -364,7 +368,7 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 	cout << "board search method" << "\n";
 	BoardSearchMessage boardSearchMessage = messageConverter.toBoardSearchMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, selectedPosts);
-	cout << "Looking for " << boardSearchMessage.getBoardID() << "\n";
+	cout << "Looking for " << boardSearchMessage.getSearchKeyword() << " in " << boardSearchMessage.getBoardID() << "\n";
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
 		cout << "boardNotFound" << "\n";
 		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
@@ -409,9 +413,9 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 
 
 void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
-	int loopsToWait = 1000000;
-	int waitingArray[10];
-	for (int i = 0, z = 0; i < loopsToWait; i++)
+	long int loopsToWait = 100000;
+	long int waitingArray[10];
+	for (long int i = 0L, z = 0L; i < loopsToWait; i++)
 	{
 		waitingArray[z] = i;
 		z = (z+1)%10;
@@ -421,11 +425,13 @@ void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
 }
 
 void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
+	cout << "-----------------------------sending data ------------------\n";
 	while (msgQueueToClient.empty() == false) {
 		sendData(sock, msgQueueToClient.front());
 		waitBeforeSendingLastMessage(msgQueueToClient);
 		msgQueueToClient.pop();
 	}
+	cout << "-----------------------------end sending data ------------------\n\n";
 }
 void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;

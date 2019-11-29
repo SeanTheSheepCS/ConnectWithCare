@@ -52,6 +52,7 @@ private:
 	bool terminated;
 	
 	map<string, ClientConnectionInformation> onlineUsers;
+	vector<ClientConnectionInformation> activeConnections;
 
 	LoginDatabaseController loginDatabase;
 	PostDatabaseController postDatabase;
@@ -63,13 +64,13 @@ private:
 	void initServer();
 	
 	void selectIncomingConnection_AddToTempRecvSockSet(fd_set& tempRecvSockSet);
-	int  establishConnectionWithClient();
+	ClientConnectionInformation  establishConnectionWithClient();
 	void addConnectionToReceiveSocketSet(int& sock);
 	
 	void processIncomingSockets (fd_set);
 	Message messageFromDataReceivedFromClient(int clientSock);
 
-	vector<char> receiveData(int sock);
+	vector<unsigned char> receiveData(int sock);
 	queue<Message> specifyTypeOfClientMessage(Message msgFromClient, ClientConnectionInformation& clientInfo);
 
 	queue<Message> putSingleMessageInQueue(Message msg);
