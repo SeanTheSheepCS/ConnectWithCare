@@ -92,13 +92,13 @@ void ClientController::communicate()
 					post = recvMessageFromServer(); // Keep checking from server.
                 }
 
-                vector<const unsigned char*> bulletinBoardPostsAsChar;
+                vector<string> bulletinBoardPostsString;
                 for(int i = 0; i < bulletinBoardPosts.size(); i++)
                 {
-                	bulletinBoardPostsAsChar.push_back(bulletinBoardPosts[i].getMessageAsCharArray()); // Convert the posts to char array.
+                	bulletinBoardPostsString.push_back(bulletinBoardPosts[i].getPosting().getPostText()); // Convert the posts to char array.
                 }
 
-                app.buildBulletinBoard(bulletinBoardPostsAsChar);
+                app.buildBulletinBoard(bulletinBoardPostsString);
                 bulletinBoardCase();
                 break; 
             }
@@ -324,14 +324,13 @@ void ClientController::bulletinBoardCase()
         		post = recvMessageFromServer(); // Keep checking from server.
         	}
 
-
-        	vector<const unsigned char*> searchedPostsAsChar;
+        	vector<string> searchedPosts;
 			for(int i = 0; i < searchResultsFromBulletin.size(); i++)
 			{
-				searchedPostsAsChar.push_back(searchResultsFromBulletin[i].getMessageAsCharArray()); // Convert the posts to char array.
+				searchedPosts.push_back(searchResultsFromBulletin[i].getPosting().getPostText()); // Convert the posts to char array.
 			}
 
-			app.buildSearchResults(searchedPostsAsChar);
+			app.buildSearchResults(searchedPosts);
         	break;
 		}
         case 'b':
