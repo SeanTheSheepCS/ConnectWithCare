@@ -307,11 +307,13 @@ queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Messag
 queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Message& msgFromClient) {
 	vector<Posting> selectedPosts;
 	BoardHistoryMessage boardHistoryMessage = messageConverter.toBoardHistoryMessage( msgFromClient);
+	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
 	unsigned long int specialMessageCode = postDatabase.getBoardHistoryAndPlaceInVector(boardHistoryMessage, selectedPosts);
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
 		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
 	}
 	else {
+		cout << "successful getHistory"<< "\n";
 		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
 	}

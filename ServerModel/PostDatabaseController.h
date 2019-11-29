@@ -21,7 +21,7 @@
 using namespace std;
 
 #define ORIGINAL_MESSAGE_CODE 0
-#define DEFAULT_BOARD_ID 69
+#define DEFAULT_BOARD_ID 10
 
 class PostDatabaseController {
 private:
