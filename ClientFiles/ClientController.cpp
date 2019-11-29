@@ -71,6 +71,7 @@ void ClientController::communicate()
 				// Receive message from server.
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
 
+
                 Message post (recvMessageFromServer());
 				//post.printMessageToStdOut();
 
@@ -82,6 +83,7 @@ void ClientController::communicate()
 
 				while(bytesRecv != 1) //BAD
 				{
+					cout << "";
 					if(!theConvertor.isPostingDataMessage(post))
 					{
 						cout << "\tError has occurred when receiving posts from bulletin board.\n";
@@ -116,6 +118,7 @@ void ClientController::communicate()
 
                 while(bytesRecv != 1)
                 {
+                	cout << "test" << endl;
                 	if(theConvertor.isUserMessageDataMessage(chat))
                 	{
                 		cout << "\tError has occurred when receiving chat history.\n";
@@ -392,7 +395,7 @@ void ClientController::bulletinBoardCase()
 
         	while(bytesRecv != 1)
         	{
-        		//cout << "test" << endl;
+        		cout << "";
 
         		if(!theConvertor.isPostingDataMessage(postFound))
         		{
