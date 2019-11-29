@@ -55,11 +55,11 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 	return false;
 }
 
-unsigned long int LoginDatabaseController::xx(LoginMessage& loginMessageFromClient, unsigned char* accountType) {
+
+unsigned char* LoginDatabaseController::getAccountType(string username) {
 	map<string,string>::iterator it = accountTypes.begin();
-	it = accountTypes.find(loginMessageFromClient.getUsername());
-	*accountType = (unsigned char*)it->second.c_str();
-	return (unsigned long int)it->second.length();
+	it = accountTypes.find(username);
+	return (unsigned char*)it->second.c_str();
 }
 
 bool LoginDatabaseController::confirmLogout() {

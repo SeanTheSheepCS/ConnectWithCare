@@ -287,9 +287,9 @@ queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msg
 	if (validated) {
 		queue<Message> validatedQueue;
 		validatedQueue.push(messageCreator.createLoginAuthMessage(validated));
-		unsigned char accountType[10];
-		unsigned long int accountTypeLength = loginDatabase.xx(msgFromClient, accountType);
-		validatedQueue.push(Message(accountTypeLength , accountType));
+		unsigned char* accountType = loginDatabase.getAccountType( msgFromClient.getUsername());
+		unsigned long int accounTypeLength = sizeof(accountType)/sizeof(accountType[0]);
+		validatedQueue.push(Message(accounTypeLength , accountType));
 		return validatedQueue;
 	}
 	else {
