@@ -22,7 +22,7 @@
 #include "ClientMessageCreator.h"
 #include "../CommonFiles/AllMessageTypes.h"
 
-#define BUFFERSIZE 32
+#define BUFFERSIZE 128 // 32 usually
 #define MAXLINE 32 
 #define BOARD_ID 10
 

@@ -214,10 +214,17 @@ void ClientController::userBack()
 
 void ClientController::sendMessageToServer(Message m)
 {
+	memset(outBuffer, 0, MAXLINE);
+	m.printMessageToStdOut();
+
 	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
 	msgLength = m.getLength();
+
+	cout<< std::dec << msgLength << endl;
+
+
 	bytesSent = send(sock, (char*) &outBuffer, msgLength, 0);
-	checkSending(bytesSent, msgLength);
+	//checkSending(bytesSent, msgLength);
 	clearBuffer(outBuffer);
 }
 
