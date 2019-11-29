@@ -342,7 +342,6 @@ void runSendUserMessageJPEGImageMessageTest()
 	multimediaComponents->push_back(*testMultimediaComponentOne);
 	multimediaComponents->push_back(*testMultimediaComponentTwo);
 	SendUserMessageJPEGImageMessage jpegImageMessage = creator.createSendUserMessageJPEGImageMessage(testUserMessage, *multimediaComponents);
-	jpegImageMessage.printMessageToStdOut();
 	Message theMessage = Message(jpegImageMessage.getLength(), jpegImageMessage.getMessageAsCharArray());
 	if(converter.isSendUserMessageJPEGImageMessage(theMessage))
 	{
@@ -408,7 +407,6 @@ void runSendUserMessageJPEGImageMessageTest()
 		else
 		{
 			testFailed();
-			std::cout << std::dec << thejpegImageMessageAgain.getMultimediaComponents().at(0).getMultimediaComponentID() << std::endl;
 		}
 
 		if(thejpegImageMessageAgain.getMultimediaComponents().at(1).getFilename() == "robotpicturetwo.jpeg")

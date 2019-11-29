@@ -365,10 +365,13 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 
 
 void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
-	int loopsToWait = 50;
-	if (msgQueueToClient.size() == 2) {
-		for (int i = 0; i < loopsToWait; i++);
-	}
+	int loopsToWait = 1000000;
+	//if (msgQueueToClient.size() == 2) {
+		for (int i = 0; i < loopsToWait; i++)
+		{
+			std::cout << "Waiting..." << std::endl;
+		}
+	//}
 }
 
 void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
