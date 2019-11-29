@@ -191,8 +191,6 @@ string ServerController::receiveData(int clientSock) {
 		
 		bytesRecv = recv(clientSock, (char *) &inBuffer, BUFFERSIZE, 0);
 		totalBytesRecv += bytesRecv;
-		
-		cout << inBuffer << "\n";
 
 		if (bytesRecv < 0) {
 			cout << "tcp recv() failed." << endl;
@@ -303,7 +301,8 @@ queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
 	}
 	*/
-	return putSingleMessageInQueue(messageCreator.createEndOfDataMessage() );
+	queue<Message> z;
+	return z;
 }
 queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient) {
 	UserMessageHistoryAllMessage userMessageHistoryAllMessage = messageConverter.toUserMessageHistoryAllMessage(msgFromClient);
@@ -350,8 +349,8 @@ queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Messa
 }
 queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
 	queue<Message> msgToClientInQueue;
-	for (Posting p : selectedPosts) {
-		msgToClientInQueue.push( messageCreator.createPostingDataMessage(p, boardIDTheUserWantsHistoryOf) );
+	for (int p = selectedPosts.size() - 1; p >= 0; p--) {
+		msgToClientInQueue.push( messageCreator.createPostingDataMessage(selectedPosts[p], boardIDTheUserWantsHistoryOf) );
 	}
 	msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
 	return msgToClientInQueue;
@@ -366,12 +365,14 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 
 void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
 	int loopsToWait = 1000000;
-	//if (msgQueueToClient.size() == 2) {
-		for (int i = 0; i < loopsToWait; i++)
-		{
-			std::cout << "Waiting..." << std::endl;
-		}
-	//}
+	int waitingArray[10];
+	for (int i = 0, z = 0; i < loopsToWait; i++)
+	{
+		waitingArray[z] = i;
+		z = (z+1)%10;
+		cout << "";
+	}
+	cout << "\n";
 }
 
 void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
@@ -384,6 +385,7 @@ void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQ
 void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
 
+	msgToClient.printMessageToStdOut();
 	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
 	// Sent the data

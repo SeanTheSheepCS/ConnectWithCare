@@ -123,16 +123,16 @@ void PostDatabaseController::populateMapWithHardCodedEntries() {
 			Posting("Hello! I'm stuck in the past and my time machine broke.\n If you find this message please tell my children I love them.\n", "IMissThePresent", Date(1262, 1, 29, 1200))
 	);
 	defaultBoard.insert(
-			Posting("Hey, my fridge is broken. If anyone could help me fix it that'd be so helpful.", "QuincyShelinger", Date(2019, 7, 12, 1200))
+			Posting("test1 Hey, my fridge is broken. If anyone could help me fix it that'd be so helpful.", "QuincyShelinger", Date(2019, 7, 12, 1200))
 	);
 	defaultBoard.insert(
-			Posting("Hey, there's some extra food at the Central Library. Come pick it up in room 301!", "JohnSmith", Date(2019, 11, 22, 1200))
+			Posting("test2 Hey, there's some extra food at the Central Library. Come pick it up in room 301!", "JohnSmith", Date(2019, 11, 22, 1200))
 	);
 	defaultBoard.insert(
-			Posting("test3", "fun_%^&3v", Date(2019, 11, 22, 1200))
+			Posting("test3", "username3", Date(2019, 11, 22, 1200))
 	);
 	defaultBoard.insert(
-			Posting("Cowabunga! Test 4!", "gnuropbnitn[oy", Date(2019, 11, 26, 1200))
+			Posting("Cowabunga! Test 4!", "username4", Date(2019, 11, 26, 1200))
 	);
 	unsigned long int defaultBoardID = DEFAULT_BOARD_ID;
 	bulletinBoardsDatabase.insert( pair<unsigned long int, set<Posting>>(defaultBoardID, defaultBoard) );
