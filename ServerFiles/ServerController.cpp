@@ -52,6 +52,9 @@ ServerController::ServerController(int port) {
 	
 	terminated = false;
 
+	activeConnections = vector<ClientConnectionInformation>();
+	onlineUsers = map<string, ClientConnectionInformation>();
+
 	messageConverter = ServerMessageConverter();
 	messageCreator = ServerMessageCreator();
 	
@@ -133,7 +136,7 @@ void ServerController::communicate() {
 		
 		// First, process new connection request, if any.
 		if (FD_ISSET(serverSock, &tempRecvSockSet) ) {
-			clientSock = establishConnectionWithClient();
+			ClientConnectionInformation CCI = establishConnectionWithClient();
 			addConnectionToReceiveSocketSet(clientSock);
 		}
 		else {
@@ -155,7 +158,7 @@ void ServerController::selectIncomingConnection_AddToTempRecvSockSet(fd_set& tem
 	}
 }
 
-int ServerController::establishConnectionWithClient() {
+ClientConnectionInformation ServerController::establishConnectionWithClient() {
     struct sockaddr_in clientAddr;
 	unsigned int sizeClientAddr = sizeof(clientAddr);
 	int clientSock;
@@ -167,7 +170,8 @@ int ServerController::establishConnectionWithClient() {
 	}
 	cout << "Accepted a connection from " << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port;
 	cout << endl;
-	return clientSock;
+	ClientConnectionInformation clientInfo = ClientConnectionInformation(clientAddr, clientSock);
+	return clientInfo;
 }
 void ServerController::addConnectionToReceiveSocketSet(int& sock) {
 	FD_SET(sock, &recvSockSet);
