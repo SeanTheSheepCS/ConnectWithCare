@@ -68,6 +68,7 @@ unsigned long int PostDatabaseController::searchBoardAndPlaceResultsInVector(Boa
 }
 unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeywords(BoardSearchMessage boardSearchMessage, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
 	// could potentially take too long computationally
+	cout << "starting search in postDB" << "\n";
 	for (Posting p : bulletinBoardsDatabase[boardIDTheUserWantsHistoryOf]) {
 		string postText = p.getPostText();
 		string keyword = boardSearchMessage.getSearchKeyword();
@@ -78,6 +79,7 @@ unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeyw
 			selectedPosts.push_back(p);
 		}
 	}
+	cout << "ending" << "\n";
 	return SERVERMESSAGECODE_ENDOFDATA;
 }
 string PostDatabaseController::allCapsWord(string word) {

@@ -10,6 +10,7 @@
 #include <string.h>     // for memset()
 #include <unistd.h>     // for close()
 #include <queue>
+#include <vector>
 
 #include "ServerMessageConverter.h"
 #include "ServerMessageCreator.h"
@@ -62,7 +63,7 @@ private:
 	void processIncomingSockets (fd_set);
 	Message messageFromDataReceivedFromClient(int clientSock);
 
-	string receiveData(int sock);
+	vector<char> receiveData(int sock);
 	queue<Message> specifyTypeOfClientMessage(Message msgFromClient);
 
 	queue<Message> putSingleMessageInQueue(Message msg);

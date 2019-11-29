@@ -180,17 +180,19 @@ void ServerController::processIncomingSockets (fd_set readySocks) {
 	}
 }
 
-string ServerController::receiveData(int clientSock) {
+vector<char> ServerController::receiveData(int clientSock) {
 	char inBuffer[BUFFERSIZE];
-	string msgBuilder = "";
+	vector<char> msgBuilder;
 	int bytesRecv = 0, totalBytesRecv = 0;
 	
-	cout << "Server receiving message:" << "\n";
+	cout << "Server receiving message" << "\n";
 	do {
 		memset(&inBuffer, 0, BUFFERSIZE);
 		
 		bytesRecv = recv(clientSock, (char *) &inBuffer, BUFFERSIZE, 0);
 		totalBytesRecv += bytesRecv;
+
+		cout << inBuffer << "\n";
 
 		if (bytesRecv < 0) {
 			cout << "tcp recv() failed." << endl;
@@ -212,19 +214,33 @@ string ServerController::receiveData(int clientSock) {
 			// Finish receive
 			bytesRecv = 0;
 		}
-		msgBuilder += inBuffer;
+		for (int i = 0; i < sizeof(inBuffer)/sizeof(inBuffer[0]); i++) {
+			msgBuilder.push_back(inBuffer[i]);
+		}
 	} while(bytesRecv > 0);
 	
 	cout << "tcp Received message size: " << totalBytesRecv << endl;
 
-	cout << "Client: " << msgBuilder;
+	//cout << "Client: " << msgBuilder;
 	
 	return msgBuilder;
 }
 
 Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
-	string msgFromClient = receiveData(clientSock);
-	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str() );
+	vector<char> msgFromClientVector = receiveData(clientSock);
+	cout << "Vector ";
+	for (int p = 0; p < msgFromClientVector.size(); p++) {
+		cout << msgFromClientVector[p] << "\n";
+	}
+	cout << "\n";
+
+	unsigned char msgFromClientArray[msgFromClientVector.size()];
+	unsigned char* charPointer = msgFromClientArray;
+	for (int i = 0; i < msgFromClientVector.size(); i++, charPointer++) {
+		*charPointer = msgFromClientVector[i];
+	}
+	cout << "array " <<msgFromClientArray << "\n";
+	return Message(msgFromClientVector.size(), msgFromClientArray );
 }
 
 queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
@@ -321,14 +337,21 @@ queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& m
 		return putSingleMessageInQueue( messageCreator.createErrorWriteFailedMessage() );
 	}
 }
+
+
+
+
 queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Message& msgFromClient) {
 	vector<Posting> selectedPosts;
+	cout << "board search" << "\n";
 	BoardSearchMessage boardSearchMessage = messageConverter.toBoardSearchMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, selectedPosts);
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		cout << "boardNotFound" << "\n";
 		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
 	}
 	else {
+		cout << "BoardSearch" << "\n";
 		unsigned long int boardIDTheUserWantsSearchedPostsFrom = boardSearchMessage.getBoardID();
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsSearchedPostsFrom);
 	}
@@ -347,12 +370,15 @@ queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Messa
 		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
 	}
 }
+
+
 queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
 	queue<Message> msgToClientInQueue;
 	for (int p = selectedPosts.size() - 1; p >= 0; p--) {
 		msgToClientInQueue.push( messageCreator.createPostingDataMessage(selectedPosts[p], boardIDTheUserWantsHistoryOf) );
 	}
 	msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
+	//msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
 	return msgToClientInQueue;
 }
 
