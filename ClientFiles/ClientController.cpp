@@ -12,6 +12,7 @@
  */
 #include "ClientController.h"
 #include <iostream>
+#define BOARD_ID 629
 
 using namespace std;
 
@@ -64,15 +65,16 @@ void ClientController::communicate()
         {
             case '1':
             {
-                cout << "\tBulletin board selected..." << endl;
-                unsigned long int boardID = 69; // Up for change, for now only having one bulletin board.
+                cout << "\tBulleting board selected..." << endl;
 
-                BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, boardID);
+                BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, BOARD_ID);
+                // Send board createBoardHistoryMessage to server.
                 sendMessageToServer(theBoard);
 
+				// Receive message from server.
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
+                Message post (recvMessageFromServer());
 
-                Message post (recvMessageFromServer());// First initial post.
                 if(theConvertor.isErrorBoardNotFoundMessage(post))
                 {
                 	cout << "\tError with receiving the bulletin board." << endl;
@@ -214,18 +216,18 @@ void ClientController::sendMessageToServer(Message m)
 {
 	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
 	msgLength = m.getLength();
-	bytesSent = send(sock, (char*) &inBuffer, msgLength, 0);
+	bytesSent = send(sock, (char*) &outBuffer, msgLength, 0);
 	checkSending(bytesSent, msgLength);
+	clearBuffer(outBuffer);
 }
 
 Message ClientController::recvMessageFromServer()
 {
-	bytesRecv = recv(sock, (char*) &inBuffer, msgLength, 0);
+	bytesRecv = recv(sock, (char*) &inBuffer, 32, 0);
 	Message msgFromServer(bytesRecv, inBuffer);
-	return msgFromServer;
-	// Clear buffer.
-	clearBuffer(outBuffer);
 	clearBuffer(inBuffer);
+	return msgFromServer;
+
 }
 
 Date ClientController::createCurrentDate()
@@ -238,7 +240,6 @@ Date ClientController::createCurrentDate()
 
 void ClientController::bulletinBoardCase()
 {
-	unsigned long int boardID = 69; // Up for change, for now only having one bulletin board.
     char bbOption; // Options within Bulletin Board
     cin >> bbOption;
 
@@ -253,7 +254,7 @@ void ClientController::bulletinBoardCase()
 
             Date postDate = createCurrentDate(); // Get current date.
             Posting toPost(postContent, username, postDate); // Create post
-            CreatePostingMessage postCreated = theCreator.createCreatePostingMessage(boardID, toPost); // Create CreatePostingMessage to send to server.
+            CreatePostingMessage postCreated = theCreator.createCreatePostingMessage(BOARD_ID, toPost); // Create CreatePostingMessage to send to server.
             sendMessageToServer(postCreated);
             Message msg = recvMessageFromServer();
             if(theConvertor.isWriteSuccessfulMessage(recvMessageFromServer()))
@@ -300,7 +301,7 @@ void ClientController::bulletinBoardCase()
         	cin >> searchKeyword;
 
         	Date startDate(year, month, day, 0);
-        	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, createCurrentDate(), boardID, searchKeyword);
+        	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, createCurrentDate(), BOARD_ID, searchKeyword);
         	sendMessageToServer(bsm);
 
         	cout << "\tSearch results will be generated below..." << endl;
@@ -313,7 +314,7 @@ void ClientController::bulletinBoardCase()
 
         	while(theConvertor.isEndOfDataMessage(post))
         	{
-
+        		// Print bulletin board;
         	}
         	break;
 		}
@@ -560,23 +561,27 @@ void ClientController::loginCase()
         cin >> username;
         app.buildPasswordField();
         cin >> password;
+
         LoginMessage userAttempt = theCreator.createLoginMessage(username, password); // Turn login properties into proper message
 
         strcpy((char*)outBuffer, (char*)userAttempt.getMessageAsCharArray()); 
         msgLength = userAttempt.getLength();
 
         // Send login info to server
+        sendMessageToServer(userAttempt);
+        /*
         bytesSent = send(sock, (char *) &outBuffer, msgLength, 0);
         checkSending(bytesSent, msgLength); 
-
+*/
         // Receive login info from server
-
+        Message msgFromServer = recvMessageFromServer();
+        /*
         bytesRecv = recv(sock, (char *) &inBuffer, msgLength, 0); // *** Could spawn error here if the length is not correct
 
         //checkRecv(bytesRecv, msgLength);
 
         Message msgFromServer(bytesRecv, inBuffer);
-
+*/
         if(theConvertor.isLoginAuthMessage(msgFromServer))
         {
             LoginAuthMessage userLogin = theConvertor.toLoginAuthMessage(msgFromServer);
@@ -589,14 +594,7 @@ void ClientController::loginCase()
         {
             cout << "Invalid username/password, please try again.\n " << endl;
         }
-        
-        // Clears buffer
-        clearBuffer(outBuffer);
-        clearBuffer(inBuffer);
     }
-    // Clears buffer
-	clearBuffer(outBuffer);
-	clearBuffer(inBuffer);
 }
 
 int mainClientController(int argc, char *argv[])
