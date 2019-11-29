@@ -18,25 +18,34 @@ using namespace std;
 
 LoginDatabaseController::LoginDatabaseController() {
 	loginDatabase = map<string,string>();
+	accountTypes = map<string, string>();
 	populateMapWithHardCodedEntries();
 }
 
 void LoginDatabaseController::populateMapWithHardCodedEntries() {
-	loginDatabase.insert(pair<string,string>("QuinnC","314") );
-	loginDatabase.insert(pair<string,string>("BiancaC","159") );
-	loginDatabase.insert(pair<string,string>("DarylD","265") );
-	loginDatabase.insert(pair<string,string>("SeanK","358") );
+	loginDatabase.insert(pair<string,string>("QuinnC", "314") );
+	accountTypes.insert(pair<string,string>("QuinnC","Individual") );
+	loginDatabase.insert(pair<string,string>("BiancaC", "159") );
+	accountTypes.insert(pair<string,string>("BiancaC","Individual") );
+	loginDatabase.insert(pair<string,string>("DarylD", "265") );
+	accountTypes.insert(pair<string,string>("DarylD","Individual") );
+	loginDatabase.insert(pair<string,string>("SeanK", "358") );
+	accountTypes.insert(pair<string,string>("SeanK","Individual") );
+	loginDatabase.insert(pair<string,string>("TheAlex", "123") );
+	accountTypes.insert(pair<string,string>("TheAlex","Charity") );
+	loginDatabase.insert(pair<string,string>("CalgaryFoodBank", "456") );
+	accountTypes.insert(pair<string,string>("CalgaryFoodBank","Charity") );
 }
 
 LoginDatabaseController::~LoginDatabaseController() {
 }
 
 bool LoginDatabaseController::validateUser(string username, string password) {
-	cout << endl << username << endl << password << endl;
+	//cout << endl << username << endl << password << endl;
 	map<string,string>::iterator it = loginDatabase.begin();
 	for ( ; it != loginDatabase.end(); it++) {
 		//cout << endl << it->first << endl << it->second <<endl;
-		if (it->first.compare(username) == 0 && it->second.compare(password) == 0)
+		if (it->first.compare(username) == 0 && it->first.compare(password) == 0)
 		{
 			//cout << "GOOD";
 			return true;
@@ -47,8 +56,10 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 }
 
 unsigned long int LoginDatabaseController::xx(LoginMessage loginMessageFromClient, unsigned char** accountType) {
-
-	return 0;
+	map<string,string>::iterator it = accountTypes.begin();
+	it = accountTypes.find(loginMessageFromClient.getUsername());
+	*accountType = (unsigned char*)it->second.c_str();
+	return (unsigned long int)it->second.length();
 }
 
 bool LoginDatabaseController::confirmLogout() {

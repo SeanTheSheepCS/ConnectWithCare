@@ -26,6 +26,7 @@ public:
 	bool confirmLogout();
 private:
 	map<string, string> loginDatabase;
+	map<string, string> accountTypes;
 
 	void populateMapWithHardCodedEntries();
 
