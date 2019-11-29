@@ -35,6 +35,8 @@ public:
 private:
 	map<string, set<UserMessage>> conversationsDatabase;
 	set<UserMessage> publicChannel;
+
+	void hardcode();
 };
 
 #endif /* MESSAGEDATABASECONTROLLER_H_ */

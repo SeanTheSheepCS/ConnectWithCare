@@ -20,6 +20,8 @@ MessageDatabaseController::MessageDatabaseController() {
 	// TODO Auto-generated constructor stub
 	conversationsDatabase = map<string, set<UserMessage>>();
 	publicChannel = set<UserMessage>();
+
+	hardcode();
 }
 
 MessageDatabaseController::~MessageDatabaseController() {
@@ -81,3 +83,9 @@ unsigned long int MessageDatabaseController::iterateThroughDatabaseToGetHistory(
 	return SERVERMESSAGECODE_ENDOFDATA;
 }
 
+void MessageDatabaseController::hardcode() {
+	startNewConversation("MeaW", "Asif");
+	string tag = "MeaW++Asif";
+	conversationsDatabase[tag].insert( UserMessage("MeaW","Asif",Date(2019, 11, 17, 40),"Hello Asif!") );
+	conversationsDatabase[tag].insert( UserMessage("Asif","MeaW",Date(2019, 11, 17, 40),"Hello!") );
+}
