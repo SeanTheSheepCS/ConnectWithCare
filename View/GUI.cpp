@@ -94,6 +94,18 @@ void GUI::buildBulletinBoard(vector<const unsigned char*> bulletinBoard)
     cout << "  (1) Add Post  (2) Send Message (3)Search (b) Go Back  (q) Quit Program" << endl;
 }
 
+void GUI::buildSearchResults(vector<const unsigned char*> searchResults)
+{
+	cout << endl;
+	cout << divider << "SEARCH-RESULTS" << divider << endl;
+
+	for(int i = 0; i < searchResults.size(); i++)
+	{
+		cout << searchResults[i] << endl;
+	}
+
+	cout << divider << "--------------" << divider << endl;
+}
 void GUI::addPostMenu()
 {
 	cout << divider << "ADDING-POST" << divider << endl;

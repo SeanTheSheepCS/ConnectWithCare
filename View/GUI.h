@@ -26,7 +26,9 @@ class GUI
         // Builds the menu and returns the option selected by the user (as a char).
 
         void buildBulletinBoard(vector<const unsigned char*> bulletinBoard);
-        // Builds bulletin board and returns the option seleceted by the user (as a char).
+        // Builds bulletin board and returns the option selected by the user (as a char).
+        void buildSearchResults(vector<const unsigned char*> searchResults);
+        // Builds the search results inquired from the bulletin board.
         void addPostMenu();
         // Builds adding post menu.
         void buildChatsMenu(unsigned int pcNotifications, char** friends, int friendsLength);
