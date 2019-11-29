@@ -76,37 +76,13 @@ void ClientController::communicate()
 
                 Message post (recvMessageFromServer());
 				post.printMessageToStdOut();
-                //post.printMessageToStdOut();
-                //PostingDataMessage post2 = theConvertor.toPostingDataMessage(post);
-                //string post3 = post2.getPosting().getPostText();
-                //cout << post3 << endl;
-/*
-                Message post1 (recvMessageFromServer());
-                post1.printMessageToStdOut();
-                post2 = theConvertor.toPostingDataMessage(post1);
-                post3 = post2.getPosting().getPostText();
-                cout << post3 << endl;
-
-                Message POST1 (recvMessageFromServer());
-                //post = Message(recvMessageFromServer());
-                POST1.printMessageToStdOut();
-				post2 = theConvertor.toPostingDataMessage(POST1);
-				post3 = post2.getPosting().getPostText();
-				cout << post3 << endl;
-
-				Message POST2 (recvMessageFromServer());
-				//post = Message(recvMessageFromServer());
-				POST2.printMessageToStdOut();
-				post2 = theConvertor.toPostingDataMessage(POST2);
-				post3 = post2.getPosting().getPostText();
-				cout << post3 << endl;
-*/
 
                 if(theConvertor.isErrorBoardNotFoundMessage(post))
                 {
                 	cout << "\tError with receiving the bulletin board." << endl;
                 	break;
                 }
+
 				while(bytesRecv != 1) //BAD
 				{
 					if(!theConvertor.isPostingDataMessage(post))
@@ -116,21 +92,18 @@ void ClientController::communicate()
 					}
 					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
 					Message newPost(recvMessageFromServer());
-					newPost.printMessageToStdOut();
 					post = Message(newPost);
-					//post.printMessageToStdOut();
 				}
-                //cout << "TESTOUT" << endl;
                 vector<string> bulletinBoardPostsString;
                 for(unsigned int i = 0; i < bulletinBoardPosts.size(); i++)
                 {
-                	//cout << "TEST2" << endl;
                 	bulletinBoardPostsString.push_back(bulletinBoardPosts[i].getPosting().getPostText()); // Convert the posts to char array.
                 }
 
                 app.buildBulletinBoard(bulletinBoardPostsString);
                 bulletinBoardCase();
                 break; 
+
             }
             case '2':
             {
