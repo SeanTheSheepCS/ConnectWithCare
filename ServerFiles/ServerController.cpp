@@ -185,12 +185,13 @@ string ServerController::receiveData(int clientSock) {
 	string msgBuilder = "";
 	int bytesRecv = 0, totalBytesRecv = 0;
 	
+	cout << "Server receiving message:" << "\n";
 	do {
 		memset(&inBuffer, 0, BUFFERSIZE);
 		
 		bytesRecv = recv(clientSock, (char *) &inBuffer, BUFFERSIZE, 0);
 		totalBytesRecv += bytesRecv;
-		
+
 		if (bytesRecv < 0) {
 			cout << "tcp recv() failed." << endl;
 			FD_CLR(clientSock, &recvSockSet);
@@ -223,7 +224,7 @@ string ServerController::receiveData(int clientSock) {
 
 Message ServerController::messageFromDataReceivedFromClient (int clientSock) {
 	string msgFromClient = receiveData(clientSock);
-	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str());
+	return Message(msgFromClient.size(), (unsigned char*)msgFromClient.c_str() );
 }
 
 queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClient) {
@@ -234,7 +235,7 @@ queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClien
 		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
 	else if (messageConverter.isSendUserMessageMessage(msgFromClient)) {
-		//SendUserMessageMessage toSendUserMessageMessage(
+		return clarifyClientMessageAsSendUserMessage(msgFromClient);
 	}
 	else if (messageConverter.isSendUserMessageJPEGImageMessage(msgFromClient)) {
 		//SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(
@@ -279,6 +280,34 @@ queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& ms
 
 	return putSingleMessageInQueue( messageCreator.createLogoutConfirmMessage(whetherTheLogoutWasSuccessful) );
 }
+queue<Message> ServerController::clarifyClientMessageAsSendUserMessage(Message& msgFromClient) {
+	SendUserMessageMessage sendUserMessageMessage = messageConverter.toSendUserMessageMessage(msgFromClient);
+}
+queue<Message> ServerController::clarifyClientMessageAsSendUserJPEGImageMessage(Message& msgFromClient) {
+	SendUserMessageJPEGImageMessage sendUserJPEGMessage = messageConverter.toSendUserMessageJPEGImageMessage(msgFromClient);
+}
+queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryMessage(Message& msgFromClient) {
+	/*
+	vector<Posting> selectedPosts;
+	UserMessageHistoryMessage userMessageHistoryMessage = messageConverter.toUserMessageHistoryMessage(msgFromClient);
+	cout << "In specifyClientMessageAsBoardHistory, desired board id= " << boardHistoryMessage.getBoardID() << "\n";
+	unsigned long int specialMessageCode = postDatabase.getBoardHistoryAndPlaceInVector(boardHistoryMessage, selectedPosts);
+	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
+		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
+	}
+	else {
+		cout << "successful getHistory"<< "\n";
+		unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
+		return putPostingsInQueueAndReturnToClient(selectedPosts, boardIDTheUserWantsHistoryOf);
+	}
+	*/
+	queue<Message> z;
+	return z;
+}
+queue<Message> ServerController::clarifyClientMessageAsUserMessageHistoryAllMessage(Message& msgFromClient) {
+	UserMessageHistoryAllMessage userMessageHistoryAllMessage = messageConverter.toUserMessageHistoryAllMessage(msgFromClient);
+	return putSingleMessageInQueue(userMessageHistoryAllMessage);
+}
 queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& msgFromClient) {
 	CreatePostingMessage postingMsgFromClient = messageConverter.toCreatePostingMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.addNewPostAndReturnSpecialMessageCode(postingMsgFromClient);
@@ -320,8 +349,8 @@ queue<Message> ServerController::specifyClientMessageAsBoardHistoryMessage(Messa
 }
 queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Posting> selectedPosts, unsigned long int boardIDTheUserWantsHistoryOf) {
 	queue<Message> msgToClientInQueue;
-	for (Posting p : selectedPosts) {
-		msgToClientInQueue.push( messageCreator.createPostingDataMessage(p, boardIDTheUserWantsHistoryOf) );
+	for (int p = selectedPosts.size() - 1; p >= 0; p--) {
+		msgToClientInQueue.push( messageCreator.createPostingDataMessage(selectedPosts[p], boardIDTheUserWantsHistoryOf) );
 	}
 	msgToClientInQueue.push( messageCreator.createEndOfDataMessage() );
 	return msgToClientInQueue;
@@ -334,17 +363,29 @@ queue<Message> ServerController::putPostingsInQueueAndReturnToClient(vector<Post
 
 
 
-
+void waitBeforeSendingLastMessage(queue<Message>& msgQueueToClient) {
+	int loopsToWait = 1000000;
+	int waitingArray[10];
+	for (int i = 0, z = 0; i < loopsToWait; i++)
+	{
+		waitingArray[z] = i;
+		z = (z+1)%10;
+		cout << "";
+	}
+	cout << "\n";
+}
 
 void ServerController::popQueueAndSendDataToClient(int sock, queue<Message> msgQueueToClient) {
 	while (msgQueueToClient.empty() == false) {
 		sendData(sock, msgQueueToClient.front());
+		waitBeforeSendingLastMessage(msgQueueToClient);
 		msgQueueToClient.pop();
 	}
 }
 void ServerController::sendData(int sock, Message msgToClient) {
 	int bytesSent = 0;
 
+	msgToClient.printMessageToStdOut();
 	const unsigned char* outGoingMsg = msgToClient.getMessageAsCharArray();
 
 	// Sent the data

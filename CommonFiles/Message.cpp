@@ -60,6 +60,8 @@ void Message::printMessageToStdOut() const
 {
 	for(unsigned int i = 0; i < this->length; i++)
 	{
-		std::cout << "0x" <<  std::hex << (int)(this->messageAsCharArray)[i] << " - " << messageAsCharArray[i] << std::endl;
+		//std::cout << "0x" <<  std::hex << (int)(this->messageAsCharArray)[i] << " - " << messageAsCharArray[i] << std::endl;
+		std::cout << messageAsCharArray[i];
 	}
+	std::cout << "\n";
 }

@@ -329,7 +329,7 @@ void runSendUserMessageMessageTest()
 void runSendUserMessageJPEGImageMessageTest()
 {
 	ClientMessageCreator creator = ClientMessageCreator();
-	ServerMessageConverter converter;
+	ServerMessageConverter converter = ServerMessageConverter();
 
 	std::string testSenderUsername = "tom_boop";
 	std::string testRecipientUsername = "kim_beep";
