@@ -108,16 +108,18 @@ void ClientController::communicate()
                 }
 				while(!theConvertor.isEndOfDataMessage(post))
 				{
+					cout << "TEST" << endl;
+					/*
 					if(!theConvertor.isPostingDataMessage(post))
 					{
 						cout << "\tError has occured when receiving posts from bulletin board.\n";
 						exit(1);
-					}
-					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
+					}*/
+					//bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
 					Message post = Message(recvMessageFromServer());
 					//post.printMessageToStdOut();
 				}
-
+                cout << "TESTOUT" << endl;
                 /*
                 while(!theConvertor.isEndOfDataMessage(post))
                 {
