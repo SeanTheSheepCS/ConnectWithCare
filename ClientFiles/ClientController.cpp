@@ -75,6 +75,7 @@ void ClientController::communicate()
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
 
                 Message post (recvMessageFromServer());
+				post.printMessageToStdOut();
                 //post.printMessageToStdOut();
                 //PostingDataMessage post2 = theConvertor.toPostingDataMessage(post);
                 //string post3 = post2.getPosting().getPostText();
@@ -106,38 +107,24 @@ void ClientController::communicate()
                 	cout << "\tError with receiving the bulletin board." << endl;
                 	break;
                 }
-				while(!theConvertor.isEndOfDataMessage(post))
+				while(bytesRecv != 1) //BAD
 				{
-					cout << "TEST" << endl;
-					/*
 					if(!theConvertor.isPostingDataMessage(post))
-					{
-						cout << "\tError has occured when receiving posts from bulletin board.\n";
-						exit(1);
-					}*/
-					//bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
-					Message post = Message(recvMessageFromServer());
-					//post.printMessageToStdOut();
-				}
-                cout << "TESTOUT" << endl;
-                /*
-                while(!theConvertor.isEndOfDataMessage(post))
-                {
-                	post.printMessageToStdOut();
-                	cout << "TEST" << endl;
-                	if(!theConvertor.isPostingDataMessage(post))
 					{
 						cout << "\tError has occured when receiving posts from bulletin board.\n";
 						exit(1);
 					}
 					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
-					post = PostingDateMessage(recvMessageFromServer()); // Keep checking from server.
-                }*/
-                //cout << "TEST1" << endl;
+					Message newPost(recvMessageFromServer());
+					newPost.printMessageToStdOut();
+					post = Message(newPost);
+					//post.printMessageToStdOut();
+				}
+                //cout << "TESTOUT" << endl;
                 vector<string> bulletinBoardPostsString;
                 for(unsigned int i = 0; i < bulletinBoardPosts.size(); i++)
                 {
-                	cout << "TEST2" << endl;
+                	//cout << "TEST2" << endl;
                 	bulletinBoardPostsString.push_back(bulletinBoardPosts[i].getPosting().getPostText()); // Convert the posts to char array.
                 }
 
