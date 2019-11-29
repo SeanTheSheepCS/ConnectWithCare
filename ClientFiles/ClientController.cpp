@@ -568,7 +568,7 @@ void ClientController::accountCase()
             unsigned char* changePasswordMessageArray = new unsigned char[1];
             changePasswordMessageArray[0] = SERVERMESSAGECODE_CHANGEPASSWORD;
             Message changePasswordMessage(1, changePasswordMessageArray);
-            delete changePasswordMessage;
+            delete changePasswordMessageArray;
             // todo
             break;
         }
