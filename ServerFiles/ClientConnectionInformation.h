@@ -8,7 +8,7 @@
 #ifndef CLIENTCONNECTIONINFORMATION_H_
 #define CLIENTCONNECTIONINFORMATION_H_
 
-#include <string.h>
+#include <string>
 
 using namespace std;
 
