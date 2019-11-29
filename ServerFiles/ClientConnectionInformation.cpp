@@ -7,6 +7,7 @@
 
 #include "ClientConnectionInformation.h"
 #include <iostream>
+#include <arpa/inet.h>
 
 ClientConnectionInformation::ClientConnectionInformation(struct sockaddr_in clientAddr, int currentClientSocket) {
 	this->clientAddr = clientAddr;
@@ -28,7 +29,7 @@ void ClientConnectionInformation::setUsername(string UN) {
 }
 
 void ClientConnectionInformation::display() {
-	cout << clientAddr.sin_addr << ":" << clientAddr.sin_port << " -- socket: " << currentClientSocket;
+	cout << inet_ntoa(clientAddr.sin_addr) << ":" << clientAddr.sin_port << " -- socket: " << currentClientSocket;
 	cout << endl;
 }
 

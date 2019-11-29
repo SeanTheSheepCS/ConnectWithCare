@@ -9,13 +9,13 @@
 #define CLIENTCONNECTIONINFORMATION_H_
 
 #include <string>
+#include <arpa/inet.h>
 
 using namespace std;
 
 class ClientConnectionInformation {
 public:
 	ClientConnectionInformation(struct 	sockaddr_in clientAddr, int currentClientSocket);
-	virtual ~ClientConnectionInformation();
 
 	struct sockaddr_in getClientAddr();
 	int getCurrentClientSocket();
