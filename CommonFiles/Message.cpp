@@ -58,6 +58,8 @@ const unsigned char* Message::getMessageAsCharArray() const
 
 void Message::printMessageToStdOut() const
 {
+	std::cout << "0x" <<  std::hex << (int)(messageAsCharArray[0]) << "\n";
+	std::cout << std::dec;
 	for(unsigned int i = 0; i < this->length; i++)
 	{
 		//std::cout << "0x" <<  std::hex << (int)(this->messageAsCharArray)[i] << " - " << messageAsCharArray[i] << std::endl;

@@ -184,6 +184,7 @@ vector<char> ServerController::receiveData(int clientSock) {
 	char inBuffer[BUFFERSIZE];
 	vector<char> msgBuilder;
 	int bytesRecv = 0, totalBytesRecv = 0;
+	bool continueToReceiveMsg = true;
 	
 	cout << "Server receiving message" << "\n";
 	do {
@@ -195,6 +196,7 @@ vector<char> ServerController::receiveData(int clientSock) {
 		cout << inBuffer << "\n";
 
 		if (bytesRecv < 0) {
+			continueToReceiveMsg = false;
 			cout << "tcp recv() failed." << endl;
 			FD_CLR(clientSock, &recvSockSet);
 	
@@ -203,6 +205,7 @@ vector<char> ServerController::receiveData(int clientSock) {
 				maxDesc -= 1;
 		}
 		else if (bytesRecv == 0) {
+			continueToReceiveMsg = false;
 			cout << "tcp connection is closed." << endl;
 			FD_CLR(clientSock, &recvSockSet);
 			
@@ -212,12 +215,12 @@ vector<char> ServerController::receiveData(int clientSock) {
 		}
 		else if (bytesRecv < BUFFERSIZE) {
 			// Finish receive
-			bytesRecv = 0;
+			continueToReceiveMsg = false;
 		}
-		for (int i = 0; i < sizeof(inBuffer)/sizeof(inBuffer[0]); i++) {
+		for (int i = 0; i < bytesRecv; i++) {
 			msgBuilder.push_back(inBuffer[i]);
 		}
-	} while(bytesRecv > 0);
+	} while(continueToReceiveMsg);
 	
 	cout << "tcp Received message size: " << totalBytesRecv << endl;
 
@@ -337,15 +340,12 @@ queue<Message> ServerController::specifyClientMessageAsPostingMessage(Message& m
 		return putSingleMessageInQueue( messageCreator.createErrorWriteFailedMessage() );
 	}
 }
-
-
-
-
 queue<Message> ServerController::specifyClientMessageAsBoardSearchMessage(Message& msgFromClient) {
 	vector<Posting> selectedPosts;
-	cout << "board search" << "\n";
+	cout << "board search method" << "\n";
 	BoardSearchMessage boardSearchMessage = messageConverter.toBoardSearchMessage(msgFromClient);
 	unsigned long int specialMessageCode = postDatabase.searchBoardAndPlaceResultsInVector(boardSearchMessage, selectedPosts);
+	cout << "Looking for " << boardSearchMessage.getBoardID() << "\n";
 	if (specialMessageCode == SERVERMESSAGECODE_ERRORBOARDNOTFOUND) {
 		cout << "boardNotFound" << "\n";
 		return putSingleMessageInQueue( messageCreator.createErrorBoardNotFoundMessage() );
