@@ -12,7 +12,7 @@
  */
 #include "ClientController.h"
 #include <iostream>
-#define BOARD_ID 629
+#define BOARD_ID 69
 
 using namespace std;
 
@@ -54,8 +54,8 @@ void ClientController::communicate()
     app.buildWelcomeMessage();
     char option;
 
-    Date startDate = Date(2019, 11, 27, 0); // todo hard-coded start and end dates, might want to make this userfriendly and selectable
-    Date endDate = createCurrentDate(); //Date(2020, 11 , 27, 0);
+    Date startDate = Date(2018, 11, 27, 0); // todo hard-coded start and end dates, might want to make this userfriendly and selectable
+    Date endDate = Date(2020, 11 , 27, 0);
 
     while(1)
     {
@@ -65,7 +65,7 @@ void ClientController::communicate()
         {
             case '1':
             {
-                cout << "\tBulleting board selected..." << endl;
+                cout << "\tBulletin board selected..." << endl;
 
                 BoardHistoryMessage theBoard = theCreator.createBoardHistoryMessage(startDate, endDate, BOARD_ID);
                 // Send board createBoardHistoryMessage to server.
@@ -223,11 +223,10 @@ void ClientController::sendMessageToServer(Message m)
 
 Message ClientController::recvMessageFromServer()
 {
-	bytesRecv = recv(sock, (char*) &inBuffer, 32, 0);
+	bytesRecv = recv(sock, (char*) &inBuffer, BUFFERSIZE, 0);
 	Message msgFromServer(bytesRecv, inBuffer);
 	clearBuffer(inBuffer);
 	return msgFromServer;
-
 }
 
 Date ClientController::createCurrentDate()
@@ -312,10 +311,27 @@ void ClientController::bulletinBoardCase()
         		break;
         	}
 
+        	vector<PostingDataMessage> searchResultsFromBulletin;
+
         	while(theConvertor.isEndOfDataMessage(post))
         	{
-        		// Print bulletin board;
+        		if(!theConvertor.isPostingDataMessage(post))
+        		{
+        			cout << "\tError in receiving search results..." << endl;
+        			break;
+        		}
+        		searchResultsFromBulletin.push_back(theConvertor.toPostingDataMessage(post));
+        		post = recvMessageFromServer(); // Keep checking from server.
         	}
+
+
+        	vector<const unsigned char*> searchedPostsAsChar;
+			for(int i = 0; i < searchResultsFromBulletin.size(); i++)
+			{
+				searchedPostsAsChar.push_back(searchResultsFromBulletin[i].getMessageAsCharArray()); // Convert the posts to char array.
+			}
+
+			app.buildSearchResults(searchedPostsAsChar);
         	break;
 		}
         case 'b':
