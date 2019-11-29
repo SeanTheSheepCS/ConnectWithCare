@@ -670,10 +670,12 @@ void ClientController::loginCase()
 
     // Successful login.
     Message accountTypeMessageWrapper = recvMessageFromServer();
-    char* aType = accountTypeMessageWrapper.getMessageAsCharArray();
-    *(++aType) = '\0';
-    accountType(aType);
-    cout << accountType << endl;
+        unsigned int accountTypeLength = accountTypeMessageWrapper.getLength();
+        unsigned char aType[accountTypeLength + 1];
+        strcpy((char*)aType, (char*)accountTypeMessageWrapper.getMessageAsCharArray() );
+        //*(++aType) = '\0';
+        accountType = std::string( (char*)aType );
+        cout << accountType << endl;
 }
 
 int mainClientController(int argc, char *argv[])
