@@ -11,6 +11,9 @@
 #include <map>
 #include <string>
 
+#include "../CommonFiles/Message.h"
+#include "../CommonFiles/AllMessageTypes.h"
+
 using namespace std;
 
 class LoginDatabaseController {
@@ -19,6 +22,7 @@ public:
 	virtual ~LoginDatabaseController();
 
 	bool validateUser(string username, string password);
+	unsigned long int xx(LoginMessage logMsg, unsigned char** accountType);
 	bool confirmLogout();
 private:
 	map<string, string> loginDatabase;

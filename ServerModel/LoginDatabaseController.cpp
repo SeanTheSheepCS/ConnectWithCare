@@ -10,6 +10,9 @@
 #include <string>
 #include <iostream>
 
+#include "../CommonFiles/Message.h"
+#include "../CommonFiles/AllMessageTypes.h"
+
 using namespace std;
 
 
@@ -32,15 +35,20 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 	cout << endl << username << endl << password << endl;
 	map<string,string>::iterator it = loginDatabase.begin();
 	for ( ; it != loginDatabase.end(); it++) {
-		cout << endl << it->first << endl << it->second <<endl;
+		//cout << endl << it->first << endl << it->second <<endl;
 		if (it->first.compare(username) == 0 && it->second.compare(password) == 0)
 		{
-			cout << "GOOD";
+			//cout << "GOOD";
 			return true;
 		}
 	}
-	cout <<"BAD";
+	//cout <<"BAD";
 	return false;
+}
+
+unsigned long int LoginDatabaseController::xx(LoginMessage loginMessageFromClient, unsigned char** accountType) {
+
+	return 0;
 }
 
 bool LoginDatabaseController::confirmLogout() {
