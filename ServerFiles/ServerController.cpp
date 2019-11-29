@@ -233,6 +233,18 @@ queue<Message> ServerController::specifyTypeOfClientMessage(Message msgFromClien
 	else if (messageConverter.isLogoutMessage(msgFromClient)) {
 		return specifyClientMessageAsLogoutMessage(msgFromClient);
 	}
+	else if (messageConverter.isSendUserMessageMessage(msgFromClient)) {
+		//SendUserMessageMessage toSendUserMessageMessage(
+	}
+	else if (messageConverter.isSendUserMessageJPEGImageMessage(msgFromClient)) {
+		//SendUserMessageJPEGImageMessage toSendUserMessageJPEGImageMessage(
+	}
+	else if (messageConverter.isUserMessageHistoryMessage(msgFromClient)) {
+		//UserMessageHistoryMessage toUserMessageHistoryMessage(
+	}
+	else if (messageConverter.isUserMessageHistoryAllMessage(msgFromClient)) {
+		//UserMessageHistoryAllMessage toUserMessageHistoryAllMessage(
+	}
 	else if (messageConverter.isCreatePostingMessage(msgFromClient) ) {
 		return specifyClientMessageAsPostingMessage(msgFromClient);
 	}
@@ -259,8 +271,8 @@ queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msg
 		return putSingleMessageInQueue(messageCreator.createErrorNoAuthMessage() );
 		//cout <<hex <<(specifyClientMessageAsLoginMessageFailure().getMessageAsCharArray())[0]<< "\n";
 	}
-
 }
+
 queue<Message> ServerController::specifyClientMessageAsLogoutMessage(Message& msgFromClient) {
 	LogoutMessage logoutMessageFromClient = messageConverter.toLogoutMessage(msgFromClient);
 	bool whetherTheLogoutWasSuccessful = loginDatabase.confirmLogout();
