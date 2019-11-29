@@ -290,6 +290,7 @@ queue<Message> ServerController::specifyClientMessageAsLoginMessage(Message& msg
 		unsigned char accountType[10];
 		unsigned long int accountTypeLength = loginDatabase.xx(msgFromClient, &accountType);
 		validatedQueue.push(Message(accountTypeLength , accountType));
+		return validatedQueue;
 	}
 	else {
 		return putSingleMessageInQueue(messageCreator.createErrorNoAuthMessage() );
