@@ -22,7 +22,7 @@ public:
 	virtual ~LoginDatabaseController();
 
 	bool validateUser(string username, string password);
-	unsigned long int xx(LoginMessage& logMsg, unsigned char** accountType);
+	unsigned long int xx(LoginMessage& logMsg, unsigned char* accountType);
 	bool confirmLogout();
 private:
 	map<string, string> loginDatabase;

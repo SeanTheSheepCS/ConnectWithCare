@@ -55,7 +55,7 @@ bool LoginDatabaseController::validateUser(string username, string password) {
 	return false;
 }
 
-unsigned long int LoginDatabaseController::xx(LoginMessage& loginMessageFromClient, unsigned char** accountType) {
+unsigned long int LoginDatabaseController::xx(LoginMessage& loginMessageFromClient, unsigned char* accountType) {
 	map<string,string>::iterator it = accountTypes.begin();
 	it = accountTypes.find(loginMessageFromClient.getUsername());
 	*accountType = (unsigned char*)it->second.c_str();
