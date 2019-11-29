@@ -105,33 +105,33 @@ void ClientController::communicate()
             }
             case '2':
             {
-                cout << "chats selected" << endl;
+                cout << "\tChats selected." << endl;
                 app.buildChatsMenu(0,0,0); // TODO add notifications later
                 chatsCase();
                 break;    
             }
             case '3':
             {
-                cout << "my posts selected" << endl;
+                cout << "\tPosts selected." << endl;
                 app.buildPostsMenu(0 ,0); // TODO add notifications later
                 postsCase();
                 break;
             }
             case '4':
             {
-                cout << "public channel selected, NOT WORKING YET" << endl;
+                cout << "\tPublic Channel selected." << endl;
                 app.buildPublicChannel();
                 break;
             }
             case '5':
             {
-                cout << "friends selected" << endl;
-                //app.buildFriendList(); // TODO need to figure out what to pass here to display friends.
+                cout << "\tFriends selected." << endl;
+                app.buildFriendList(); // TODO need to figure out what to pass here to display friends.
                 break;
             }
             case '6':
             {
-                cout << "my account selected" << endl;
+                cout << "\tAccount selected." << endl;
                 app.buildAccountMenu(username, nameTag, accountType);
                 break;
             }
@@ -405,27 +405,27 @@ void ClientController::chatsCase()
     {
         case '1':
         {
-            cout << "display chat 1" << endl;
+            cout << "\tDisplay chat 1" << endl;
             break;
         }
         case '2':
         {
-            cout << "display chat 2" << endl;
+            cout << "\tDisplay chat 2" << endl;
             break;
         }
         case '3':
         {
-            cout << "display chat 3" << endl;
+            cout << "\tDisplay chat 3" << endl;
             break;
         }
         case '4':
         {
-            cout << "display chat 4" << endl;
+            cout << "\tDisplay chat 4" << endl;
             break;
         }
         case '5':
         {
-            cout << "display chat 5" << endl;
+            cout << "\tDisplay chat 5" << endl;
             break;
         }
         case 'b':
@@ -454,27 +454,27 @@ void ClientController::postsCase()
     {
         case '1':
         {
-            cout << "post 1" << endl;
+            cout << "\tPost 1" << endl;
             break;
         }
         case '2':
         {
-            cout << "post 2" << endl;
+            cout << "\tPost 2" << endl;
             break;
         }
         case '3':
         {
-            cout << "post 3" << endl;
+            cout << "\tPost 3" << endl;
             break;
         }
         case '4':
         {
-            cout << "post 4" << endl;
+            cout << "\tPost 4" << endl;
             break;
         }
         case '5':
         {
-            cout << "post 5" << endl;
+            cout << "\tPost 5" << endl;
             break;
         }
         case 'b':

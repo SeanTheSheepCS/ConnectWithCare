@@ -40,7 +40,7 @@ class GUI
         //    title and date of the post. Returns a char for the option selected by the user.
         void buildPublicChannel();
 
-        void buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength);
+        void buildFriendList(/*char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength*/);
         // Builds Friends list menu given online and offline friends via string arrays.
         //    Returns a char for the option selected by the user.
         void buildAccountMenu(string username, string nameTag, string accountType);

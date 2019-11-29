@@ -159,23 +159,23 @@ void GUI::buildPublicChannel()
     cout << "Enter Message below! (Type 'leave' to go back or 'quit' to exit program)";
 }
 
-void GUI::buildFriendList(char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength)
+void GUI::buildFriendList(/*char** onlineFriends, int onlineLength, char** offlineFriends, int offlineLength*/)
 {
     cout << divider << "FRIENDS" << divider << endl;
 
     cout << "Online:\n";
-    for(int i = 0; i < onlineLength; i++)
+    for(int i = 0; i < 5; i++)
     {
         cout << "\t";
-        /***** PRINT FRIEND NAME HERE *****/
+        cout << "Friend " << i;
         cout << endl;
     }
 
     cout << "Offline:\n";
-    for(int i = 0; i < offlineLength; i++)
+    for(int i = 0; i < 3; i++)
     {
         cout << "\t";
-        /***** PRINT FRIEND NAME HERE *****/
+        cout << "Friend " << i + 6;
         cout << endl;
     }
     cout << divider << "-------" << divider << endl;
