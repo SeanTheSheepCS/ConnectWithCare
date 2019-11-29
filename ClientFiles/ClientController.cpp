@@ -54,8 +54,8 @@ void ClientController::communicate()
     app.buildWelcomeMessage();
     char option;
 
-    Date startDate = Date(2018, 11, 27, 0); // todo hard-coded start and end dates, might want to make this userfriendly and selectable
-    Date endDate = Date(2020, 11 , 27, 0);
+    Date startDate = Date(2018, 11, 27, 40000); // todo hard-coded start and end dates, might want to make this userfriendly and selectable
+    Date endDate = Date(2020, 11 , 27, 40000);
 
     while(1)
     {
@@ -73,28 +73,69 @@ void ClientController::communicate()
 
 				// Receive message from server.
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
+
                 Message post (recvMessageFromServer());
+                //post.printMessageToStdOut();
+                //PostingDataMessage post2 = theConvertor.toPostingDataMessage(post);
+                //string post3 = post2.getPosting().getPostText();
+                //cout << post3 << endl;
+/*
+                Message post1 (recvMessageFromServer());
+                post1.printMessageToStdOut();
+                post2 = theConvertor.toPostingDataMessage(post1);
+                post3 = post2.getPosting().getPostText();
+                cout << post3 << endl;
+
+                Message POST1 (recvMessageFromServer());
+                //post = Message(recvMessageFromServer());
+                POST1.printMessageToStdOut();
+				post2 = theConvertor.toPostingDataMessage(POST1);
+				post3 = post2.getPosting().getPostText();
+				cout << post3 << endl;
+
+				Message POST2 (recvMessageFromServer());
+				//post = Message(recvMessageFromServer());
+				POST2.printMessageToStdOut();
+				post2 = theConvertor.toPostingDataMessage(POST2);
+				post3 = post2.getPosting().getPostText();
+				cout << post3 << endl;
+*/
 
                 if(theConvertor.isErrorBoardNotFoundMessage(post))
                 {
                 	cout << "\tError with receiving the bulletin board." << endl;
                 	break;
                 }
+				while(!theConvertor.isEndOfDataMessage(post))
+				{
+					if(!theConvertor.isPostingDataMessage(post))
+					{
+						cout << "\tError has occured when receiving posts from bulletin board.\n";
+						exit(1);
+					}
+					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
+					Message post = Message(recvMessageFromServer());
+					//post.printMessageToStdOut();
+				}
 
-                while(theConvertor.isEndOfDataMessage(post))
+                /*
+                while(!theConvertor.isEndOfDataMessage(post))
                 {
+                	post.printMessageToStdOut();
+                	cout << "TEST" << endl;
                 	if(!theConvertor.isPostingDataMessage(post))
 					{
 						cout << "\tError has occured when receiving posts from bulletin board.\n";
 						exit(1);
 					}
 					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
-					post = recvMessageFromServer(); // Keep checking from server.
-                }
-
+					post = PostingDateMessage(recvMessageFromServer()); // Keep checking from server.
+                }*/
+                //cout << "TEST1" << endl;
                 vector<string> bulletinBoardPostsString;
-                for(int i = 0; i < bulletinBoardPosts.size(); i++)
+                for(unsigned int i = 0; i < bulletinBoardPosts.size(); i++)
                 {
+                	cout << "TEST2" << endl;
                 	bulletinBoardPostsString.push_back(bulletinBoardPosts[i].getPosting().getPostText()); // Convert the posts to char array.
                 }
 
@@ -215,12 +256,12 @@ void ClientController::userBack()
 void ClientController::sendMessageToServer(Message m)
 {
 	memset(outBuffer, 0, MAXLINE);
-	m.printMessageToStdOut();
+	//m.printMessageToStdOut();
 
 	strcpy((char*)outBuffer,(char*)m.getMessageAsCharArray());
 	msgLength = m.getLength();
 
-	cout<< std::dec << msgLength << endl;
+	//cout<< std::dec << msgLength << endl;
 
 
 	bytesSent = send(sock, (char*) &outBuffer, msgLength, 0);
@@ -230,7 +271,10 @@ void ClientController::sendMessageToServer(Message m)
 
 Message ClientController::recvMessageFromServer()
 {
+	cout << "------------------------------------------------------------------" << endl;
+	clearBuffer(inBuffer);
 	bytesRecv = recv(sock, (char*) &inBuffer, BUFFERSIZE, 0);
+	cout << "********BYTES RECV: "<< std::dec <<bytesRecv << endl;
 	Message msgFromServer(bytesRecv, inBuffer);
 	clearBuffer(inBuffer);
 	return msgFromServer;
