@@ -352,15 +352,16 @@ void ClientController::bulletinBoardCase()
         	cout << "\tSearch selected" << endl;
         	cout << "Please enter start year (ie.1998): ";
         	cin >> year;
-        	while(year == 0)
+        	while(cin.fail() || year == 0)
         	{
+
         		cout << "\tInvalid year." << endl;
         		cout << "Please enter start year (ie.1998): ";
         		cin >> year;
         	}
         	cout << "\nEnter start month (ie.1 = January): ";
         	cin >> month;
-        	while(month == 0)
+        	while(cin.fail() || month == 0)
 			{
 
 				cout << "\tInvalid month." << endl;
@@ -369,7 +370,7 @@ void ClientController::bulletinBoardCase()
 			}
         	cout << "\nEnter start day (ie.1): ";
         	cin >> day;
-        	while(day == 0)
+        	while(cin.fail() || day == 0)
 			{
 				cout << "\tInvalid day." << endl;
 				cout << "\nEnter start day (ie.1): ";
