@@ -69,7 +69,7 @@ private:
 	void processIncomingSockets (fd_set);
 	Message messageFromDataReceivedFromClient(int clientSock);
 
-	vector<char> receiveData(int sock);
+	vector<unsigned char> receiveData(int sock);
 	queue<Message> specifyTypeOfClientMessage(Message msgFromClient, ClientConnectionInformation& clientInfo);
 
 	queue<Message> putSingleMessageInQueue(Message msg);

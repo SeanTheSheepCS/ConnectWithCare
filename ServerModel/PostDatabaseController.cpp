@@ -68,7 +68,7 @@ unsigned long int PostDatabaseController::searchBoardAndPlaceResultsInVector(Boa
 }
 unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeywords(BoardSearchMessage boardSearchMessage, unsigned long int boardIDTheUserWantsHistoryOf, vector<Posting>& selectedPosts) {
 	// could potentially take too long computationally
-	cout << "starting search in postDB" << "\n";
+	cout << "starting search in postDB for " << boardSearchMessage.getSearchKeyword() << "\n";
 	for (Posting p : bulletinBoardsDatabase[boardIDTheUserWantsHistoryOf]) {
 		string postText = p.getPostText();
 		string keyword = boardSearchMessage.getSearchKeyword();
@@ -77,8 +77,10 @@ unsigned long int PostDatabaseController::iterateThroughDatabaseToFindSearchKeyw
 			|| postText.find( allCapsWord(keyword) ) != string::npos )
 		{
 			selectedPosts.push_back(p);
+			cout << "found " << p.getPostText() << "\n";
 		}
 	}
+
 	cout << "ending" << "\n";
 	return SERVERMESSAGECODE_ENDOFDATA;
 }
@@ -97,6 +99,10 @@ string PostDatabaseController::capitalizeWord(string word) {
 	}
 	return capitalizedWord;
 }
+
+
+
+
 unsigned long int PostDatabaseController::getBoardHistoryAndPlaceInVector(BoardHistoryMessage boardHistoryMessage, vector<Posting>& selectedPosts) {
 	unsigned long int boardIDTheUserWantsHistoryOf = boardHistoryMessage.getBoardID();
 	cout << "in post controller getHistory, client wants to access board" << boardIDTheUserWantsHistoryOf << "\n";
