@@ -58,7 +58,7 @@ void ClientController::communicate()
 
     while(1)
     {
-        app.buildMenu(0, 0, 0); // TODO Need to add notifciation numbers later.
+        app.buildMenu(4, 0, 1); // TODO Need to add notifciation numbers later.
         cin >> option;
         switch(option)
         {
