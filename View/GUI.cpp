@@ -191,10 +191,8 @@ void GUI::buildAccountMenu(string username, string nameTag, string accountType)
     cout << "   Account Type: <" << accountType << ">" << endl;
     cout << "\n[1] Change Username" << endl;
     cout << "[2] Change Password" << endl;
-    cout << "[3] Update Status" << endl;
-    cout << "[4] Update Orginization Information (Charity Only)" << endl;
-    cout << "[5] Change Account Type (Individual or Charity)" << endl;
-    cout << "[6] Delete Account" << endl;
+    cout << "[3] Change Account Type (Individual or Charity)" << endl;
+    cout << "[4] Delete Account" << endl;
     cout << "[b] Go Back" << endl;
     cout << "[q] Quit Program" << endl;
     cout << divider << "------------" << divider << endl;

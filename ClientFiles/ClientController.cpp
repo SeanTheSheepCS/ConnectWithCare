@@ -49,7 +49,6 @@ void ClientController::communicate()
 
     /*** LOGIN WAS SUCCESSFUL ***/
     accountType = "individual(testing)"; // TODO Remove later, get information from server
-    nameTag = "user(testing)"; // TODO Remove later, get information from server
 
     app.buildWelcomeMessage();
     char option;
@@ -75,7 +74,7 @@ void ClientController::communicate()
                 vector<PostingDataMessage> bulletinBoardPosts; // Create bulletin board posts. (passing this to GUI)
 
                 Message post (recvMessageFromServer());
-				post.printMessageToStdOut();
+				//post.printMessageToStdOut();
 
                 if(theConvertor.isErrorBoardNotFoundMessage(post))
                 {
@@ -87,7 +86,7 @@ void ClientController::communicate()
 				{
 					if(!theConvertor.isPostingDataMessage(post))
 					{
-						cout << "\tError has occured when receiving posts from bulletin board.\n";
+						cout << "\tError has occurred when receiving posts from bulletin board.\n";
 						exit(1);
 					}
 					bulletinBoardPosts.push_back(theConvertor.toPostingDataMessage(post));
@@ -103,7 +102,6 @@ void ClientController::communicate()
                 app.buildBulletinBoard(bulletinBoardPostsString);
                 bulletinBoardCase();
                 break; 
-
             }
             case '2':
             {
@@ -225,7 +223,6 @@ void ClientController::sendMessageToServer(Message m)
 
 	//cout<< std::dec << msgLength << endl;
 
-
 	bytesSent = send(sock, (char*) &outBuffer, msgLength, 0);
 	//checkSending(bytesSent, msgLength);
 	clearBuffer(outBuffer);
@@ -233,13 +230,25 @@ void ClientController::sendMessageToServer(Message m)
 
 Message ClientController::recvMessageFromServer()
 {
-	cout << "------------------------------------------------------------------" << endl;
+	//cout << "------------------------------------------------------------------" << endl;
 	clearBuffer(inBuffer);
 	bytesRecv = recv(sock, (char*) &inBuffer, BUFFERSIZE, 0);
-	cout << "********BYTES RECV: "<< std::dec <<bytesRecv << endl;
+	//cout << "********BYTES RECV: "<< std::dec <<bytesRecv << endl;
 	Message msgFromServer(bytesRecv, inBuffer);
 	clearBuffer(inBuffer);
 	return msgFromServer;
+}
+
+string ClientController::recvStringFromServer()
+{
+	clearBuffer(inBuffer);
+	bytesRecv = recv(sock, (char*) &inBuffer, BUFFERSIZE, 0);
+	string s = "";
+	for(int i = 0; sizeof(inBuffer)/sizeof(inBuffer[0]); i++)
+	{
+		s += inBuffer[i];
+	}
+	return s;
 }
 
 Date ClientController::createCurrentDate()
@@ -248,6 +257,11 @@ Date ClientController::createCurrentDate()
 	tm *ltm = localtime(&now);
 	Date date(ltm->tm_year, ltm->tm_mon, ltm->tm_mday, ltm->tm_sec);
 	return date;
+}
+
+bool ClientController::isNumber(const string &s)
+{
+	return !s.empty() && std::find_if(s.begin(), s.end(), [](char c){return !isdigit(c);}) == s.end();
 }
 
 void ClientController::bulletinBoardCase()
@@ -303,22 +317,41 @@ void ClientController::bulletinBoardCase()
         	unsigned int day;
         	string searchKeyword;
         	cout << "\tSearch selected" << endl;
-        	cout << "Please enter start year: ";
+        	cout << "Please enter start year (ie.1998): ";
         	cin >> year;
-        	cout << "\nEnter start month: ";
+        	while(year == 0)
+        	{
+        		cout << "\tInvalid year." << endl;
+        		cout << "Please enter start year (ie.1998): ";
+        		cin >> year;
+        	}
+        	cout << "\nEnter start month (ie.1 = January): ";
         	cin >> month;
-        	cout << "\nEnter start day: ";
+        	while(month == 0)
+			{
+				cout << "\tInvalid month." << endl;
+				cout << "\nEnter start month (ie.1 = January): ";
+				cin >> month;
+			}
+        	cout << "\nEnter start day (ie.1): ";
         	cin >> day;
+        	while(day == 0)
+			{
+				cout << "\tInvalid day." << endl;
+				cout << "\nEnter start day (ie.1): ";
+				cin >> day;
+			}
         	cout << "\nPlease enter search keyword: ";
         	cin >> searchKeyword;
 
-        	Date startDate(year, month, day, 0);
+        	Date startDate(year, month, day, 40000); // time = 40 000
+        	Date endDate(3000, 1, 1, 40000); // time = 40 000
         	BoardSearchMessage bsm = theCreator.createBoardSearchMessage(startDate, createCurrentDate(), BOARD_ID, searchKeyword);
         	sendMessageToServer(bsm);
 
         	cout << "\tSearch results will be generated below..." << endl;
-        	Message post = recvMessageFromServer();
-        	if(theConvertor.isErrorBoardNotFoundMessage(post))
+        	Message postFound = recvMessageFromServer();
+        	if(theConvertor.isErrorBoardNotFoundMessage(postFound))
         	{
         		cout << "\tNo results found or error in searching..." << endl;
         		break;
@@ -326,15 +359,15 @@ void ClientController::bulletinBoardCase()
 
         	vector<PostingDataMessage> searchResultsFromBulletin;
 
-        	while(theConvertor.isEndOfDataMessage(post))
+        	while(theConvertor.isEndOfDataMessage(postFound))
         	{
-        		if(!theConvertor.isPostingDataMessage(post))
+        		if(!theConvertor.isPostingDataMessage(postFound))
         		{
         			cout << "\tError in receiving search results..." << endl;
         			break;
         		}
-        		searchResultsFromBulletin.push_back(theConvertor.toPostingDataMessage(post));
-        		post = recvMessageFromServer(); // Keep checking from server.
+        		searchResultsFromBulletin.push_back(theConvertor.toPostingDataMessage(postFound));
+        		postFound = recvMessageFromServer(); // Keep checking from server.
         	}
 
         	vector<string> searchedPosts;
@@ -522,40 +555,33 @@ void ClientController::accountCase()
         case '1':
         {
             cout << "\tChange username selected." << endl;
+            unsigned char* changeUsernameMessageArray = new unsigned char[1];
+            changeUsernameMessageArray[0] = SERVERMESSAGECODE_CHANGEUSERNAME;
+            Message changeUsernameMessage(1, changeUsernameMessageArray);
+            delete changeUsernameMessageArray;
             // todo
             break;
         }
         case '2':
         {
             cout << "\tChange password selected." << endl;
+            unsigned char* changePasswordMessageArray = new unsigned char[1];
+            changePasswordMessageArray[0] = SERVERMESSAGECODE_CHANGEPASSWORD;
+            Message changePasswordMessage(1, changePasswordMessageArray);
+            delete changePasswordMessage;
             // todo
             break;
         }
         case '3':
         {
-            cout << "\tUpdate status selected." << endl;
-            // todo
+            cout << "\tChange account type selected." << endl;
+            unsigned char* changeAccountMessageArray = new unsigned char[1];
+            changeAccountMessageArray[0] = SERVERMESSAGECODE_CHANGEACCOUNTTYPE;
+            Message changeAccountMessage(1, changeAccountMessageArray);
+            delete changeAccountMessageArray;
             break;
         }
         case '4':
-        {
-            if(accountType == "charity")
-            {
-                cout << "\tChange organization option selected." << endl;
-                //todo
-            }
-            else
-            {
-                cout << "\t Operation unavailable. Only available for account types 'charity'." << endl;
-            }
-            break;
-        }
-        case '5':
-        {
-            cout << "\tChange account type selected." << endl;
-            break;
-        }
-        case '6':
         {
             cout << "\tDelete account type selected" << endl;
             app.deleteAccountMenu();
@@ -564,7 +590,10 @@ void ClientController::accountCase()
             if(deleteAccount == 'Y')
             {
                 cout << "\tDeleting Account..." << endl;
-                //TODO tell server to delete account
+                unsigned char* deleteAccountMessageArray = new unsigned char[1];
+                deleteAccountMessageArray[0] = SERVERMESSAGECODE_DELETEACCOUNT;
+                Message deleteAccountMessage(1, deleteAccountMessageArray);
+                delete deleteAccountMessageArray;
                 userQuit();
             }
             else if(deleteAccount == 'b')
@@ -574,7 +603,7 @@ void ClientController::accountCase()
             }
             else
             {
-                cout << "invalid option, going back anayways" << endl;
+                cout << "\tInvalid option, going back..." << endl;
                 break;
             }
             break;
@@ -607,8 +636,8 @@ void ClientController::loginCase()
 
         LoginMessage userAttempt = theCreator.createLoginMessage(username, password); // Turn login properties into proper message
 
-        strcpy((char*)outBuffer, (char*)userAttempt.getMessageAsCharArray()); 
-        msgLength = userAttempt.getLength();
+        //strcpy((char*)outBuffer, (char*)userAttempt.getMessageAsCharArray());
+        //msgLength = userAttempt.getLength();
 
         // Send login info to server
         sendMessageToServer(userAttempt);
@@ -638,6 +667,13 @@ void ClientController::loginCase()
             cout << "Invalid username/password, please try again.\n " << endl;
         }
     }
+
+    // Successful login.
+    Message accountTypeMessageWrapper = recvMessageFromServer();
+    char* aType = accountTypeMessageWrapper.getMessageAsCharArray();
+    *(++aType) = '\0';
+    accountType(aType);
+    cout << accountType << endl;
 }
 
 int mainClientController(int argc, char *argv[])

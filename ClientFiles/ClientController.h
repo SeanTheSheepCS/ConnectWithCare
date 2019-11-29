@@ -17,6 +17,8 @@
 #include <unistd.h>     // for close()
 #include <vector>
 #include <ctime>
+#include <string>
+#include <bits/stdc++.h>
 #include "../View/GUI.h"
 #include "ClientMessageConverter.h"
 #include "ClientMessageCreator.h"
@@ -69,8 +71,12 @@ class ClientController
         // Sends a message to Server.
         Message recvMessageFromServer();
         // Receives message from Server.
+        string recvStringFromServer();
+        // Receives string from Server.
         Date createCurrentDate();
         // Creates current date.
+        bool isNumber(const string &s);
+
 
         void loginCase();
         // Handles logging in process.
